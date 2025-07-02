@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   programs.git = {
@@ -12,6 +12,10 @@
       };
       init = {
         defaultBranch = "main";
+      };
+      credential = {
+        helper = "${pkgs.git-credential-manager}/bin/git-credential-manager";
+        credentialStore = "cache";
       };
       branch.autosetupmerge = "true";
       push.default = "current";
