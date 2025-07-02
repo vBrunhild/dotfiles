@@ -8,9 +8,11 @@
     config = {
       user = {
         email = "brunomoretti100@gmail.com";
-        name = "vBrunhild"; 
+        name = "vBrunhild";
       };
-      init = {defaultBranch = "main";};
+      init = {
+        defaultBranch = "main";
+      };
       branch.autosetupmerge = "true";
       push.default = "current";
       merge.stat = "true";

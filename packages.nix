@@ -6,6 +6,7 @@ in
 {
   environment.systemPackages = [
     pkgs.git
+    pkgs.git-credential-manager
     pkgs.curl
     pkgs.uv
     pkgs.fish
