@@ -1,0 +1,17 @@
+theme = "zed_onedark"
+
+[editor]
+rulers = [120]
+auto-completion = true
+path-completion = true
+completion-trigger-len = 2
+cursorline = true
+color-modes = true
+true-color = true
+
+[editor.indent-guides]
+render = true
+
+[editor.lsp]
+display-inlay-hints = true
+snippets = true

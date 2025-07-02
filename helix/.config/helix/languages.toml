@@ -1,0 +1,17 @@
+[[language]]
+name = "rust"
+
+[language-server.rust-analyzer.config]
+checkOnSave = { command = "clippy" }
+cargo = { allFeatures = true }
+
+[language-server.rust-analyzer.config.inlayHints]
+closureReturnTypeHints.enable = true
+
+[[language]]
+name = "nix"
+language-servers = [ "nil" ]
+
+[language-server.nil]
+command = "nil"
+formatter = { command = "nixfmt" }

@@ -1,13 +1,12 @@
-{ config, pkgs, ... }:
+{ ... }:
 
 {
 	imports = [
 		<nixos-wsl/modules>
 		./packages.nix
-		./envars.nix
 		./users.nix
+		./envars.nix
 		./git.nix
-		./helix.nix
 	];
 
 	wsl.enable = true;
