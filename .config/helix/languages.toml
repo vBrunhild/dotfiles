@@ -15,3 +15,10 @@ language-servers = [ "nil" ]
 [language-server.nil]
 command = "nil"
 formatter = { command = "nixfmt" }
+
+[[language]]
+name = "toml"
+language-servers = [ "taplo" ]
+
+[language-server.taplo]
+command = "taplo"
