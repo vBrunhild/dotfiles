@@ -2,8 +2,7 @@
 
 let
   unstable = import <nixos-unstable> { config = config.nixpkgs.config; };
-in
-{
+in {
   environment.systemPackages = [
     pkgs.stow
     pkgs.gcc
@@ -20,6 +19,10 @@ in
     pkgs.nixfmt-rfc-style
     pkgs.gitui
     pkgs.yazi
+    pkgs.starship
+    pkgs.zoxide
+    pkgs.uutils-coreutils-noprefix
+    pkgs.taplo
     unstable.rustup
   ];
 
