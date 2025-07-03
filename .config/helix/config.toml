@@ -2,15 +2,28 @@ theme = "zed_onedark"
 
 [editor]
 rulers = [120]
-auto-completion = true
-path-completion = true
-completion-trigger-len = 2
 cursorline = true
 color-modes = true
 true-color = true
 
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+
+[editor.auto-save]
+after-delay.enable = true
+after-delay.timeout = 3000
+
+[editor.whitespace]
+render = "none"
+
 [editor.indent-guides]
 render = true
+character = "▎"
 
 [editor.lsp]
 enable = true
