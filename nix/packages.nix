@@ -1,8 +1,6 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
-let
-  unstable = import <nixos-unstable> { config = config.nixpkgs.config; };
-in {
+{
   environment.systemPackages = [
     pkgs.stow
     pkgs.gcc
@@ -23,7 +21,11 @@ in {
     pkgs.zoxide
     pkgs.uutils-coreutils-noprefix
     pkgs.taplo
-    unstable.rustup
+    pkgs.rustup
+    pkgs.cargo
+    pkgs.rust-analyzer
+    pkgs.bacon
+    pkgs.clippy
   ];
 
   programs.fish.enable = true;
