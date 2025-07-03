@@ -13,5 +13,6 @@ true-color = true
 render = true
 
 [editor.lsp]
+enable = true
 display-inlay-hints = true
 snippets = true
