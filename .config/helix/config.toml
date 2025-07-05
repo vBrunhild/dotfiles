@@ -1,4 +1,4 @@
-theme = "zed_onedark"
+theme = "onedark"
 
 [editor]
 rulers = [120]
