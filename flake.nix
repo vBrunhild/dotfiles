@@ -1,9 +1,7 @@
 {
-  description = "My own nixos flake based on sioodmy/dotfiles";
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL";
 
     zen-browser = {
       url = "github:youwen5/zen-browser-flake";
@@ -11,7 +9,7 @@
     };
   };
 
-  outputs = inputs @ { nixpkgs, ... }:
+  outputs = inputs @ { nixpkgs, self, ... }:
   let
     user = import ./user;
 
@@ -43,8 +41,27 @@
     nixosModules = {
       system = import ./system;
       user = user.module;
-    } // import ./modules;
+    };
 
-    nixosConfigurations = import ./hosts inputs;
+    nixosConfigurations.wsl = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+
+      modules = [
+        inputs.nixos-wsl.nixosModules.default {
+          wsl = {
+            enable = true;
+            wslConf.automount.root = "/mnt";
+            defaultUser = "brunhild";
+          };
+
+          system.stateVersion = "24.11";
+        }
+      ] ++ builtins.attrValues self.nixosModules;
+
+      specialArgs = {
+        inherit inputs;
+        flake = self;
+      };
+    };
   };
 }

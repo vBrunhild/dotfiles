@@ -1,10 +1,5 @@
 { ... }:
 {
-  staypls = {
-    enable = true;
-    dirs = ["/etc/ssh" "/etc/nix"];
-  };
-
   fileSystems."/" = {
     device = "none";
     fsType = "tmpfs";

@@ -6,6 +6,7 @@
     package = pkgs.lix;
 
     settings = {
+      flake-registry = "/etc/nix/registry.json";
       auto-optimise-store = true;
       builders-use-substitutes = true;
       allowed-users = ["@wheel"];
@@ -19,7 +20,7 @@
       max-jobs = "auto";
       keep-going = true;
       log-lines = 20;
-      extra-experimental-features = ["flakes" "nix-command"];
+      extra-experimental-features = ["flakes" "nix-command" "recursive-nix" "ca-derivations"];
       substituters = ["https://cache.nixos.org"];
     };
   };
@@ -27,16 +28,11 @@
   programs.nix-ld.enable = true;
   programs.nh = {
     enable = true;
-    flake = "/home/brunhild/dotfiles/nix";
+    flake = "/home/brunhild/dev/dotfiles";
   };
 
   systemd.services.nix-daemon = {
     environment.TMPDIR = "/var/tmp";
-  };
-
-  system.switch = {
-    enable = false;
-    enableNg = true;
   };
 
   nixpkgs = {

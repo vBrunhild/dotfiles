@@ -38,7 +38,5 @@ in {
       python313
       uv
     ;
-  }
-
-  ++ [inputs.zen-browser.packages.${pkgs.system}.default];
+  } ++ [inputs.zen-browser.packages.${pkgs.system}.default];
 }

@@ -5,7 +5,6 @@
     users = {
       root.hashedPasswordFile = "/persist/secrets/root";
       brunhild = {
-        homix = true;
         isNormalUser = true;
         shell = flake.packages.${pkgs.system}.fish;
 

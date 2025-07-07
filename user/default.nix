@@ -2,7 +2,10 @@ rec
 {
   packages = pkgs: let
     inherit (pkgs) callPackage;
-  in {};
+  in {
+    helix = pkgs.helix;
+    fish = pkgs.fish;
+  };
 
   shell = pkgs:
     pkgs.mkShell {
@@ -11,7 +14,7 @@ rec
         fish
       '';
 
-      buildInput = builtins.attrValues {
+      buildInputs = builtins.attrValues {
         inherit
           (packages pkgs)
           helix
@@ -25,6 +28,7 @@ rec
     config = {
       environment.systemPackages = builtins.attrValues (packages pkgs);
 
+      programs.fish.enable = true;
       programs.direnv = {
         enable = true;
         enableFishIntegration = true;
@@ -33,7 +37,7 @@ rec
 
     imports = [
       ./packages.nix
-      ./git
+      ./git.nix
     ];
   };
 }
