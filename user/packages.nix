@@ -37,6 +37,8 @@ in {
       python312
       python313
       uv
+      ruff
+      basedpyright
     ;
   } ++ [inputs.zen-browser.packages.${pkgs.system}.default];
 }
