@@ -27,6 +27,9 @@ rec
   {
     config = {
       environment.systemPackages = builtins.attrValues (packages pkgs);
+      environment.sessionVariables = {
+        LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+      };
 
       programs.fish.enable = true;
       programs.direnv = {

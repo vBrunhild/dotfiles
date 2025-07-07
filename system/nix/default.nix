@@ -25,7 +25,13 @@
     };
   };
 
-  programs.nix-ld.enable = true;
+  programs.nix-ld = {
+    enable = true;
+    libraries = [
+      pkgs.stdenv.cc.cc.lib
+    ];
+  };
+
   programs.nh = {
     enable = true;
     flake = "/home/brunhild/dev/dotfiles";
