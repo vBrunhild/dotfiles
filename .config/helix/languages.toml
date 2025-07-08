@@ -10,7 +10,7 @@ closureReturnTypeHints.enable = true
 
 [[language]]
 name = "python"
-language-servers = [ "basedpyright", "ruff" ]
+language-servers = ["basedpyright", "ruff"]
 
 [language-server.basedpyright]
 command = "basedpyright-langserver"
@@ -37,3 +37,18 @@ language-servers = [ "taplo" ]
 
 [language-server.taplo]
 command = "taplo"
+
+[[language]]
+name = "typst"
+language-servers = ["tinymist"]
+
+[language-server.tinymist]
+command = "tinymist"
+
+[language-server.tinymist.config]
+preview.background.enabled = true
+preview.background.args = [
+  "--data-plane-host=127.0.0.1:23635",
+  "--invert-colors=never",
+  "--open"
+]

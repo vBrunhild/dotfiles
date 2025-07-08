@@ -8,7 +8,6 @@ in {
       stow
       gcc
       clang
-      openssl
       git
       git-credential-manager
       curl
@@ -25,6 +24,8 @@ in {
       zoxide
       uutils-coreutils-noprefix
       taplo
+      typst
+      tinymist
 
       # rust tools
       rustup
