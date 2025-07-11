@@ -14,7 +14,6 @@ in {
       direnv
       fish
       zellij
-      helix
       docker
       nil
       nixfmt-rfc-style

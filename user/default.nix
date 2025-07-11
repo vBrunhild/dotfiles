@@ -3,7 +3,7 @@ rec
   packages = pkgs: let
     inherit (pkgs) callPackage;
   in {
-    helix = pkgs.helix;
+    neovim = callPackage ./wrapped/neovim.nix {};
     fish = pkgs.fish;
   };
 
@@ -17,7 +17,7 @@ rec
       buildInputs = builtins.attrValues {
         inherit
           (packages pkgs)
-          helix
+          neovim
           fish
         ;
       };
@@ -27,9 +27,6 @@ rec
   {
     config = {
       environment.systemPackages = builtins.attrValues (packages pkgs);
-      environment.sessionVariables = {
-        LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
-      };
 
       programs.fish.enable = true;
       programs.direnv = {
