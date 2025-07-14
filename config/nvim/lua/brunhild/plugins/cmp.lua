@@ -30,42 +30,40 @@ local kind_icons = {
 
 local cmp = require('cmp')
 local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+local luasnip = require("luasnip")
 require("luasnip.loaders.from_vscode").lazy_load()
 
 cmp.setup({
-  	mapping = cmp.mapping.preset.insert({
-		["<Tab>"] = cmp.mapping(function(fallback)
-			if vim.fn.pumvisible() == 1 then
-				feedkey("<C-n>", "n")
-			elseif cmp.visible() then
-				cmp.select_next_item()
-			else
-				fallback()
-			end
-		end, {
-			"i",
-		}),
-		["<CR>"] = cmp.mapping.confirm({ select = true }),
-		["<C-u>"] = cmp.mapping.scroll_docs(-4),
-		["<C-d>"] = cmp.mapping.scroll_docs(4),
-
-		["<S-Tab>"] = cmp.mapping(function(fallback)
-			if vim.fn.pumvisible() == 1 then
-				feedkey("<C-p>", "n")
-			elseif cmp.visible() then
-				cmp.select_prev_item()
-			else
-				fallback()
-			end
-		end, {
-			"i",
-		}),
+	mapping = cmp.mapping.preset.insert({
+		["<Tab>"] = cmp.mapping(
+            function(fallback)
+                if vim.fn.pumvisible() == 1 then
+                    feedkey("<C-n>", "n")
+                elseif cmp.visible() then
+                    cmp.select_next_item()
+                else
+                    fallback()
+                end
+		    end, 
+            {"i"}
+        ),
+		["<S-Tab>"] = cmp.mapping(
+            function(fallback)
+                if vim.fn.pumvisible() == 1 then
+                    feedkey("<C-p>", "n")
+                elseif cmp.visible() then
+                    cmp.select_prev_item()
+                else
+                    fallback()
+                end
+		    end, 
+            {"i"}
+        ),
+        ["<CR>"] = cmp.mapping.confirm({ select = true }),
 	}),
 	window = {
 		documentation = cmp.config.window.bordered(),
-		completion = cmp.config.window.bordered({
-			winhighlight = "Normal:CmpPmenu,CursorLine:PmenuSel,Search:None",
-		}),
+		completion = cmp.config.window.bordered(),
 	},
 	snippet = {
 		expand = function(args)

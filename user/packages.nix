@@ -17,6 +17,7 @@ in {
       docker
       nil
       nixfmt-rfc-style
+      nixd
       gitui
       yazi
       starship

@@ -1,0 +1,8 @@
+require("gitsigns").setup({})
+require("ibl").setup({})
+require("lualine").setup({})
+require("nvim-autopairs").setup({})
+require("trouble").setup({})
+require("colorizer").setup({})
+require("Comment").setup({})
+
