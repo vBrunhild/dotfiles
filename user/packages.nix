@@ -40,6 +40,10 @@ in {
       uv
       ruff
       basedpyright
+
+      # go tools
+      go
+      gopls
     ;
   } ++ [inputs.zen-browser.packages.${pkgs.system}.default];
 }
