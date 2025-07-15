@@ -41,6 +41,8 @@ cmp.setup({
                     feedkey("<C-n>", "n")
                 elseif cmp.visible() then
                     cmp.select_next_item()
+                elseif luasnip.expand_or_jumpable() then
+                    luasnip.jump(1)
                 else
                     fallback()
                 end
