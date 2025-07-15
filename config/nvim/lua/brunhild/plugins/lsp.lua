@@ -11,10 +11,34 @@ vim.lsp.enable({
 	'nil'
 })
 
+
+vim.lsp.inlay_hint.enable(true)
+
 vim.lsp.config('rust_analyzer', {
-    --cmd = {},
     settings = {
-        ['rust-analyzer'] = {},
+        ['rust-analyzer'] = {
+            cargo = {
+                buildScripts = {
+                    enable = true
+                }
+            },
+
+            procMacro = {
+                enable = true
+            },
+
+            inlayHints = {
+                typeHints = { enable = true },
+                parameterHints = { enable = true },
+                chainingHints = { enable = true },
+                bindingModeHints = { enable = true },
+                renderColons = true
+            },
+
+            check = {
+                command = "clippy"
+            }
+        },
     },
 })
 
