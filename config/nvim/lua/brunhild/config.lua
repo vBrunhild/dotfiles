@@ -1,9 +1,30 @@
 vim.wo.relativenumber = true
 vim.wo.signcolumn = "yes"
 
+-- indentation stuff
 vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+
+local filetypes_2_space = {
+    "nix"
+}
+
+vim.api.nvim_create_autocmd("FileType", {
+    --group = "IndentationSettings",
+    pattern = filetypes_2_space,
+    callback = function()
+        vim.opt_local.tabstop = 2
+        vim.opt_local.softtabstop = 2
+        vim.opt_local.shiftwidth = 2
+        vim.opt_local.expandtab = true
+    end,
+    desc = "Set 2-space indentation for specific file types"
+})
+
 vim.opt.colorcolumn = "121"
 vim.opt.updatetime = 100
 
