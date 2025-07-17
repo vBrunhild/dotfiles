@@ -5,4 +5,6 @@ require("nvim-autopairs").setup({})
 require("trouble").setup({})
 require("colorizer").setup({})
 require("Comment").setup({})
+require("conform").setup({})
+require("guess-indent").setup({})
 

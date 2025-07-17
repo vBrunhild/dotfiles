@@ -12,7 +12,7 @@ let
 
     plugins = (attrValues {
       inherit (pkgs.vimPlugins)
-        onedark-nvim
+        onedarkpro-nvim
         telescope-nvim
         undotree
         gitsigns-nvim
@@ -29,9 +29,10 @@ let
         nvim-cmp
         luasnip
         friendly-snippets
-        cmp-nvim-lsp
-        cmp-buffer
-        cmp-path
+        blink-cmp
+        conform-nvim
+        guess-indent-nvim
+        which-key-nvim
       ;
     }) ++ [ pkgs.vimPlugins.nvim-treesitter.withAllGrammars ];
   };

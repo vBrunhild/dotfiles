@@ -26,6 +26,7 @@ in {
       taplo
       ripgrep
       fd
+      lua-language-server
 
       # typst tools
       typst

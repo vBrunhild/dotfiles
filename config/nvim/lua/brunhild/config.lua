@@ -37,6 +37,24 @@ vim.o.foldlevel = 99
 
 vim.diagnostic.config({
     virtual_text = false,
-    virtual_lines = true
+    virtual_lines = true,
+    underline = true,
+    --update_in_insert = false,
+    severity_sort = true,
+    float = {
+        border = "rounded",
+        source = true
+    }
 })
+
+vim.lsp.enable({
+    "basedpyright",
+    "gopls",
+    "nixd",
+    "nil",
+    "rust_analyzer",
+    "lua_ls"
+})
+
+vim.lsp.inlay_hint.enable(true)
 

@@ -1,6 +1,9 @@
-require('onedark').setup {
-  transparent = true,
-}
+require("onedarkpro").setup({
+    options = {
+        transparency = true,
+        highlight_inactive_windows = true
+    }
+})
 
-require("onedark").load()
+require("onedarkpro").load()
 
