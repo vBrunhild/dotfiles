@@ -24,11 +24,14 @@ in {
       zoxide
       uutils-coreutils-noprefix
       taplo
+      ripgrep
+      fd
+
+      # typst tools
       typst
       tinymist
 
       # rust tools
-      rustup
       cargo
       rust-analyzer
       bacon
