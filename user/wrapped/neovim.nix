@@ -34,7 +34,16 @@ let
         guess-indent-nvim
         which-key-nvim
       ;
-    }) ++ [ pkgs.vimPlugins.nvim-treesitter.withAllGrammars ];
+    }) ++ [
+      pkgs.vimPlugins.nvim-treesitter.withAllGrammars
+      pkgs.gopls
+      pkgs.rust-analyzer
+      pkgs.lua-language-server
+      pkgs.nil
+      pkgs.nixd
+      pkgs.basedpyright
+      pkgs.taplo
+    ];
   };
 in
   pkgs.symlinkJoin {

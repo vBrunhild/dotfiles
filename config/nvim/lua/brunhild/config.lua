@@ -53,7 +53,8 @@ vim.lsp.enable({
     "nixd",
     "nil",
     "rust_analyzer",
-    "lua_ls"
+    "lua_ls",
+    "taplo",
 })
 
 vim.lsp.inlay_hint.enable(true)
