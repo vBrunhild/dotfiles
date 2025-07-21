@@ -3,8 +3,6 @@ local wk = require("which-key")
 vim.g.mapleader = " "
 
 wk.add({
-    { "<leader> ", vim.cmd.Ex }
+    { "<leader> ", vim.cmd.Ex, desc = "Opens neovim explorer." }
 })
-
-vim.keymap.set("n", "<leader> ", vim.cmd.Ex)
 
