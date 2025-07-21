@@ -2,6 +2,18 @@
 let
   inherit (builtins) attrValues;
 
+  lspPackages = [
+    pkgs.gopls
+    pkgs.rust-analyzer
+    pkgs.lua-language-server
+    pkgs.nil
+    pkgs.nixd
+    pkgs.basedpyright
+    pkgs.taplo
+    pkgs.dprint
+    pkgs.dprint-plugins.dprint-plugin-json
+  ];
+
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
     withPython3 = false;
     withRuby = false;
@@ -36,18 +48,13 @@ let
       ;
     }) ++ [
       pkgs.vimPlugins.nvim-treesitter.withAllGrammars
-      pkgs.gopls
-      pkgs.rust-analyzer
-      pkgs.lua-language-server
-      pkgs.nil
-      pkgs.nixd
-      pkgs.basedpyright
-      pkgs.taplo
     ];
   };
 in
   pkgs.symlinkJoin {
     name = "neovim-wrapped";
-    paths = [ (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig) ];
+    paths = [
+      (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig)
+    ] ++ lspPackages;
   }
 
