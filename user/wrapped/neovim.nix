@@ -4,6 +4,9 @@ let
 
   lspPackages = [
     pkgs.gopls
+    pkgs.golangci-lint
+    pkgs.golangci-lint-langserver
+    pkgs.go-tools
     pkgs.rust-analyzer
     pkgs.lua-language-server
     pkgs.nil
@@ -36,9 +39,7 @@ let
         nvim-colorizer-lua
         lsp_lines-nvim
         trouble-nvim
-        harpoon
         nvim-lspconfig
-        nvim-cmp
         luasnip
         friendly-snippets
         blink-cmp
@@ -47,6 +48,10 @@ let
         which-key-nvim
         mini-icons
         nvim-web-devicons
+        nvim-nio
+        nvim-dap
+        nvim-dap-ui
+        nvim-dap-virtual-text
       ;
     }) ++ [
       pkgs.vimPlugins.nvim-treesitter.withAllGrammars

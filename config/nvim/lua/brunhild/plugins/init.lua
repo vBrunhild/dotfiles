@@ -1,6 +1,8 @@
 require("brunhild.plugins.blink")
+require("brunhild.plugins.telescope")
 require("brunhild.plugins.treesitter")
 require("brunhild.plugins.conform")
+require("brunhild.plugins.dap")
 
 require("gitsigns").setup({})
 require("ibl").setup({})
@@ -10,4 +12,6 @@ require("trouble").setup({})
 require("colorizer").setup({})
 require("Comment").setup({})
 require("guess-indent").setup({})
+require("dapui").setup({})
+require("nvim-dap-virtual-text").setup({})
 

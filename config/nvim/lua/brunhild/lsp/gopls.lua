@@ -1,4 +1,4 @@
--- @class go_dir_custom_args
+--- @class go_dir_custom_args
 ---
 --- @field envvar_id string
 ---
@@ -11,7 +11,6 @@ local std_lib = nil
 ---@param on_complete fun(dir: string | nil)
 local function identify_go_dir(custom_args, on_complete)
     local cmd = { 'go', 'env', custom_args.envvar_id }
-  
     vim.system(cmd, { text = true }, function(output)
     local res = vim.trim(output.stdout or '')
         if output.code == 0 and res ~= '' then
@@ -93,8 +92,98 @@ return {
         local fname = vim.api.nvim_buf_get_name(bufnr)
         get_mod_cache_dir()
         get_std_lib_dir()
-        -- see: https://github.com/neovim/nvim-lspconfig/issues/804
         on_dir(get_root_dir(fname))
     end,
+    settings = {
+        gopls = {
+            codelenses = {
+                gc_details = false,
+                generate = true,
+                regenerate_cgo = true,
+                run_govulncheck = true,
+                test = true,
+                tidy = true,
+                upgrade_dependency = true,
+                vendor = true
+            },
+            hints = {
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                compositeLiteralTypes = true,
+                constantValues =    true,
+                functionTypeParameters = true,
+                parameterValues = true,
+                rangeVariableTypes = true
+            },
+            analyses = {
+                nilness = true,
+                unusedparams = true,
+                unusedwrite = true,
+                useany = true,
+                unreachable = true,
+                modernize = true,
+                stylecheck = true,
+                appends = true,
+                asmdecl = true,
+                assign = true,
+                atomic = true,
+                bools = true,
+                buildtag = true,
+                cgocall = true,
+                composite = true,
+                contextcheck = true,
+                deba = true,
+                atomicalign = true,
+                composites = true,
+                copylocks = true,
+                deepequalerrors = true,
+                defers = true,
+                deprecated = true,
+                directive = true,
+                embed = true,
+                errorsas = true,
+                fillreturns = true,
+                framepointer = true,
+                gofix = true,
+                hostport = true,
+                infertypeargs = true,
+                lostcancel = true,
+                httpresponse = true,
+                ifaceassert = true,
+                loopclosure = true,
+                nilfunc = true,
+                nonewvars = true,
+                noresultvalues = true,
+                printf = true,
+                shadow = true,
+                shift = true,
+                sigchanyzer = true,
+                simplifycompositelit = true,
+                simplifyrange = true,
+                simplifyslice = true,
+                slog = true,
+                sortslice = true,
+                stdmethods = true,
+                stdversion = true,
+                stringintconv = true,
+                structtag = true,
+                testinggoroutine = true,
+                tests = true,
+                timeformat = true,
+                unmarshal = true,
+                unsafeptr = true,
+                unusedfunc = true,
+                unusedresult = true,
+                waitgroup = true,
+                yield = true,
+                unusedvariable = true
+            },
+            usePlaceholders = true,
+            completeUnimported = true,
+            staticcheck = true,
+            directoryFilters = { "-.git" },
+            semanticTokens = true
+        }
+    }
 }
 

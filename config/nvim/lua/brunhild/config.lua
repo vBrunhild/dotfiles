@@ -33,6 +33,7 @@ vim.diagnostic.config({
 vim.lsp.enable({
     "basedpyright",
     "gopls",
+    "golangci_lint_ls",
     "nixd",
     "nil_ls",
     "rust_analyzer",
