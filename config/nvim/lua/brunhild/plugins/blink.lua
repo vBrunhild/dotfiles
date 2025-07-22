@@ -3,13 +3,16 @@ require("blink.cmp").setup({
     signature = { enabled = true },
     appearance = {
         use_nvim_cmp_as_default = false,
-        nerd_font_variant = "normal",
+        nerd_font_variant = "mono",
     },
     keymap = {
         preset = 'super-tab',
     },
     cmdline = {
-        completion = { menu = { auto_show = true } },
+        completion = {
+            menu = { auto_show = true },
+            list = { selection = { preselect = false } }
+        },
         keymap = {
             ["<CR>"] = { "accept_and_enter", "fallback" }
         }
@@ -20,7 +23,7 @@ require("blink.cmp").setup({
             cmdline = {
                 min_keyword_length = 2
             }
-        }, 
+        },
     },
     completion = {
         menu = {
@@ -39,7 +42,6 @@ require("blink.cmp").setup({
 
         documentation = {
             window = {
-                border = nil,
                 scrollbar = false,
                 winhighlight = 'Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,EndOfBuffer:BlinkCmpDoc',
             },
