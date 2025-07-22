@@ -45,6 +45,8 @@ let
         conform-nvim
         guess-indent-nvim
         which-key-nvim
+        mini-icons
+        nvim-web-devicons
       ;
     }) ++ [
       pkgs.vimPlugins.nvim-treesitter.withAllGrammars
