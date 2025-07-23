@@ -1,19 +1,18 @@
-local wk = require("which-key")
+local minifiles = require("mini.files")
 local telescope = require("telescope.builtin")
+
+local map = vim.keymap.set
 
 vim.g.mapleader = " "
 
-wk.add({
-    { "<leader> ", vim.cmd.Ex, desc = "Opens neovim explorer" },
+local minifiles_toggle = function()
+    if not minifiles.close() then minifiles.open() end
+end
 
-    -- telescope
-    { "<leader>ff", telescope.find_files, desc = "Telescope find files" },
-    { "<leader>fg", telescope.live_grep, desc = "Telescope grep" },
-
-    -- lsp
-    { "gd", vim.lsp.buf.definition, desc = "Goto definition" },
-    { "<leader>ld", vim.lsp.buf.signature_help, desc = "Signature documentation" },
-    { "<leader>lr", vim.lsp.buf.rename, desc = "Rename all references" },
-    { "<leader>lv", "<cmd>vsplit | lua vim.lsp.buf.definition()<cr>", desc = "Goto definition in vertical split" }
-})
+map("n", "<leader> ", minifiles_toggle, { desc = "Open explorer" })
+map("n", "gd", vim.lsp.buf.definition, { desc = "Goto definition" })
+--telescope
+map("n", "<leader>ff", telescope.find_files, { desc = "Telescope find files" })
+map("n", "<leader>fg", telescope.live_grep, { desc = "Telescope grep" })
+map("n", "<leader>fb", telescope.buffers, { desc = "Telescope find buffers" })
 

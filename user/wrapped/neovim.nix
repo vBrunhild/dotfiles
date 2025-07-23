@@ -31,11 +31,7 @@ let
         telescope-nvim
         undotree
         gitsigns-nvim
-        lualine-nvim
         nvim-osc52
-        indent-blankline-nvim-lua
-        nvim-autopairs
-        comment-nvim
         nvim-colorizer-lua
         lsp_lines-nvim
         trouble-nvim
@@ -45,13 +41,24 @@ let
         blink-cmp
         conform-nvim
         guess-indent-nvim
-        which-key-nvim
-        mini-icons
-        nvim-web-devicons
         nvim-nio
         nvim-dap
-        nvim-dap-ui
-        nvim-dap-virtual-text
+        nvim-dap-view
+        zellij-nav-nvim
+        obsidian-nvim
+        mini-icons
+        mini-comment
+        mini-keymap
+        mini-pairs
+        mini-clue
+        mini-files
+        mini-git
+        mini-diff
+        mini-statusline
+        mini-trailspace
+        mini-indentscope
+        mini-splitjoin
+        mini-surround
       ;
     }) ++ [
       pkgs.vimPlugins.nvim-treesitter.withAllGrammars

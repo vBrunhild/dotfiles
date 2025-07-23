@@ -1,3 +1,5 @@
+vim.loader.enable()
+
 vim.wo.relativenumber = true
 vim.wo.signcolumn = "yes"
 
