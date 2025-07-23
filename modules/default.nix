@@ -1,0 +1,3 @@
+{
+    staypls = import ./staypls.nix;
+}

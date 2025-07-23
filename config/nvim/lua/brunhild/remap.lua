@@ -8,7 +8,7 @@ wk.add({
 
     -- telescope
     { "<leader>ff", telescope.find_files, desc = "Telescope find files" },
-    { "<leader>fg", telescope.git_files, desc = "Telescope find git files" },
+    { "<leader>fg", telescope.live_grep, desc = "Telescope grep" },
 
     -- lsp
     { "gd", vim.lsp.buf.definition, desc = "Goto definition" },

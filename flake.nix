@@ -41,7 +41,7 @@
     nixosModules = {
       system = import ./system;
       user = user.module;
-    };
+    } // import ./modules;
 
     nixosConfigurations.wsl = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
