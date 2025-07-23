@@ -2,26 +2,20 @@
 
 add_newline = false
 palette = 'one_dark'
+continuation_prompt = ' '
 
 format = """
 $username\
 $directory\
-$git_branch\
-$git_commit\
-$git_status\
-$git_metrics\
-$git_state\
+${custom.git}\
 $rust\
 $golang\
 $python\
 $package\
-$docker_context\
-$shell\
 $memory_usage\
 $cmd_duration\
-$status\
 $line_break\
-$character\
+$character
 """
 
 [palettes.one_dark]
@@ -64,14 +58,14 @@ color_duration = '#528cff'
 show_always = true
 style_user = "fg:color_username"
 style_root = "bold fg:color_danger"
-format = '[$user ]($style)'
+format = '[$user]($style) '
 
 [directory]
 style = "fg:color_directory"
 read_only_style = "fg:color_directory"
 repo_root_style = "bold fg:color_directory"
-format = "[ $path ]($style)"
-read_only = " "
+format = "[$path]($style) "
+read_only = ""
 home_symbol = "~"
 truncation_symbol = "…/"
 truncation_length = 3
@@ -82,7 +76,7 @@ use_logical_path = true
 [git_branch]
 symbol = ""
 style = "fg:color_git"
-format = '( [$symbol $branch]($style) )'
+format = '([$symbol $branch]($style))'
 only_attached = true
 ignore_branches = []
 truncation_length = 25
@@ -92,7 +86,7 @@ disabled = false
 
 [git_commit]
 style = "fg:color_git"
-format = "( [($tag)(@$hash)]($style) )"
+format = "([($tag)(@$hash)]($style))"
 commit_hash_length = 7
 only_detached = true
 tag_symbol = "󰓼 "
@@ -101,7 +95,7 @@ disabled = false
 
 [git_status]
 style = "fg:color_git"
-format = '([$ahead_behind]($style) )([$all_status]($style) )'
+format = '([$ahead_behind]($style))([$all_status]($style))'
 stashed = "*${count}"
 ahead = "⇡${count}"
 behind = "⇣${count}"
@@ -118,7 +112,7 @@ disabled = false
 
 [git_state]
 style = "fg:color_danger"
-format = '([$state( $progress_current/$progress_total)]($style bold) )'
+format = '([$state($progress_current/$progress_total)]($style bold))'
 rebase = "REBASING"
 merge = "MERGING"
 revert = "REVERTING"
@@ -128,23 +122,47 @@ am = "AM"
 am_or_rebase = "AM/REBASE"
 disabled = false
 
+[custom.git]
+description = "git modules aggregation"
+command = '''
+    starship module git_branch
+    starship module git_commit
+    starship module git_status
+    starship module git_state
+'''
+when = "true"
+format = "[$output](style) "
+require_repo = true
+disabled = false
+
 [memory_usage]
 style = "fg:color_green"
-format = '[${ram}]($style)'
+format = '[${ram}]($style) '
+threshold = -1
 disabled = false
+
+[cmd_duration]
+style = "fg:color_cyan"
+min_time = 0
+show_milliseconds = true
+format = "[$duration](style)"
+
+[character]
+success_symbol = "[❯](fg:color_green)"
+error_symbol = "[❯](fg:color_danger)"
 
 [c]
 symbol = " "
-format = '[ $symbol ($version) ]($style)'
+format = '[$symbol($version)]($style)'
 
 [rust]
 symbol = ""
-format = '[ $symbol ($version) ]($style)'
+format = '[$symbol($version)]($style)'
 
 [golang]
 symbol = ""
-format = '[ $symbol ($version) ]($style)'
+format = '[$symbol($version)]($style)'
 
 [python]
 symbol = " "
-format = '[ $symbol ($version at $virtualenv) ]($style)'
+format = '[$symbol($version)]($style)'
