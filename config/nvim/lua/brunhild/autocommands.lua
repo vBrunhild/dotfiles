@@ -1,4 +1,9 @@
 local minifiles = require("mini.files")
+local minitrailspace = require("mini.trailspace")
+
+local map_to_buffer = function(buffer, lhs, rhs, desc)
+    vim.keymap.set("n", lhs, rhs, { buffer = buffer, desc = desc })
+end
 
 vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
@@ -7,10 +12,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
         end
     end
 })
-
-local map_to_buffer = function(buffer, lhs, rhs, desc)
-    vim.keymap.set("n", lhs, rhs, { buffer = buffer, desc = desc })
-end
 
 vim.api.nvim_create_autocmd("User", {
     pattern = "MiniFilesBufferCreate",
@@ -22,3 +23,9 @@ vim.api.nvim_create_autocmd("User", {
     end
 })
 
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*",
+    callback = function()
+        minitrailspace.trim_last_lines()
+    end
+})
