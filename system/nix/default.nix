@@ -34,7 +34,7 @@
 
   programs.nh = {
     enable = true;
-    flake = "/home/brunhild/dev/dotfiles";
+    flake = "/home/brunhild/dotfiles";
   };
 
   systemd.services.nix-daemon = {
