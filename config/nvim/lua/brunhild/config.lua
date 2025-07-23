@@ -12,8 +12,12 @@ vim.opt.autoindent = true
 vim.opt.smartindent = true
 vim.opt.colorcolumn = "121"
 vim.opt.updatetime = 100
-
-vim.o.completeopt = "menuone,noinsert,noselect"
+vim.opt.scrolloff = 10
+vim.opt.cursorline = true
+vim.opt.cursorlineopt = "number"
+vim.opt.jumpoptions = "stack,view"
+vim.opt.incsearch=true
+vim.opt.fillchars:append(',eob: ')
 
 -- fold stuff
 vim.o.foldmethod = "expr"
