@@ -34,7 +34,8 @@ miniclue.setup({
   },
 
   clues = {
-    -- Enhance this by adding descriptions for <Leader> mapping groups
+    { mode = 'n', keys = '<Leader>f', desc = "+Telescope" },
+    { mode = 'n', keys = '<Leader>l', desc = "+LSP" },
     miniclue.gen_clues.builtin_completion(),
     miniclue.gen_clues.g(),
     miniclue.gen_clues.marks(),
@@ -42,5 +43,8 @@ miniclue.setup({
     miniclue.gen_clues.windows(),
     miniclue.gen_clues.z(),
   },
-})
 
+  window = {
+    delay = 250
+  }
+})
