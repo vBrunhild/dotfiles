@@ -34,7 +34,6 @@ let
         nvim-osc52
         nvim-colorizer-lua
         lsp_lines-nvim
-        trouble-nvim
         nvim-lspconfig
         luasnip
         friendly-snippets

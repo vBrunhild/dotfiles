@@ -5,7 +5,6 @@ require("brunhild.plugins.conform")
 require("brunhild.plugins.dap")
 require("brunhild.plugins.statusline")
 
-require("trouble").setup({})
 require("colorizer").setup({})
 require("guess-indent").setup({})
 require("dap-view").setup({})

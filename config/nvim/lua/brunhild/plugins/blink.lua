@@ -30,6 +30,7 @@ require("blink.cmp").setup({
             border = nil,
             scrolloff = 1,
             scrollbar = false,
+            list = { selection = { preselect = false } },
             draw = {
                 columns = {
                     { "kind_icon" },
