@@ -17,5 +17,13 @@ map("n", "<leader>ff", telescope.find_files, { desc = "Telescope find files" })
 map("n", "<leader>fg", telescope.live_grep, { desc = "Telescope grep" })
 map("n", "<leader>fb", telescope.buffers, { desc = "Telescope find buffers" })
 
--- navigation
-map("n", "<A-Left>", "<C-w>h", { desc = "Move to left split" })
+-- lsp
+map("n", "<leader>ld", vim.lsp.buf.definition, { desc = "LSP goto definition" })
+map("n", "<Leader>lv", "<cmd>vsplit | lua vim.lsp.buf.definition()<cr>", { desc = "LSP goto definition in vertical split" })
+map("n", "<Leader>lr", vim.lsp.buf.rename, { desc = "LSP rename" })
+
+-- navigation / hjkl wtf?
+map("n", "<A-Left>", "<cmd>ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
+map("n", "<A-Right>", "<cmd>ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
+map("n", "<A-Up>", "<cmd>ZellijNavigateUp<cr>", { desc = "Navigate up" })
+map("n", "<A-Down>", "<cmd>ZellijNavigateDown<cr>", { desc = "Navigate down" })
