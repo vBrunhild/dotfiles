@@ -11,7 +11,6 @@ ${custom.git}\
 $rust\
 $golang\
 $python\
-$package\
 $memory_usage\
 $cmd_duration\
 $line_break\
@@ -153,16 +152,16 @@ error_symbol = "[❯](fg:color_danger)"
 
 [c]
 symbol = " "
-format = '[$symbol($version)]($style)'
+format = '[$symbol ($version)]($style)'
 
 [rust]
 symbol = ""
-format = '[$symbol($version)]($style)'
+format = '[$symbol ($version)]($style)'
 
 [golang]
 symbol = ""
-format = '[$symbol($version)]($style)'
+format = '[$symbol ($version)]($style)'
 
 [python]
 symbol = " "
-format = '[$symbol($version)]($style)'
+format = '[$symbol ($version)]($style)'
