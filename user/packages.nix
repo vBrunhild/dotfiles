@@ -22,6 +22,7 @@ in {
       ripgrep
       fd
       wezterm
+      zellij
     ;
   } ++ [inputs.zen-browser.packages.${pkgs.system}.default];
 }

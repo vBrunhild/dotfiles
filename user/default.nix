@@ -4,7 +4,7 @@ rec
     inherit (pkgs) callPackage;
   in {
     neovim = callPackage ./wrapped/neovim.nix {};
-    zellij = callPackage ./wrapped/zellij.nix {};
+    zellijPlugins = callPackage ./wrapped/zellij-plugins.nix {};
     fish = pkgs.fish;
   };
 
@@ -35,6 +35,9 @@ rec
           SHELL = "${pkgs.fish}/bin/fish";
           RIPGREP_CONFIG_PATH = "$HOME/.config/ripgrep/.ripgreprc";
         };
+        pathsToLink = [ 
+          "/share/zellij-plugins"
+        ];
       };
 
       programs.fish.enable = true;
