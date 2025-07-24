@@ -1,7 +1,7 @@
 require("brunhild.config")
 require("brunhild.colors")
-require("brunhild.remap")
+require("brunhild.keymaps")
 require("brunhild.plugins")
 require("brunhild.clipboard")
 require("brunhild.autocommands")
-
+require("brunhild.commands")
