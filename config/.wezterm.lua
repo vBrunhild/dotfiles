@@ -6,7 +6,5 @@ return {
     color_scheme = 'One Dark (Gogh)',
     font = wezterm.font_with_fallback { 'JetBrains Mono', 'Noto Emoji' },
     font_size = 9.2,
-    enable_tab_bar = false,
-    window_state = 'FullScreen'
+    enable_tab_bar = false
 }
-
