@@ -22,6 +22,7 @@ in {
       uutils-coreutils-noprefix
       ripgrep
       fd
+      wezterm
     ;
   } ++ [inputs.zen-browser.packages.${pkgs.system}.default];
 }
