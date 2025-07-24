@@ -257,14 +257,21 @@ plugins {
     welcome-screen location="zellij:session-manager" {
         welcome_screen true
     }
+    autolock location="file:/run/current-system/sw/share/zellij-plugins/zellij-autolock.wasm" {
+        is_enable true
+        triggers "nvim"
+        reaction_seconds "0.3"
+        print_to_log true
+    }
 }
 
 // Plugins to load in the background when a new session starts
 // eg. "file:/path/to/my-plugin.wasm"
 // eg. "https://example.com/my-plugin.wasm"
 load_plugins {
+    autolock
 }
- 
+
 // Use a simplified UI without special fonts (arrow glyphs)
 // Options:
 //   - true
