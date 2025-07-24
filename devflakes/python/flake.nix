@@ -23,6 +23,7 @@
         default = pkgs.mkShell {
           buildInputs = [
             pkgs.uv
+            pkgs.basedpyright
           ];
         };
       }

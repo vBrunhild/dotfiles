@@ -2,16 +2,10 @@
 let
   inherit (builtins) attrValues;
 
-  lspPackages = [
-    pkgs.gopls
-    pkgs.golangci-lint
-    pkgs.golangci-lint-langserver
-    pkgs.go-tools
-    pkgs.rust-analyzer
+  lspPackages = [ 
     pkgs.lua-language-server
     pkgs.nil
     pkgs.nixd
-    pkgs.basedpyright
     pkgs.taplo
     pkgs.dprint
     pkgs.dprint-plugins.dprint-plugin-json

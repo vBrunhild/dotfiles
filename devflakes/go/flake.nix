@@ -23,6 +23,10 @@
             pkgs.go
             pkgs.delve
             pkgs.air
+            pkgs.gopls
+            pkgs.golangci-lint
+            pkgs.golangci-lint-langserver
+            pkgs.go-tools         
           ];
         };
       }

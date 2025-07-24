@@ -22,6 +22,7 @@
           buildInputs = [
             pkgs.rustc
             pkgs.cargo
+            pkgs.rust-analyzer
             pkgs.clippy
             pkgs.bacon
           ];
