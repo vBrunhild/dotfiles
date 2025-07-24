@@ -24,7 +24,7 @@ map("n", "<Leader>lv", "<cmd>vsplit | lua vim.lsp.buf.definition()<cr>", { desc 
 map("n", "<Leader>lr", vim.lsp.buf.rename, { desc = "LSP rename" })
 
 -- navigation / hjkl wtf?
--- map("n", "<A-Left>", "<cmd>ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
--- map("n", "<A-Right>", "<cmd>ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
--- map("n", "<A-Up>", "<cmd>ZellijNavigateUp<cr>", { desc = "Navigate up" })
--- map("n", "<A-Down>", "<cmd>ZellijNavigateDown<cr>", { desc = "Navigate down" })
+map("n", "<A-Left>", "<cmd>ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
+map("n", "<A-Right>", "<cmd>ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
+map("n", "<A-Up>", "<cmd>ZellijNavigateUp<cr>", { desc = "Navigate up" })
+map("n", "<A-Down>", "<cmd>ZellijNavigateDown<cr>", { desc = "Navigate down" })
