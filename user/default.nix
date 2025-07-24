@@ -26,7 +26,12 @@ rec
   module = { pkgs, ... }:
   {
     config = {
-      environment.systemPackages = builtins.attrValues (packages pkgs);
+      environment = {
+        systemPackages = builtins.attrValues (packages pkgs);
+        sessionVariables = {
+          RIPGREP_CONFIG_PATH = "$HOME/.config/ripgrep/.ripgreprc";
+        };
+      };
 
       programs.fish.enable = true;
       programs.direnv = {

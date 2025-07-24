@@ -1,3 +1,0 @@
-require("mini.statusline").setup({
-    
-})

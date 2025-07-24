@@ -1,5 +1,5 @@
 require("blink.cmp").setup({
-    snippets = { preset = "luasnip" },
+    snippets = { preset = "mini_snippets" },
     signature = { enabled = true },
     appearance = {
         use_nvim_cmp_as_default = false,
@@ -51,4 +51,3 @@ require("blink.cmp").setup({
         }
     }
 })
-

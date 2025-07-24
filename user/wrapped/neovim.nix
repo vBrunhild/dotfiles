@@ -28,14 +28,9 @@ let
     plugins = (attrValues {
       inherit (pkgs.vimPlugins)
         onedarkpro-nvim
-        telescope-nvim
-        undotree
-        gitsigns-nvim
         nvim-osc52
         nvim-colorizer-lua
-        lsp_lines-nvim
         nvim-lspconfig
-        luasnip
         friendly-snippets
         blink-cmp
         conform-nvim
@@ -44,7 +39,6 @@ let
         nvim-dap
         nvim-dap-view
         zellij-nav-nvim
-        obsidian-nvim
         mini-icons
         mini-comment
         mini-keymap
@@ -58,6 +52,10 @@ let
         mini-indentscope
         mini-splitjoin
         mini-surround
+        mini-pick
+        mini-extra
+        mini-hipatterns
+        mini-snippets
       ;
     }) ++ [
       pkgs.vimPlugins.nvim-treesitter.withAllGrammars
@@ -70,4 +68,3 @@ in
       (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig)
     ] ++ lspPackages;
   }
-
