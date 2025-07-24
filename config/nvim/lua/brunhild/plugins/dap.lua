@@ -39,10 +39,21 @@ dap.configurations.go = {
     },
     {
         type = 'delve',
-        name = 'Debug test (go.mod)',
+        name = 'Debug (go.mod)',
         request = 'launch',
-        mode = 'test',
         program = "./${relativeFileDirname}"
+    },
+    {
+        type = 'delve',
+        name = 'Debug with args (go.mod)',
+        request = 'launch',
+        program = "./${relativeFileDirname}",
+        args = function()
+            local input = vim.fn.input("Executable args: ", '', 'file')
+            if input and input ~= '' then
+                return vim.split(input, '%s+')
+            end
+            return {}
+        end
     }
 }
-
