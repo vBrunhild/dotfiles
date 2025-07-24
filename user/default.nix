@@ -4,6 +4,7 @@ rec
     inherit (pkgs) callPackage;
   in {
     neovim = callPackage ./wrapped/neovim.nix {};
+    zellij = callPackage ./wrapped/zellij.nix {};
     fish = pkgs.fish;
   };
 
@@ -29,6 +30,9 @@ rec
       environment = {
         systemPackages = builtins.attrValues (packages pkgs);
         sessionVariables = {
+          EDITOR = "nvim";
+          VISUAL = "nvim";
+          SHELL = "${pkgs.fish}/bin/fish";
           RIPGREP_CONFIG_PATH = "$HOME/.config/ripgrep/.ripgreprc";
         };
       };

@@ -13,7 +13,6 @@ in {
       curl
       direnv
       fish
-      zellij
       docker
       gitui
       yazi
