@@ -10,6 +10,7 @@ end
 
 map("n", "<leader> ", minifiles_toggle, { desc = "Open explorer" })
 map("n", "gd", vim.lsp.buf.definition, { desc = "Goto definition" })
+map("n", "<C-a>", "ggVG", { desc = "Select all" })
 
 -- find
 map("n", "<leader>ff", "<cmd>lua MiniPick.builtin.files({ tool = 'rg' })<cr>", { desc = "Find files" })
@@ -20,11 +21,19 @@ map("n", "<leader>fd", "<cmd>lua MiniExtra.pickers.diagnostic()", { desc = "Find
 
 -- lsp
 map("n", "<leader>ld", vim.lsp.buf.definition, { desc = "LSP goto definition" })
-map("n", "<Leader>lv", "<cmd>vsplit | lua vim.lsp.buf.definition()<cr>", { desc = "LSP goto definition in vertical split" })
+map("n", "<Leader>lv", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", { desc = "LSP goto definition in vertical split" })
 map("n", "<Leader>lr", vim.lsp.buf.rename, { desc = "LSP rename" })
+map("n", "<leader>lh", vim.lsp.buf.hover, { desc = "LSP hover" })
+map("n", "<leader>la", vim.lsp.buf.code_action, { desc = "LSP code action" })
 
 -- navigation / hjkl wtf?
 map("n", "<A-Left>", "<cmd>ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
 map("n", "<A-Right>", "<cmd>ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
 map("n", "<A-Up>", "<cmd>ZellijNavigateUp<cr>", { desc = "Navigate up" })
 map("n", "<A-Down>", "<cmd>ZellijNavigateDown<cr>", { desc = "Navigate down" })
+map("n", "<C-Left>", ":bnext<CR>", { desc = "Next buffer" })
+map("n", "<C-Right>", ":bprevious<CR>", { desc = "Previous buffer" })
+
+-- the solution to my indentation problems
+map("v", "<", "<gv")
+map("v", ">", ">gv")
