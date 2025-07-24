@@ -1,20 +1,9 @@
-local telescope = require("telescope.builtin")
 local minifiles = require("mini.files")
 local minitrailspace = require("mini.trailspace")
 
 local map_to_buffer = function(buffer, lhs, rhs, desc)
     vim.keymap.set("n", lhs, rhs, { buffer = buffer, desc = desc })
 end
-
--- Supposed to open vim with Telescope but somehow doesn't work?
-vim.api.nvim_create_autocmd("VimEnter", {
-    callback = function()
-        if vim.fn.argv(0) == "" then
-            -- minifiles.close() DOESN'T WORK!
-            telescope.find_files()
-        end
-    end
-})
 
 -- This lets me navigate minifiles hjkl is stupid
 vim.api.nvim_create_autocmd("User", {
