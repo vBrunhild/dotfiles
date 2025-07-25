@@ -30,9 +30,6 @@ rec
       environment = {
         systemPackages = builtins.attrValues (packages pkgs);
         sessionVariables = {
-          EDITOR = "nvim";
-          VISUAL = "nvim";
-          SHELL = "${pkgs.fish}/bin/fish";
           RIPGREP_CONFIG_PATH = "$HOME/.config/ripgrep/.ripgreprc";
         };
         pathsToLink = [ 
@@ -40,7 +37,17 @@ rec
         ];
       };
 
-      programs.fish.enable = true;
+      programs.fish = { 
+        enable = true;
+        interactiveShellInit = ''
+          set fish_greeting 
+        '';
+        shellInit = ''
+          starship init fish | source
+          zoxide init fish | source
+        '';
+      };
+
       programs.direnv = {
         enable = true;
         enableFishIntegration = true;
