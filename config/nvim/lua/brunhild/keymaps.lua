@@ -1,4 +1,6 @@
 local minifiles = require("mini.files")
+local origami = require("origami")
+local substitute = require("substitute")
 
 local map = vim.keymap.set
 
@@ -11,6 +13,8 @@ end
 map("n", "<leader> ", minifiles_toggle, { desc = "Open explorer" })
 map("n", "gd", vim.lsp.buf.definition, { desc = "Goto definition" })
 map("n", "<C-a>", "ggVG", { desc = "Select all" })
+map("n", "<Left>", function() origami.h() end)
+map("n", "<Right>", function() origami.l() end)
 
 -- find
 map("n", "<leader>ff", "<cmd>lua MiniPick.builtin.files({ tool = 'rg' })<cr>", { desc = "Find files" })
@@ -33,6 +37,16 @@ map("n", "<A-Up>", "<cmd>ZellijNavigateUp<cr>", { desc = "Navigate up" })
 map("n", "<A-Down>", "<cmd>ZellijNavigateDown<cr>", { desc = "Navigate down" })
 map("n", "<C-Left>", ":bnext<CR>", { desc = "Next buffer" })
 map("n", "<C-Right>", ":bprevious<CR>", { desc = "Previous buffer" })
+
+-- substitute
+map("n", "s", substitute.operator, { desc = "Substitution operator" })
+map("n", "ss", substitute.line, { desc = "Substitute line" })
+map("n", "S", substitute.eol, { desc = "Substitute eol" })
+map("x", "s", substitute.visual, { desc = "Substitute visual" })
+
+-- git
+map("n", "<leader>gs", ":lua MiniGit.show_at_cursor()<cr>", { desc = "Git show" })
+map("n", "<leader>gb", ":vertical Git blame -- %<cr>", { desc = "Git blame" })
 
 -- the solution to my indentation problems
 map("v", "<", "<gv")

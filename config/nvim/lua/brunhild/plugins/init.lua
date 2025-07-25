@@ -5,6 +5,8 @@ require("brunhild.plugins.miniclue")
 require("brunhild.plugins.treesitter")
 require("brunhild.plugins.conform")
 require("brunhild.plugins.dap")
+require("brunhild.plugins.origami")
+require("brunhild.plugins.substitute")
 
 require("colorizer").setup()
 require("guess-indent").setup()

@@ -33,6 +33,8 @@ let
         nvim-dap
         nvim-dap-view
         zellij-nav-nvim
+        nvim-origami
+        substitute-nvim
         mini-icons
         mini-comment
         mini-keymap

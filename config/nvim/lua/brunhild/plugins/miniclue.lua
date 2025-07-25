@@ -34,8 +34,9 @@ miniclue.setup({
   },
 
   clues = {
-    { mode = 'n', keys = '<Leader>f', desc = "+Telescope" },
+    { mode = 'n', keys = '<Leader>f', desc = "+Picker" },
     { mode = 'n', keys = '<Leader>l', desc = "+LSP" },
+    { mode = 'n', keys = '<Leader>g', desc = "+Git" },
     miniclue.gen_clues.builtin_completion(),
     miniclue.gen_clues.g(),
     miniclue.gen_clues.marks(),

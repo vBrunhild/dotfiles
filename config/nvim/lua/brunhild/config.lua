@@ -19,10 +19,8 @@ vim.opt.jumpoptions = "stack,view"
 vim.opt.incsearch=true
 vim.opt.fillchars:append(',eob: ')
 
--- fold stuff
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "v:lua.vim.lsp.foldexpr()"
 vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
 
 vim.diagnostic.config({
     virtual_text = false,
@@ -49,4 +47,3 @@ vim.lsp.enable({
 })
 
 vim.lsp.inlay_hint.enable(true)
-
