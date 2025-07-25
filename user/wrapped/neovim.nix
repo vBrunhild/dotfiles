@@ -47,7 +47,6 @@ let
         mini-trailspace
         mini-indentscope
         mini-splitjoin
-        mini-surround
         mini-pick
         mini-extra
         mini-hipatterns
