@@ -44,3 +44,17 @@ vim.api.nvim_create_autocmd('User', {
         vim.wo[win_src].scrollbind, vim.wo.scrollbind = true, true
     end
 })
+
+-- Easy close
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = {
+        "help",
+        "man",
+        "checkhealth"
+    },
+    callback = function (event)
+        vim.bo[event.buf].buflisted = false
+        map_to_buffer(event.buf, "q", ":close<Cr>", "Close")
+        map_to_buffer(event.buf, "<Esc>", ":close<Cr>", "Close")
+    end
+})
