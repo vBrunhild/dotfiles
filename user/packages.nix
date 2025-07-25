@@ -15,12 +15,10 @@ in {
       fish
       docker
       gitui
-      yazi
       starship
       zoxide
       uutils-coreutils-noprefix
       ripgrep
-      fd
       wezterm
       zellij
     ;
