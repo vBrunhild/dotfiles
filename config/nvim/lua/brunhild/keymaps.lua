@@ -1,9 +1,11 @@
 local minifiles = require("mini.files")
 local origami = require("origami")
 local substitute = require("substitute")
+local spider = require("spider")
 
 local map = vim.keymap.set
 
+-- leader
 vim.g.mapleader = " "
 
 local minifiles_toggle = function()
@@ -11,24 +13,23 @@ local minifiles_toggle = function()
 end
 
 map("n", "<leader> ", minifiles_toggle, { desc = "Open explorer" })
-map("n", "gd", vim.lsp.buf.definition, { desc = "Goto definition" })
-map("n", "<C-a>", "ggVG", { desc = "Select all" })
-map("n", "<Left>", function() origami.h() end)
-map("n", "<Right>", function() origami.l() end)
+map({ "n", "x", "v" }, "<leader>y", '"+y<cr>', { desc = "Yank to clipboard" })
 
 -- find
 map("n", "<leader>ff", ":lua MiniPick.builtin.files({ tool = 'rg' })<cr>", { desc = "Find files" })
 map("n", "<leader>fg", ":lua MiniPick.builtin.grep_live({ tool = 'rg' })<cr>", { desc = "Find grep" })
 map("n", "<leader>fb", ":lua MiniPick.builtin.buffers()<cr>", { desc = "Find buffers" })
 map("n", "<leader>fh", ":lua MiniExtra.pickers.git_hunks()<cr>", { desc = "Find hunks" })
-map("n", "<leader>fd", ":lua MiniExtra.pickers.diagnostic()", { desc = "Find diagnostics" })
+map("n", "<leader>fd", ":lua MiniExtra.pickers.diagnostic()<cr>", { desc = "Find diagnostics" })
+map("n", "<leader>fv", ":lua MiniPick.builtin.help({ tool = 'rg' })<cr>", { desc = "Find vim help"})
 
 -- lsp
 map("n", "<leader>ld", vim.lsp.buf.definition, { desc = "LSP goto definition" })
-map("n", "<Leader>lv", ":vsplit | lua vim.lsp.buf.definition()<CR>", { desc = "LSP goto definition in vertical split" })
-map("n", "<Leader>lr", vim.lsp.buf.rename, { desc = "LSP rename" })
+map("n", "<leader>lv", ":vsplit | lua vim.lsp.buf.definition()<CR>", { desc = "LSP goto definition in vertical split" })
+map("n", "<leader>lr", vim.lsp.buf.rename, { desc = "LSP rename" })
 map("n", "<leader>lh", vim.lsp.buf.hover, { desc = "LSP hover" })
 map("n", "<leader>la", vim.lsp.buf.code_action, { desc = "LSP code action" })
+map("n", "<leader>lf", vim.lsp.buf.format, { desc = "LSP format" })
 
 -- navigation / hjkl wtf?
 map("n", "<A-Left>", ":ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
@@ -56,5 +57,8 @@ map({ "n", "o", "x" }, "e", function() spider.motion("e") end)
 map({ "n", "o", "x" }, "b", function() spider.motion("b") end)
 
 -- general
+map({ "n", "o", "x" }, "<C-a>", "ggVG", { desc = "Select all" })
+map({ "n", "o", "x" }, "<Left>", origami.h)
+map({ "n", "o", "x" }, "<Right>", origami.l)
 map("v", "<", "<gv")
 map("v", ">", ">gv")
