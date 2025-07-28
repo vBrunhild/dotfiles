@@ -5,4 +5,5 @@
 --smart-case
 
 --glob=!.git/*
+--glob=!**/__pycache__/
 --colors=line:style:bold
