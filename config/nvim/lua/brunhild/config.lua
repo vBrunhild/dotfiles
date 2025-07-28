@@ -1,26 +1,27 @@
 vim.loader.enable()
 
-vim.wo.relativenumber = true
-vim.wo.signcolumn = "yes"
-
--- indentation stuff
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
-vim.opt.autoindent = true
-vim.opt.smartindent = true
-vim.opt.colorcolumn = "121"
-vim.opt.updatetime = 100
-vim.opt.scrolloff = 10
-vim.opt.cursorline = true
-vim.opt.cursorlineopt = "number"
-vim.opt.jumpoptions = "stack,view"
-vim.opt.incsearch=true
-vim.opt.fillchars:append(',eob: ')
-
+vim.o.signcolumn = "yes"
+-- vim.o.number = true
+vim.o.relativenumber = true
+vim.o.tabstop = 4
+vim.o.softtabstop = 4
+vim.o.shiftwidth = 4
+vim.o.expandtab = true
+vim.o.autoindent = true
+vim.o.smartindent = true
+vim.o.colorcolumn = "121"
+vim.o.updatetime = 100
+vim.o.scrolloff = 10
+vim.o.cursorline = true
+vim.o.cursorlineopt = "number"
+vim.o.jumpoptions = "stack,view"
+vim.o.incsearch = true
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
+vim.o.wrap = false
+vim.o.winborder = "rounded"
+
+vim.opt.fillchars:append(",eob: ")
 
 vim.diagnostic.config({
     virtual_text = false,
@@ -29,11 +30,11 @@ vim.diagnostic.config({
     --update_in_insert = false,
     severity_sort = true,
     float = {
-        border = "rounded",
         source = true
     }
 })
 
+-- lsp
 vim.lsp.enable({
     "basedpyright",
     "gopls",
@@ -43,7 +44,8 @@ vim.lsp.enable({
     "rust_analyzer",
     "lua_ls",
     "taplo",
-    "dprint"
+    "dprint",
+    "tinymist"
 })
 
 vim.lsp.inlay_hint.enable(true)
