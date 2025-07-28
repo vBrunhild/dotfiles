@@ -50,6 +50,11 @@ map("x", "s", substitute.visual, { desc = "Substitute visual" })
 map("n", "<leader>gs", ":lua MiniGit.show_at_cursor()<cr>", { desc = "Git show" })
 map("n", "<leader>gb", ":vertical Git blame -- %<cr>", { desc = "Git blame" })
 
--- the solution to my indentation problems
+-- spider
+map({ "n", "o", "x" }, "w", function() spider.motion("w") end)
+map({ "n", "o", "x" }, "e", function() spider.motion("e") end)
+map({ "n", "o", "x" }, "b", function() spider.motion("b") end)
+
+-- general
 map("v", "<", "<gv")
 map("v", ">", ">gv")

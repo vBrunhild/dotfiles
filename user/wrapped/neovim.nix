@@ -35,6 +35,7 @@ let
         zellij-nav-nvim
         nvim-origami
         substitute-nvim
+        nvim-spider
         mini-icons
         mini-comment
         mini-keymap
