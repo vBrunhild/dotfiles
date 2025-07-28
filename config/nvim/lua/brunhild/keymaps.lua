@@ -15,6 +15,14 @@ end
 map("n", "<leader> ", minifiles_toggle, { desc = "Open explorer" })
 map({ "n", "x", "v" }, "<leader>y", '"+y<cr>', { desc = "Yank to clipboard" })
 
+-- write
+map("n", "<leader>ww", ":w<cr>", { desc = "Write" })
+map("n", "<leader>W", ":w!<cr>", { desc = "Write force" })
+map("n", "<leader>wd", ":w<cr>:bd<cr>", { desc = "Write close" })
+
+-- buffers
+map("n", "<leader>bd", ":bd<cr>", { desc = "Buffer delete" })
+
 -- find
 map("n", "<leader>ff", ":lua MiniPick.builtin.files({ tool = 'rg' })<cr>", { desc = "Find files" })
 map("n", "<leader>fg", ":lua MiniPick.builtin.grep_live({ tool = 'rg' })<cr>", { desc = "Find grep" })
