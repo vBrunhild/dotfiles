@@ -11,7 +11,12 @@ require("blink.cmp").setup({
     cmdline = {
         completion = {
             menu = { auto_show = true },
-            list = { selection = { preselect = false } }
+            list = {
+                selection = {
+                    preselect = false,
+                    auto_insert = false
+                }
+            }
         },
         keymap = {
             ["<CR>"] = { "accept_and_enter", "fallback" }
@@ -21,16 +26,20 @@ require("blink.cmp").setup({
         default = { "lsp", "path", "snippets", "buffer" },
         providers = {
             cmdline = {
-                min_keyword_length = 2
+                min_keyword_length = 0
             }
         },
     },
     completion = {
         menu = {
-            border = nil,
             scrolloff = 1,
             scrollbar = false,
-            list = { selection = { preselect = false } },
+            list = {
+                selection = {
+                    preselect = false,
+                    auto_insert = false
+                }
+            },
             draw = {
                 columns = {
                     { "kind_icon" },
@@ -40,7 +49,6 @@ require("blink.cmp").setup({
                 }
             }
         },
-
         documentation = {
             window = {
                 scrollbar = false,
@@ -49,5 +57,9 @@ require("blink.cmp").setup({
             auto_show = true,
             auto_show_delay_ms = 500
         }
+    },
+    fuzzy = {
+        implementation = "prefer_rust_with_warning",
+        sorts = { "exact", "score", "sort_text" }
     }
 })
