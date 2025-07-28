@@ -45,7 +45,8 @@ vim.lsp.enable({
     "lua_ls",
     "taplo",
     "dprint",
-    "tinymist"
+    "tinymist",
+    "groovyls"
 })
 
 vim.lsp.inlay_hint.enable(true)
