@@ -27,7 +27,9 @@ return {
 
             workspace = {
                 library = {
-                    vim.env.VIMRUNTIME
+                    vim.env.VIMRUNTIME,
+                    "lua",
+                    "${3rd}/luv/library"
                 },
 
                 checkThirdParty = false
@@ -35,4 +37,3 @@ return {
         }
     }
 }
-
