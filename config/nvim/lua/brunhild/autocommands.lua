@@ -55,6 +55,15 @@ vim.api.nvim_create_autocmd("FileType", {
     callback = function (event)
         vim.bo[event.buf].buflisted = false
         map_to_buffer(event.buf, "q", ":close<Cr>", "Close")
-        map_to_buffer(event.buf, "<Esc>", ":close<Cr>", "Close")
+    end
+})
+
+-- Start linter on opening or saving file
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
+    pattern = "*.groovy",
+    callback = function()
+        require("lint").try_lint()
+        vim.api.nvim_create_user_command("GroovyLintFix", "silent !npm-groovy-lint --fix %", {})
+        vim.api.nvim_create_user_command("GroovyLintFormat", "silent !npm-groovy-lint --format %", {})
     end
 })

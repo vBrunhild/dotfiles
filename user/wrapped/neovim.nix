@@ -29,6 +29,7 @@ let
         blink-cmp
         conform-nvim
         guess-indent-nvim
+        nvim-lint
         nvim-nio
         nvim-dap
         nvim-dap-view

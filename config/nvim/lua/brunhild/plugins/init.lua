@@ -7,6 +7,7 @@ require("brunhild.plugins.conform")
 require("brunhild.plugins.dap")
 require("brunhild.plugins.origami")
 require("brunhild.plugins.substitute")
+require("brunhild.plugins.lint")
 
 require("colorizer").setup()
 require("guess-indent").setup()
