@@ -44,10 +44,6 @@ map("n", "<A-Left>", ":ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
 map("n", "<A-Right>", ":ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
 map("n", "<A-Up>", ":ZellijNavigateUp<cr>", { desc = "Navigate up" })
 map("n", "<A-Down>", ":ZellijNavigateDown<cr>", { desc = "Navigate down" })
-map("n", "<C-Left>", ":bnext<CR>", { desc = "Next buffer" })
-map("n", "<C-Right>", ":bprevious<CR>", { desc = "Previous buffer" })
-map("n", "<C-Left>", ":silent bnext<CR>", { desc = "Next buffer" })
-map("n", "<C-Right>", ":silent bprevious<CR>", { desc = "Previous buffer" })
 
 -- substitute
 map("n", "s", substitute.operator, { desc = "Substitution operator" })
