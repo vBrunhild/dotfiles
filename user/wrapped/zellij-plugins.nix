@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   inherit (pkgs) fetchurl;
   inherit (pkgs.stdenv) mkDerivation;
 

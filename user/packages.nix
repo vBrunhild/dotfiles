@@ -1,11 +1,14 @@
-{ pkgs, inputs, ... }:
-let
-  inherit (builtins) attrValues;
-in
 {
+  pkgs,
+  inputs,
+  ...
+}: let
+  inherit (builtins) attrValues;
+in {
   environment.systemPackages =
     attrValues {
-      inherit (pkgs)
+      inherit
+        (pkgs)
         nh
         stow
         gcc
@@ -26,5 +29,5 @@ in
         bottom
         ;
     }
-    ++ [ inputs.zen-browser.packages.${pkgs.system}.default ];
+    ++ [inputs.zen-browser.packages.${pkgs.system}.default];
 }

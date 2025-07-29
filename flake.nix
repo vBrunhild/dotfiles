@@ -9,8 +9,11 @@
     };
   };
 
-  outputs = inputs @ { nixpkgs, self, ... }:
-  let
+  outputs = inputs @ {
+    nixpkgs,
+    self,
+    ...
+  }: let
     user = import ./user;
 
     forAllSystems = nixpkgs.lib.genAttrs [
@@ -35,28 +38,33 @@
     devShells = forAllSystems (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
-      in { default = user.shell pkgs; }
+      in {default = user.shell pkgs;}
     );
 
-    nixosModules = {
-      system = import ./system;
-      user = user.module;
-    } // import ./modules;
+    nixosModules =
+      {
+        system = import ./system;
+        user = user.module;
+      }
+      // import ./modules;
 
     nixosConfigurations.wsl = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
 
-      modules = [
-        inputs.nixos-wsl.nixosModules.default {
-          wsl = {
-            enable = true;
-            wslConf.automount.root = "/mnt";
-            defaultUser = "brunhild";
-          };
+      modules =
+        [
+          inputs.nixos-wsl.nixosModules.default
+          {
+            wsl = {
+              enable = true;
+              wslConf.automount.root = "/mnt";
+              defaultUser = "brunhild";
+            };
 
-          system.stateVersion = "24.11";
-        }
-      ] ++ builtins.attrValues self.nixosModules;
+            system.stateVersion = "24.11";
+          }
+        ]
+        ++ builtins.attrValues self.nixosModules;
 
       specialArgs = {
         inherit inputs;

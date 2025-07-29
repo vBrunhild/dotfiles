@@ -1,5 +1,4 @@
-rec
-{
+rec {
   packages = pkgs: let
     inherit (pkgs) callPackage;
   in {
@@ -16,31 +15,26 @@ rec
       '';
 
       buildInputs = builtins.attrValues {
-        inherit
-          (packages pkgs)
-          neovim
-          fish
-        ;
+        inherit (packages pkgs) neovim fish;
       };
     };
 
-  module = { pkgs, ... }:
-  {
+  module = {pkgs, ...}: {
     config = {
       environment = {
         systemPackages = builtins.attrValues (packages pkgs);
-        sessionVariables = {
+        variables = {
           RIPGREP_CONFIG_PATH = "$HOME/.config/ripgrep/.ripgreprc";
+          EDITOR = "nvim";
+          VISUAL = "nvim";
         };
-        pathsToLink = [ 
-          "/share/zellij-plugins"
-        ];
+        pathsToLink = ["/share/zellij-plugins"];
       };
 
-      programs.fish = { 
+      programs.fish = {
         enable = true;
         interactiveShellInit = ''
-          set fish_greeting 
+          set fish_greeting
         '';
         shellInit = ''
           starship init fish | source
