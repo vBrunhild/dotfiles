@@ -6,6 +6,7 @@ let
     pkgs.lua-language-server
     pkgs.nil
     pkgs.nixd
+    pkgs.alejandra
     pkgs.taplo
     pkgs.dprint
     pkgs.dprint-plugins.dprint-plugin-json
