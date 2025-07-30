@@ -10,7 +10,7 @@ vim.o.expandtab = true
 vim.o.autoindent = true
 vim.o.smartindent = true
 vim.o.colorcolumn = "121"
-vim.o.updatetime = 100
+-- vim.o.updatetime = 100
 vim.o.scrolloff = 10
 vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
@@ -21,7 +21,8 @@ vim.o.foldlevelstart = 99
 vim.o.wrap = false
 vim.o.winborder = "rounded"
 vim.o.termguicolors = true
-
+vim.o.splitright = true
+vim.o.mouse = ""
 vim.opt.fillchars:append(",eob: ")
 
 vim.diagnostic.config({

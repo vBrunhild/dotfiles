@@ -10,7 +10,7 @@ local minifiles_toggle = function()
 end
 
 map("n", "<leader> ", minifiles_toggle, { desc = "Open explorer" })
-map({ "n", "x", "v" }, "<leader>y", '"+y<cr>', { desc = "Yank to clipboard" })
+map({ "n", "x", "v" }, "Y", '"+y', { desc = "Yank to clipboard" })
 
 -- force me to use hjkl
 map({ "n", "x" }, "<Up>", "<Nop>", { silent = true, desc = "Disable Up arrow" })
@@ -20,7 +20,7 @@ map({ "n", "x" }, "<Right>", "<Nop>", { silent = true, desc = "Disable Right arr
 
 -- write
 map("n", "<leader>ww", ":w<cr>", { desc = "Write" })
-map("n", "<leader>wd", ":w<cr>:lua MiniBufremove.delete()<cr>", { desc = "Write close" })
+map("n", "<leader>wd", ":w<cr>:lua MiniBufremove.delete()<cr>", { desc = "Write buf delete" })
 map("n", "<leader>wq", ":wqa<cr>", { desc = "Write quit" })
 
 -- buffers
@@ -49,8 +49,10 @@ map({ "n", "i" }, "<A-k>", ":ZellijNavigateUp<cr>", { desc = "Navigate up" })
 map({ "n", "i" }, "<A-l>", ":ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
 
 -- git
-map("n", "<leader>gs", ":lua MiniGit.show_at_cursor()<cr>", { desc = "Git show" })
+map("n", "<leader>gh", ":lua MiniGit.show_at_cursor()<cr>", { desc = "Git history" })
 map("n", "<leader>gb", ":vertical Git blame -- %<cr>", { desc = "Git blame" })
+map("n", "<leader>gd", ":vertical Git diff -- %<cr>", { desc = "Git diff" })
+map("n", "<leader>gs", ":vertical Git status<cr>", { desc = "Git status" })
 
 -- general
 map({ "n", "o", "x" }, "<C-a>", "ggVG", { desc = "Select all" })

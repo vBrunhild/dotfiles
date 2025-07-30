@@ -37,6 +37,10 @@ miniclue.setup({
         { mode = 'x', keys = '[' },
         { mode = 'n', keys = ']' },
         { mode = 'x', keys = ']' },
+
+        -- surround
+        { mode = 'n', keys = 's' },
+        { mode = 'x', keys = 's' },
     },
 
     clues = {

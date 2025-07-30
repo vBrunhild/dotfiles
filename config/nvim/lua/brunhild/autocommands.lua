@@ -1,7 +1,8 @@
 local minitrailspace = require("mini.trailspace")
 
-local map_to_buffer = function(buffer, lhs, rhs, desc)
-    vim.keymap.set("n", lhs, rhs, { buffer = buffer, desc = desc })
+local buf_easy_close = function(buf)
+    vim.bo[buf].buflisted = false
+    vim.keymap.set("n", "q", ":close<cr>", { buffer = buf, silent = true })
 end
 
 -- Auto trim last lines on bw
@@ -17,13 +18,14 @@ vim.api.nvim_create_autocmd("VimLeave", {
 })
 
 -- Align git blame
-vim.api.nvim_create_autocmd('User', {
-    pattern = 'MiniGitCommandSplit',
-    callback = function(au_data)
-        if au_data.data.git_subcommand ~= 'blame' then return end
+vim.api.nvim_create_autocmd("User", {
+    pattern = "MiniGitCommandSplit",
+    callback = function(event)
+        buf_easy_close(event.buf)
+        if event.data.git_subcommand ~= "blame" then return end
 
         -- Align blame output with source
-        local win_src = au_data.data.win_source
+        local win_src = event.data.win_source
         vim.wo.wrap = false
         vim.fn.winrestview({ topline = vim.fn.line('w0', win_src) })
         vim.api.nvim_win_set_cursor(0, { vim.fn.line('.', win_src), 0 })
@@ -38,11 +40,10 @@ vim.api.nvim_create_autocmd("FileType", {
     pattern = {
         "help",
         "man",
-        "checkhealth"
+        "checkhealth",
     },
-    callback = function (event)
-        vim.bo[event.buf].buflisted = false
-        map_to_buffer(event.buf, "q", ":close<Cr>", "Close")
+    callback = function(event)
+        buf_easy_close(event.buf)
     end
 })
 
@@ -63,5 +64,12 @@ vim.api.nvim_create_autocmd("User", {
         if args.data.tabstop_to == '0' then
             require("mini.snippets").session.stop()
         end
+    end
+})
+
+-- highlight on yank
+vim.api.nvim_create_autocmd("TextYankPost", {
+    callback = function()
+        vim.highlight.on_yank()
     end
 })
