@@ -9,24 +9,21 @@ in {
     attrValues {
       inherit
         (pkgs)
-        nh
-        stow
-        gcc
-        clang
-        git
-        git-credential-manager
+        bottom
         curl
         direnv
-        fish
         docker
-        gitui
-        starship
-        zoxide
-        uutils-coreutils-noprefix
+        fish
+        git
+        git-credential-manager
+        nh
         ripgrep
+        starship
+        stow
+        uutils-coreutils-noprefix
         wezterm
         zellij
-        bottom
+        zoxide
         ;
     }
     ++ [inputs.zen-browser.packages.${pkgs.system}.default];
