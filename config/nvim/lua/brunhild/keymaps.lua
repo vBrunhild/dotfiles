@@ -12,6 +12,12 @@ end
 map("n", "<leader> ", minifiles_toggle, { desc = "Open explorer" })
 map({ "n", "x", "v" }, "<leader>y", '"+y<cr>', { desc = "Yank to clipboard" })
 
+-- force me to use hjkl
+map({ "n", "x" }, "<Up>", "<Nop>", { silent = true, desc = "Disable Up arrow" })
+map({ "n", "x" }, "<Down>", "<Nop>", { silent = true, desc = "Disable Down arrow" })
+map({ "n", "x" }, "<Left>", "<Nop>", { silent = true, desc = "Disable Left arrow" })
+map({ "n", "x" }, "<Right>", "<Nop>", { silent = true, desc = "Disable Right arrow" })
+
 -- write
 map("n", "<leader>ww", ":w<cr>", { desc = "Write" })
 map("n", "<leader>wd", ":w<cr>:lua MiniBufremove.delete()<cr>", { desc = "Write close" })
@@ -36,11 +42,11 @@ map("n", "<leader>lh", vim.lsp.buf.hover, { desc = "LSP hover" })
 map("n", "<leader>la", vim.lsp.buf.code_action, { desc = "LSP code action" })
 map("n", "<leader>lf", vim.lsp.buf.format, { desc = "LSP format" })
 
--- navigation / hjkl wtf?
-map({ "n", "i" }, "<A-Left>", ":ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
-map({ "n", "i" }, "<A-Right>", ":ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
-map({ "n", "i" }, "<A-Up>", ":ZellijNavigateUp<cr>", { desc = "Navigate up" })
-map({ "n", "i" }, "<A-Down>", ":ZellijNavigateDown<cr>", { desc = "Navigate down" })
+-- navigation / fine... I will hjkl
+map({ "n", "i" }, "<A-h>", ":ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
+map({ "n", "i" }, "<A-j>", ":ZellijNavigateDown<cr>", { desc = "Navigate down" })
+map({ "n", "i" }, "<A-k>", ":ZellijNavigateUp<cr>", { desc = "Navigate up" })
+map({ "n", "i" }, "<A-l>", ":ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
 
 -- git
 map("n", "<leader>gs", ":lua MiniGit.show_at_cursor()<cr>", { desc = "Git show" })
