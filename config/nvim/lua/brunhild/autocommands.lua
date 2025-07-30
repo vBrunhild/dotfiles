@@ -67,3 +67,13 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
         vim.api.nvim_create_user_command("GroovyLintFormat", "silent !npm-groovy-lint --format %", {})
     end
 })
+
+-- End minisnips session on final tabstop
+vim.api.nvim_create_autocmd("User", {
+    pattern = "MiniSnippetsSessionJump",
+    callback = function(args)
+        if args.data.tabstop_to == '0' then
+            require("mini.snippets").session.stop()
+        end
+    end
+})
