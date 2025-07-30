@@ -6,7 +6,7 @@ require("blink.cmp").setup({
         nerd_font_variant = "mono",
     },
     keymap = {
-        preset = 'super-tab',
+        preset = "super-tab",
     },
     cmdline = {
         completion = {
@@ -31,19 +31,24 @@ require("blink.cmp").setup({
         },
     },
     completion = {
+        accept = {
+            auto_brackets = {
+                enabled = true
+            }
+        },
         menu = {
             scrolloff = 1,
             scrollbar = false,
             list = {
                 selection = {
                     preselect = false,
-                    auto_insert = false
+                    auto_insert = true
                 }
             },
             draw = {
                 columns = {
                     { "kind_icon" },
-                    { "label", "label_description", gap = 1 },
+                    { "label",      "label_description", gap = 1 },
                     { "kind" },
                     { "source_name" }
                 }
@@ -61,5 +66,5 @@ require("blink.cmp").setup({
     fuzzy = {
         implementation = "prefer_rust_with_warning",
         sorts = { "exact", "score", "sort_text" }
-    }
-})
+        }
+    })

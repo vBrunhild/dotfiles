@@ -2,14 +2,14 @@
 let
   inherit (builtins) attrValues;
 
-  lspPackages = [ 
+  lspPackages = [
+    pkgs.alejandra
+    pkgs.dprint
+    pkgs.dprint-plugins.dprint-plugin-json
     pkgs.lua-language-server
     pkgs.nil
     pkgs.nixd
-    pkgs.alejandra
     pkgs.taplo
-    pkgs.dprint
-    pkgs.dprint-plugins.dprint-plugin-json
   ];
 
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
@@ -20,49 +20,51 @@ let
       :luafile ~/.config/nvim/init.lua
     '';
 
-    plugins = (attrValues {
-      inherit (pkgs.vimPlugins)
-        onedarkpro-nvim
-        nvim-osc52
-        nvim-colorizer-lua
-        nvim-lspconfig
-        friendly-snippets
-        blink-cmp
-        conform-nvim
-        guess-indent-nvim
-        nvim-lint
-        nvim-nio
-        nvim-dap
-        nvim-dap-view
-        zellij-nav-nvim
-        nvim-origami
-        substitute-nvim
-        nvim-spider
-        mini-icons
-        mini-comment
-        mini-keymap
-        mini-pairs
-        mini-clue
-        mini-files
-        mini-git
-        mini-diff
-        mini-statusline
-        mini-trailspace
-        mini-indentscope
-        mini-splitjoin
-        mini-pick
-        mini-extra
-        mini-hipatterns
-        mini-snippets
-      ;
-    }) ++ [
-      pkgs.vimPlugins.nvim-treesitter.withAllGrammars
-    ];
+    plugins =
+      (attrValues {
+        inherit (pkgs.vimPlugins)
+          blink-cmp
+          conform-nvim
+          friendly-snippets
+          guess-indent-nvim
+          mini-bufremove
+          mini-clue
+          mini-comment
+          mini-diff
+          mini-extra
+          mini-files
+          mini-git
+          mini-hipatterns
+          mini-icons
+          mini-indentscope
+          mini-keymap
+          mini-operators
+          mini-pairs
+          mini-pick
+          mini-snippets
+          mini-splitjoin
+          mini-statusline
+          mini-surround
+          mini-trailspace
+          nvim-colorizer-lua
+          nvim-dap
+          nvim-dap-view
+          nvim-lint
+          nvim-lspconfig
+          nvim-nio
+          nvim-osc52
+          onedarkpro-nvim
+          zellij-nav-nvim
+          ;
+      })
+      ++ [
+        pkgs.vimPlugins.nvim-treesitter.withAllGrammars
+      ];
   };
 in
-  pkgs.symlinkJoin {
-    name = "neovim-wrapped";
-    paths = [
-      (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig)
-    ] ++ lspPackages;
-  }
+pkgs.symlinkJoin {
+  name = "neovim-wrapped";
+  paths = [
+    (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig)
+  ] ++ lspPackages;
+}

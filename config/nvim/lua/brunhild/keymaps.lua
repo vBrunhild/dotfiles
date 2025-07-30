@@ -1,7 +1,4 @@
 local minifiles = require("mini.files")
-local origami = require("origami")
-local substitute = require("substitute")
-local spider = require("spider")
 
 local map = vim.keymap.set
 
@@ -17,11 +14,11 @@ map({ "n", "x", "v" }, "<leader>y", '"+y<cr>', { desc = "Yank to clipboard" })
 
 -- write
 map("n", "<leader>ww", ":w<cr>", { desc = "Write" })
-map("n", "<leader>W", ":w!<cr>", { desc = "Write force" })
-map("n", "<leader>wd", ":w<cr>:bd<cr>", { desc = "Write close" })
+map("n", "<leader>wd", ":w<cr>:lua MiniBufremove.delete()<cr>", { desc = "Write close" })
+map("n", "<leader>wq", ":wqa<cr>", { desc = "Write quit" })
 
 -- buffers
-map("n", "<leader>bd", ":bd<cr>", { desc = "Buffer delete" })
+map("n", "<leader>bd", ":lua MiniBufremove.delete()<cr>", { desc = "Buffer delete" })
 
 -- find
 map("n", "<leader>ff", ":lua MiniPick.builtin.files({ tool = 'rg' })<cr>", { desc = "Find files" })
@@ -40,29 +37,16 @@ map("n", "<leader>la", vim.lsp.buf.code_action, { desc = "LSP code action" })
 map("n", "<leader>lf", vim.lsp.buf.format, { desc = "LSP format" })
 
 -- navigation / hjkl wtf?
-map("n", "<A-Left>", ":ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
-map("n", "<A-Right>", ":ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
-map("n", "<A-Up>", ":ZellijNavigateUp<cr>", { desc = "Navigate up" })
-map("n", "<A-Down>", ":ZellijNavigateDown<cr>", { desc = "Navigate down" })
-
--- substitute
-map("n", "s", substitute.operator, { desc = "Substitution operator" })
-map("n", "ss", substitute.line, { desc = "Substitute line" })
-map("n", "S", substitute.eol, { desc = "Substitute eol" })
-map("x", "s", substitute.visual, { desc = "Substitute visual" })
+map({ "n", "i" }, "<A-Left>", ":ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
+map({ "n", "i" }, "<A-Right>", ":ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
+map({ "n", "i" }, "<A-Up>", ":ZellijNavigateUp<cr>", { desc = "Navigate up" })
+map({ "n", "i" }, "<A-Down>", ":ZellijNavigateDown<cr>", { desc = "Navigate down" })
 
 -- git
 map("n", "<leader>gs", ":lua MiniGit.show_at_cursor()<cr>", { desc = "Git show" })
 map("n", "<leader>gb", ":vertical Git blame -- %<cr>", { desc = "Git blame" })
 
--- spider
-map({ "n", "o", "x" }, "w", function() spider.motion("w") end)
-map({ "n", "o", "x" }, "e", function() spider.motion("e") end)
-map({ "n", "o", "x" }, "b", function() spider.motion("b") end)
-
 -- general
 map({ "n", "o", "x" }, "<C-a>", "ggVG", { desc = "Select all" })
-map({ "n", "o", "x" }, "<Left>", origami.h)
-map({ "n", "o", "x" }, "<Right>", origami.l)
 map("v", "<", "<gv")
 map("v", ">", ">gv")
