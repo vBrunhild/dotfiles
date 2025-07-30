@@ -1,5 +1,3 @@
-local minitrailspace = require("mini.trailspace")
-
 local buf_easy_close = function(buf)
     vim.bo[buf].buflisted = false
     vim.keymap.set("n", "q", ":close<cr>", { buffer = buf, silent = true })
@@ -8,7 +6,7 @@ end
 -- Auto trim last lines on bw
 vim.api.nvim_create_autocmd("BufWritePre", {
     callback = function()
-        minitrailspace.trim_last_lines()
+        require("mini.trailspace").trim_last_lines()
     end
 })
 
