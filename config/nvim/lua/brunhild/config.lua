@@ -20,6 +20,7 @@ vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 vim.o.wrap = false
 vim.o.winborder = "rounded"
+vim.o.termguicolors = true
 
 vim.opt.fillchars:append(",eob: ")
 
