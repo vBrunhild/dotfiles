@@ -3,33 +3,52 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    wild = {
+      url = "github:davidlattimore/wild";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, ... }:
-  let
-    forAllSystems = nixpkgs.lib.genAttrs [
-      "aarch64-linux"
-      "x86_64-linux"
-      "x86_64-darwin"
-      "aarch64-darwin"
-    ];
-  in {
-    devShells = forAllSystems(system:
-      let 
-        pkgs = nixpkgs.legacyPackages.${system};
-      in {
-        default = pkgs.mkShell {
-          buildInputs = [
-            pkgs.rustc
-            pkgs.cargo
-            pkgs.rust-analyzer
-            pkgs.clippy
-            pkgs.bacon
-          ];
+  outputs =
+    {
+      nixpkgs,
+      wild,
+      ...
+    }:
+    let
+      forAllSystems = nixpkgs.lib.genAttrs [
+        "aarch64-linux"
+        "x86_64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
 
-          RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
+      pkgsFor =
+        system:
+        import nixpkgs {
+          inherit system;
+          overlays = [ (import wild) ];
         };
-      }
-    );
-  };
+
+      allPkgs = forAllSystems pkgsFor;
+    in
+    {
+      devShells = forAllSystems (
+        system:
+        let
+          pkgs = allPkgs.${system};
+          wildStdenv = pkgs.useWildLinker pkgs.stdenv;
+        in
+        {
+          default = pkgs.mkShell.override { stdenv = wildStdenv; } {
+            packages = [
+              pkgs.rustc
+              pkgs.cargo
+              pkgs.rust-analyzer
+              pkgs.clippy
+            ];
+          };
+        }
+      );
+    };
 }
