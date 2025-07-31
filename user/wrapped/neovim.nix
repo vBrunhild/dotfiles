@@ -17,7 +17,7 @@ let
     withRuby = false;
     withNodeJs = false;
     customRC = ''
-      :luafile ~/.config/nvim/init.lua
+      source ~/.config/nvim/init.lua
     '';
 
     plugins =

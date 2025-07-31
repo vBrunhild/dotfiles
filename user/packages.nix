@@ -19,7 +19,6 @@ in {
         nh
         ripgrep
         starship
-        stow
         uutils-coreutils-noprefix
         wezterm
         zellij

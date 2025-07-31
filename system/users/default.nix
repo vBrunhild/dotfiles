@@ -1,11 +1,15 @@
-{ flake, pkgs, ... }:
 {
+  flake,
+  pkgs,
+  ...
+}: {
   users = {
     mutableUsers = false;
     users = {
       root.hashedPasswordFile = "/persist/secrets/root";
       brunhild = {
         isNormalUser = true;
+        homix = true;
         shell = flake.packages.${pkgs.system}.fish;
 
         hashedPasswordFile = "/persist/secrets/brunhild";
