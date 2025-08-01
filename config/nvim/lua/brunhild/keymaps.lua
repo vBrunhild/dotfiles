@@ -29,7 +29,7 @@ map("n", "<leader>bd", ":lua MiniBufremove.delete()<cr>", { desc = "Buffer delet
 -- find
 map("n", "<leader>ff", ":lua MiniPick.builtin.files({ tool = 'rg' })<cr>", { desc = "Find files" })
 map("n", "<leader>fg", ":lua MiniPick.builtin.grep_live({ tool = 'rg' })<cr>", { desc = "Find grep" })
-map("n", "<leader>fb", ":lua MiniPick.builtin.buffers()<cr>", { desc = "Find buffers" })
+map("n", "<leader>fb", ":lua MiniExtra.pickers.buf_lines({ scope = 'current' }, nil)<cr>", { desc = "Find in buffer" })
 map("n", "<leader>fh", ":lua MiniExtra.pickers.git_hunks()<cr>", { desc = "Find hunks" })
 map("n", "<leader>fd", ":lua MiniExtra.pickers.diagnostic()<cr>", { desc = "Find diagnostics" })
 map("n", "<leader>fv", ":lua MiniPick.builtin.help({ tool = 'rg' })<cr>", { desc = "Find vim help"})
