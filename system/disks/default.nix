@@ -2,27 +2,33 @@
 {
   staypls = {
     enable = true;
-    dirs = ["/etc/ssh" "/etc/nix" "/secrets/brunhild"];
+    dirs = ["/etc/ssh" "/etc/nix"];
   };
 
-  fileSystems."/" = {
-    device = "none";
-    fsType = "tmpfs";
-    options = ["size=1G" "mode=755"];
-  };
+  # fileSystems."/" = {
+  #   device = "none";
+  #   fsType = "tmpfs";
+  #   options = ["size=1G" "mode=755"];
+  # };
 
-  fileSystems."/nix" = {
-    neededForBoot = true;
-    device = "/dev/disk/by-label/NIXROOT";
-    fsType = "btrfs";
-    options = ["noatime" "discard" "subvol=@nix" "compress=zstd"];
-  };
+  # fileSystems."/boot" = {
+  #   device = "/dev/disk/by-label/NIXBOOT";
+  #   fsType = "vfat";
+  #   options = ["noatime" "discard"];
+  # };
 
-  fileSystems."/tmp" = {
-    device = "/dev/disk/by-label/NIXROOT";
-    fsType = "btrfs";
-    options = ["noatime" "discard" "subvol=@tmp"];
-  };
+  # fileSystems."/nix" = {
+  #   neededForBoot = true;
+  #   device = "/dev/disk/by-label/NIXROOT";
+  #   fsType = "btrfs";
+  #   options = ["noatime" "discard" "subvol=@nix" "compress=zstd"];
+  # };
+
+  # fileSystems."/tmp" = {
+  #   device = "/dev/disk/by-label/NIXROOT";
+  #   fsType = "btrfs";
+  #   options = ["noatime" "discard" "subvol=@tmp"];
+  # };
 
   fileSystems."/persist" = {
     neededForBoot = true;
