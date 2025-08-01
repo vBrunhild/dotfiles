@@ -27,7 +27,6 @@ rec {
           RIPGREP_CONFIG_PATH = "$HOME/.config/ripgrep/.ripgreprc";
           EDITOR = "nvim";
           VISUAL = "nvim";
-          CARGO_HOME = "$HOME/.config/cargo/config.toml";
         };
         pathsToLink = ["/share/zellij-plugins"];
       };

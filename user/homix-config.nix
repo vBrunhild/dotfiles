@@ -1,6 +1,5 @@
 {...}: {
   homix = {
-    ".config/cargo".source = ../config/cargo;
     ".config/fish".source = ../config/fish;
     ".config/nvim".source = ../config/nvim;
     ".config/ripgrep".source = ../config/ripgrep;
