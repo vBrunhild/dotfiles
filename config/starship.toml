@@ -8,6 +8,7 @@ format = """
 $username\
 $directory\
 ${custom.git}\
+$git_state\
 $rust\
 $golang\
 $python\
@@ -111,7 +112,7 @@ disabled = false
 
 [git_state]
 style = "fg:color_danger"
-format = '([$state($progress_current/$progress_total)]($style bold))'
+format = '([$state($progress_current/$progress_total)]($style bold)) '
 rebase = "REBASING"
 merge = "MERGING"
 revert = "REVERTING"
@@ -127,7 +128,6 @@ command = '''
     starship module git_branch
     starship module git_commit
     starship module git_status
-    starship module git_state
 '''
 when = "true"
 format = "[$output](style) "
