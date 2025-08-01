@@ -1,6 +1,7 @@
 {...}: {
   imports = [
-    ./boot
+    # ./boot
+    # ./disks
     ./fonts
     ./users
     ./nix
