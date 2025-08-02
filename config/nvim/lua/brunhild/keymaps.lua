@@ -18,14 +18,6 @@ map({ "n", "x" }, "<Down>", "<Nop>", { silent = true, desc = "Disable Down arrow
 map({ "n", "x" }, "<Left>", "<Nop>", { silent = true, desc = "Disable Left arrow" })
 map({ "n", "x" }, "<Right>", "<Nop>", { silent = true, desc = "Disable Right arrow" })
 
--- write
-map("n", "<leader>ww", ":w<cr>", { desc = "Write" })
-map("n", "<leader>wd", ":w<cr>:lua MiniBufremove.delete()<cr>", { desc = "Write buf delete" })
-map("n", "<leader>wq", ":wqa<cr>", { desc = "Write quit" })
-
--- buffers
-map("n", "<leader>bd", ":lua MiniBufremove.delete()<cr>", { desc = "Buffer delete" })
-
 -- find
 map("n", "<leader>ff", ":lua MiniPick.builtin.files({ tool = 'rg' })<cr>", { desc = "Find files" })
 map("n", "<leader>fg", ":lua MiniPick.builtin.grep_live({ tool = 'rg' })<cr>", { desc = "Find grep" })
