@@ -43,10 +43,10 @@ map("n", "<leader>la", vim.lsp.buf.code_action, { desc = "LSP code action" })
 map("n", "<leader>lf", vim.lsp.buf.format, { desc = "LSP format" })
 
 -- navigation / fine... I will hjkl
-map({ "n", "i" }, "<A-h>", ":ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
-map({ "n", "i" }, "<A-j>", ":ZellijNavigateDown<cr>", { desc = "Navigate down" })
-map({ "n", "i" }, "<A-k>", ":ZellijNavigateUp<cr>", { desc = "Navigate up" })
-map({ "n", "i" }, "<A-l>", ":ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
+map("n", "<A-h>", ":ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
+map("n", "<A-j>", ":ZellijNavigateDown<cr>", { desc = "Navigate down" })
+map("n", "<A-k>", ":ZellijNavigateUp<cr>", { desc = "Navigate up" })
+map("n", "<A-l>", ":ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
 
 -- git
 map("n", "<leader>gh", ":lua MiniGit.show_at_cursor()<cr>", { desc = "Git history" })
