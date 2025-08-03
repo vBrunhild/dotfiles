@@ -57,6 +57,7 @@ in {
 
     homix-link = let
       files = map (file: ''
+        #!/bin/sh
         FILE=$HOME/${file.path}
         mkdir -p $(dirname $FILE)
         ln -sf ${file.source} $FILE
