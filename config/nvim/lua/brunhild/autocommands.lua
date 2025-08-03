@@ -68,6 +68,8 @@ vim.api.nvim_create_autocmd("User", {
 -- highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function()
-        vim.highlight.on_yank()
+        vim.hl.on_yank()
+    end
+})
     end
 })
