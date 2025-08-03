@@ -7,12 +7,10 @@
 in {
   environment.systemPackages =
     attrValues {
-      inherit
-        (pkgs)
+      inherit (pkgs)
         bottom
         curl
         direnv
-        docker
         fish
         git
         git-credential-manager

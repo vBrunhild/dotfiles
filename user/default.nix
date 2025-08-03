@@ -2,22 +2,10 @@ rec {
   packages = pkgs: let
     inherit (pkgs) callPackage;
   in {
+    fish = pkgs.fish;
     neovim = callPackage ./wrapped/neovim.nix {};
     zellijPlugins = callPackage ./wrapped/zellij-plugins.nix {};
-    fish = pkgs.fish;
   };
-
-  shell = pkgs:
-    pkgs.mkShell {
-      name = "brunhild-devshell";
-      shellHook = ''
-        fish
-      '';
-
-      buildInputs = builtins.attrValues {
-        inherit (packages pkgs) neovim fish;
-      };
-    };
 
   module = {pkgs, ...}: {
     config = {
@@ -36,16 +24,11 @@ rec {
         interactiveShellInit = ''
           set fish_greeting
         '';
-        shellInit = ''
-          starship init fish | source
-          zoxide init fish | source
-        '';
       };
 
-      programs.direnv = {
-        enable = true;
-        enableFishIntegration = true;
-      };
+      programs.zoxide.enable = true;
+      programs.starship.enable = true;
+      programs.direnv.enable = true;
 
       # stop fish from increasing build times by an ridiculous amount
       documentation.man.generateCaches = false;
