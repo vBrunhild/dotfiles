@@ -71,5 +71,20 @@ vim.api.nvim_create_autocmd("TextYankPost", {
         vim.hl.on_yank()
     end
 })
+
+-- set wrap for specific files
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = {
+        "markdown",
+        "typst"
+    },
+    callback = function()
+        vim.opt_local.textwidth = 100
+        vim.opt_local.columns = 100
+        vim.opt_local.wrap = true
+        vim.opt_local.linebreak = true
+        vim.opt_local.breakindent = true
+        vim.opt_local.showbreak = "↪ "
+        vim.opt_local.colorcolumn = ""
     end
 })

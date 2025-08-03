@@ -17,6 +17,8 @@ in {
         nh
         ripgrep
         starship
+        tinymist
+        typst
         uutils-coreutils-noprefix
         wezterm
         zellij

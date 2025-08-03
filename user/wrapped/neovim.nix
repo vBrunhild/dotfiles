@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   inherit (builtins) attrValues;
 
   lspPackages = [
@@ -27,6 +26,7 @@ let
           conform-nvim
           friendly-snippets
           guess-indent-nvim
+          markview-nvim
           mini-bufremove
           mini-clue
           mini-comment
@@ -54,17 +54,20 @@ let
           nvim-nio
           nvim-osc52
           onedarkpro-nvim
+          typst-preview-nvim
           zellij-nav-nvim
-          ;
+        ;
       })
       ++ [
         pkgs.vimPlugins.nvim-treesitter.withAllGrammars
       ];
   };
 in
-pkgs.symlinkJoin {
-  name = "neovim-wrapped";
-  paths = [
-    (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig)
-  ] ++ lspPackages;
-}
+  pkgs.symlinkJoin {
+    name = "neovim-wrapped";
+    paths =
+      [
+        (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig)
+      ]
+      ++ lspPackages;
+  }
