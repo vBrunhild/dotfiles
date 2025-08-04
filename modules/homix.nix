@@ -57,9 +57,15 @@ in {
 
     homix-link = let
       files = map (file: ''
-        #!/bin/sh
         FILE=$HOME/${file.path}
+
         mkdir -p $(dirname $FILE)
+
+        if [ -d $FILE ]; then
+          echo "HOMIX-WARNING: Removing existing directory '$FILE' before linking."
+          rm -rf $FILE
+        fi
+
         ln -sf ${file.source} $FILE
       '') (attrValues config.homix);
     in
