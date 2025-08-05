@@ -23,6 +23,7 @@ in {
               Path to the file relative to the $HOME directory.
               If not defined, name of the attribute set will be used.
             '';
+            default = name;
           };
           source = mkOption {
             type = types.path;
@@ -35,7 +36,6 @@ in {
           };
         };
         config = {
-          path = lib.mkDefault name;
           source = mkIf (config.text != null) (
             let
               name' = "homix-" + lib.replaceStrings ["/"] ["-"] name;
@@ -57,13 +57,13 @@ in {
 
     homix-link = let
       files = map (file: ''
-        FILE=$HOME/${file.path}
+        FILE="$HOME/${file.path}"
 
-        mkdir -p $(dirname $FILE)
+        mkdir -p "$(dirname $FILE)"
 
-        if [ -d $FILE ]; then
+        if [ -d "$FILE" ]; then
           echo "HOMIX-WARNING: Removing existing directory '$FILE' before linking."
-          rm -rf $FILE
+          rm -rf "$FILE"
         fi
 
         ln -sf ${file.source} $FILE
@@ -71,6 +71,8 @@ in {
     in
       pkgs.writeShellScript "homix-link" ''
         #!/bin/sh
+        set -e
+        set -u
         ${builtins.concatStringsSep "\n" files}
       '';
 
