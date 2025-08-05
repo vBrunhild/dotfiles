@@ -1,6 +1,20 @@
 local minifiles = require("mini.files")
 
-local map = vim.keymap.set
+--- @param mode string|string[]
+--- @param lhs string
+--- @param rhs string|function
+--- @param opts? vim.keymap.set.Opts
+local map = function(mode, lhs, rhs, opts)
+    opts = opts or {}
+    opts.silent = opts.silent or true
+    vim.keymap.set(mode, lhs, rhs, opts)
+end
+
+local n = "n"
+local x = "x"
+local v = "v"
+local nx = { n, x }
+local nxv = { n, x, v }
 
 -- leader
 vim.g.mapleader = " "
@@ -9,42 +23,42 @@ local minifiles_toggle = function()
     if not minifiles.close() then minifiles.open(vim.api.nvim_buf_get_name(0), false) end
 end
 
-map("n", "<leader> ", minifiles_toggle, { desc = "Open explorer" })
-map({ "n", "x", "v" }, "Y", '"+y', { desc = "Yank to clipboard" })
+map(n, "<leader> ", minifiles_toggle, { desc = "Open explorer" })
+map(nxv, "Y", '"+y', { desc = "Yank to clipboard" })
 
 -- force me to use hjkl
-map({ "n", "x" }, "<Up>", "<Nop>", { silent = true, desc = "Disable Up arrow" })
-map({ "n", "x" }, "<Down>", "<Nop>", { silent = true, desc = "Disable Down arrow" })
-map({ "n", "x" }, "<Left>", "<Nop>", { silent = true, desc = "Disable Left arrow" })
-map({ "n", "x" }, "<Right>", "<Nop>", { silent = true, desc = "Disable Right arrow" })
+map(nx, "<Up>", "<Nop>", { desc = "Disable Up arrow" })
+map(nx, "<Down>", "<Nop>", { desc = "Disable Down arrow" })
+map(nx, "<Left>", "<Nop>", { desc = "Disable Left arrow" })
+map(nx, "<Right>", "<Nop>", { desc = "Disable Right arrow" })
 
 -- find
-map("n", "<leader>ff", ":lua MiniPick.builtin.files({ tool = 'fd' })<cr>", { desc = "Find files" })
-map("n", "<leader>fg", ":lua MiniPick.builtin.grep_live({ tool = 'rg' })<cr>", { desc = "Find grep" })
-map("n", "<leader>fb", ":lua MiniExtra.pickers.buf_lines({ scope = 'current' }, { tool = 'rg' })<cr>", { desc = "Find in buffer" })
-map("n", "<leader>fh", ":lua MiniExtra.pickers.git_hunks(nil, { tool = 'rg' })<cr>", { desc = "Find hunks" })
-map("n", "<leader>fd", ":lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })<cr>", { desc = "Find diagnostics" })
-map("n", "<leader>fv", ":lua MiniPick.builtin.help({ tool = 'rg' })<cr>", { desc = "Find vim help"})
+map(n, "<leader>ff", ":lua MiniPick.builtin.files({ tool = 'fd' })<cr>", { desc = "Find files" })
+map(n, "<leader>fg", ":lua MiniPick.builtin.grep_live({ tool = 'rg' })<cr>", { desc = "Find grep" })
+map(n, "<leader>fb", ":lua MiniExtra.pickers.buf_lines({ scope = 'current' }, { tool = 'rg' })<cr>", { desc = "Find in buffer" })
+map(n, "<leader>fh", ":lua MiniExtra.pickers.git_hunks(nil, { tool = 'rg' })<cr>", { desc = "Find hunks" })
+map(n, "<leader>fd", ":lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })<cr>", { desc = "Find diagnostics" })
+map(n, "<leader>fv", ":lua MiniPick.builtin.help({ tool = 'rg' })<cr>", { desc = "Find vim help"})
 
 -- lsp
-map("n", "<leader>ld", vim.lsp.buf.definition, { desc = "LSP goto definition" })
-map("n", "<leader>lv", ":vsplit | lua vim.lsp.buf.definition()<CR>", { desc = "LSP goto definition in vertical split" })
-map("n", "<leader>lr", vim.lsp.buf.rename, { desc = "LSP rename" })
-map("n", "<leader>lh", vim.lsp.buf.hover, { desc = "LSP hover" })
-map("n", "<leader>la", vim.lsp.buf.code_action, { desc = "LSP code action" })
-map("n", "<leader>lf", vim.lsp.buf.format, { desc = "LSP format" })
+map(n, "<leader>ld", vim.lsp.buf.definition, { desc = "LSP goto definition" })
+map(n, "<leader>lv", ":vsplit | lua vim.lsp.buf.definition()<CR>", { desc = "LSP goto definition in vertical split" })
+map(n, "<leader>lr", vim.lsp.buf.rename, { desc = "LSP rename" })
+map(n, "<leader>lh", vim.lsp.buf.hover, { desc = "LSP hover" })
+map(n, "<leader>la", vim.lsp.buf.code_action, { desc = "LSP code action" })
+map(n, "<leader>lf", vim.lsp.buf.format, { desc = "LSP format" })
 
 -- navigation / fine... I will hjkl
-map("n", "<A-h>", ":ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
-map("n", "<A-j>", ":ZellijNavigateDown<cr>", { desc = "Navigate down" })
-map("n", "<A-k>", ":ZellijNavigateUp<cr>", { desc = "Navigate up" })
-map("n", "<A-l>", ":ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
+map(n, "<A-h>", ":ZellijNavigateLeftTab<cr>", { desc = "Navigate left" })
+map(n, "<A-j>", ":ZellijNavigateDown<cr>", { desc = "Navigate down" })
+map(n, "<A-k>", ":ZellijNavigateUp<cr>", { desc = "Navigate up" })
+map(n, "<A-l>", ":ZellijNavigateRightTab<cr>", { desc = "Navigate right" })
 
 -- git
-map("n", "<leader>gh", ":lua MiniGit.show_at_cursor()<cr>", { desc = "Git history" })
-map("n", "<leader>gb", ":vertical Git blame -- %<cr>", { desc = "Git blame" })
-map("n", "<leader>gd", ":vertical Git diff -- %<cr>", { desc = "Git diff" })
-map("n", "<leader>gs", ":vertical Git status<cr>", { desc = "Git status" })
+map(n, "<leader>gh", ":lua MiniGit.show_at_cursor()<cr>", { desc = "Git history" })
+map(n, "<leader>gb", ":vertical Git blame -- %<cr>", { desc = "Git blame" })
+map(n, "<leader>gd", ":vertical Git diff -- %<cr>", { desc = "Git diff" })
+map(n, "<leader>gs", ":vertical Git status<cr>", { desc = "Git status" })
 
 -- general
 map({ "n", "o", "x" }, "<C-a>", "ggVG", { desc = "Select all" })
