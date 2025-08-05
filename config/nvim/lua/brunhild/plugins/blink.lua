@@ -39,12 +39,6 @@ require("blink.cmp").setup({
         menu = {
             scrolloff = 1,
             scrollbar = false,
-            list = {
-                selection = {
-                    preselect = false,
-                    auto_insert = true
-                }
-            },
             draw = {
                 columns = {
                     { "kind_icon" },
@@ -61,10 +55,16 @@ require("blink.cmp").setup({
             },
             auto_show = true,
             auto_show_delay_ms = 500
-        }
+        },
+        list = {
+            selection = {
+                preselect = false,
+                auto_insert = true
+            }
+        },
     },
     fuzzy = {
         implementation = "prefer_rust_with_warning",
         sorts = { "exact", "score", "sort_text" }
-        }
-    })
+    }
+})
