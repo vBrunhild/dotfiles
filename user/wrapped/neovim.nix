@@ -25,8 +25,6 @@
           blink-cmp
           conform-nvim
           friendly-snippets
-          guess-indent-nvim
-          markview-nvim
           mini-bufremove
           mini-clue
           mini-comment
@@ -50,7 +48,6 @@
           nvim-dap
           nvim-dap-view
           nvim-lint
-          nvim-lspconfig
           nvim-nio
           nvim-osc52
           onedarkpro-nvim
