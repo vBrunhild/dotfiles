@@ -14,6 +14,7 @@ in {
         fish
         git
         git-credential-manager
+        jujutsu
         nh
         ripgrep
         starship
@@ -23,7 +24,7 @@ in {
         wezterm
         zellij
         zoxide
-        ;
+      ;
     }
     ++ [inputs.zen-browser.packages.${pkgs.system}.default];
 }
