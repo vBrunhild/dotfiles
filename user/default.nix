@@ -26,9 +26,11 @@ rec {
         '';
       };
 
-      programs.zoxide.enable = true;
-      programs.starship.enable = true;
+      programs.bat.enable = true;
       programs.direnv.enable = true;
+      programs.ssh.startAgent = true;
+      programs.starship.enable = true;
+      programs.zoxide.enable = true;
 
       # stop fish from increasing build times by an ridiculous amount
       documentation.man.generateCaches = false;
