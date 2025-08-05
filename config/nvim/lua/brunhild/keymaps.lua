@@ -16,7 +16,6 @@ local v = "v"
 local nx = { n, x }
 local nxv = { n, x, v }
 
--- leader
 vim.g.mapleader = " "
 
 local minifiles_toggle = function()
@@ -25,6 +24,7 @@ end
 
 map(n, "<leader> ", minifiles_toggle, { desc = "Open explorer" })
 map(nxv, "Y", '"+y', { desc = "Yank to clipboard" })
+map(nxv, "<C-a>", "ggVG", { desc = "Select all" })
 
 -- force me to use hjkl
 map(nx, "<Up>", "<Nop>", { desc = "Disable Up arrow" })
@@ -59,8 +59,3 @@ map(n, "<leader>gh", ":lua MiniGit.show_at_cursor()<cr>", { desc = "Git history"
 map(n, "<leader>gb", ":vertical Git blame -- %<cr>", { desc = "Git blame" })
 map(n, "<leader>gd", ":vertical Git diff -- %<cr>", { desc = "Git diff" })
 map(n, "<leader>gs", ":vertical Git status<cr>", { desc = "Git status" })
-
--- general
-map({ "n", "o", "x" }, "<C-a>", "ggVG", { desc = "Select all" })
-map("v", "<", "<gv")
-map("v", ">", ">gv")
