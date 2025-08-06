@@ -1,15 +1,18 @@
 {pkgs, ...}: let
   inherit (builtins) attrValues;
-
-  lspPackages = [
-    pkgs.alejandra
-    pkgs.dprint
-    pkgs.dprint-plugins.dprint-plugin-json
-    pkgs.lua-language-server
-    pkgs.nil
-    pkgs.nixd
-    pkgs.taplo
-  ];
+  # lua = pkgs.lua5_1;
+  #
+  # init = pkgs.stdenv.mkDerivation {
+  #   name = "nvim-compiled-init";
+  #   src = ../../config/nvim;
+  #
+  #   nativeBuildInputs = [lua];
+  #
+  #   installPhase = ''
+  #     mkdir -p $out/nvim
+  #     luac -o $out/nvim/init.lc init.lua
+  #   '';
+  # };
 
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
     withPython3 = false;
@@ -21,7 +24,7 @@
 
     plugins =
       (attrValues {
-        inherit (pkgs.vimPlugins)
+        inherit(pkgs.vimPlugins)
           blink-cmp
           conform-nvim
           friendly-snippets
@@ -51,20 +54,25 @@
           nvim-nio
           nvim-osc52
           onedarkpro-nvim
+          snacks-nvim
           typst-preview-nvim
           zellij-nav-nvim
         ;
       })
-      ++ [
-        pkgs.vimPlugins.nvim-treesitter.withAllGrammars
-      ];
+      ++ [pkgs.vimPlugins.nvim-treesitter.withAllGrammars];
   };
 in
   pkgs.symlinkJoin {
     name = "neovim-wrapped";
     paths =
-      [
-        (pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig)
-      ]
-      ++ lspPackages;
-  }
+      [(pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig)]
+      ++ [
+        pkgs.alejandra
+        pkgs.dprint
+        pkgs.dprint-plugins.dprint-plugin-json
+        pkgs.lua-language-server
+        pkgs.nil
+        pkgs.nixd
+        pkgs.taplo
+      ];
+  }g
