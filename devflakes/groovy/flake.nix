@@ -20,24 +20,26 @@
     packages = forAllSystems (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
+        deco = pkgs.callPackage ./deco.nix {};
+        morpheus = pkgs.callPackage ./morpheus.nix {};
         groovy-language-server = pkgs.callPackage ./groovy-language-server.nix {jre = pkgs.jdk17;};
         npm-groovy-lint = pkgs.callPackage ./npm-groovy-lint.nix {};
-      in {inherit groovy-language-server npm-groovy-lint;}
+      in {inherit deco morpheus groovy-language-server npm-groovy-lint;}
     );
 
     devShells = forAllSystems (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
-        my-packages = self.packages.${system};
+        packages = self.packages.${system};
       in {
         default = pkgs.mkShell {
           buildInputs = [
             pkgs.jdk17
             pkgs.groovy
-            my-packages.deco
-            my-packages.morpheus
-            my-packages.groovy-language-server
-            my-packages.npm-groovy-lint
+            packages.deco
+            packages.morpheus
+            packages.groovy-language-server
+            packages.npm-groovy-lint
           ];
 
           JAVA_HOME = "${pkgs.jdk17}";

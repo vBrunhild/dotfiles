@@ -6,7 +6,7 @@
   inherit (pkgs) stdenv fetchFromGitHub makeWrapper;
   gradle = pkgs.gradle_7;
 
-  self = stdenv.mkDerivation {
+  groovy-language-server = stdenv.mkDerivation {
     pname = "groovy-language-server";
     version = "unstable-2024-02-01";
 
@@ -20,7 +20,7 @@
     nativeBuildInputs = [gradle makeWrapper];
 
     mitmCache = gradle.fetchDeps {
-      pkg = self;
+      pkg = groovy-language-server;
       # update or regenerate this by running
       #  $(nix build .#groovy-language-server.mitmCache.updateScript --print-out-paths)
       data = ./deps.json;
@@ -38,4 +38,4 @@
     '';
   };
 in
-  self
+  groovy-language-server
