@@ -1,3 +1,12 @@
+local library = {
+    "lua",
+    "${3rd}/luv/library"
+}
+
+for _, path in ipairs(vim.api.nvim_list_runtime_paths()) do
+    table.insert(library, path)
+end
+
 return {
     cmd = { 'lua-language-server' },
     filetypes = { 'lua' },
@@ -20,18 +29,11 @@ return {
                     'lua/?/init.lua'
                 }
             },
-
             diagnostics = {
                 globals = { 'vim' }
             },
-
             workspace = {
-                library = {
-                    vim.env.VIMRUNTIME,
-                    "lua",
-                    "${3rd}/luv/library"
-                },
-
+                library = library,
                 checkThirdParty = false
             },
         }

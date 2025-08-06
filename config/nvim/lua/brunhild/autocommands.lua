@@ -94,9 +94,17 @@ vim.api.nvim_create_autocmd("FileType", {
     pattern = {
         "nix"
     },
-    callback = function ()
+    callback = function()
         vim.opt_local.tabstop = 2
         vim.opt_local.softtabstop = 2
         vim.opt_local.shiftwidth = 2
+    end
+})
+
+-- mini.files and snacks.rename integration
+vim.api.nvim_create_autocmd("User", {
+    pattern = "MiniFilesActionRename",
+    callback = function(event)
+        Snacks.rename.on_rename_file(event.data.from, event.data.to)
     end
 })
