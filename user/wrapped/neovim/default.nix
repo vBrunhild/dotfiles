@@ -28,6 +28,7 @@
           blink-cmp
           conform-nvim
           friendly-snippets
+          lazy-nvim
           mini-bufremove
           mini-clue
           mini-comment

@@ -3,7 +3,7 @@ rec {
     inherit (pkgs) callPackage;
   in {
     fish = pkgs.fish;
-    neovim = callPackage ./wrapped/neovim.nix {};
+    neovim = callPackage ./wrapped/neovim {};
     zellijPlugins = callPackage ./wrapped/zellij-plugins.nix {};
   };
 
