@@ -49,16 +49,16 @@ vim.diagnostic.config({
 -- lsp
 vim.lsp.enable({
     "basedpyright",
-    "gopls",
-    "golangci_lint_ls",
-    "nixd",
-    "nil_ls",
-    "rust_analyzer",
-    "lua_ls",
-    "taplo",
     "dprint",
+    "golangci_lint_ls",
+    "gopls",
+    "groovyls",
+    "lua_ls",
+    "nil_ls",
+    "nixd",
+    "rust_analyzer",
+    "taplo",
     "tinymist",
-    "groovyls"
 })
 
 vim.lsp.inlay_hint.enable(true)
@@ -160,11 +160,23 @@ map("n", "<leader>lf", vim.lsp.buf.format, { desc = "LSP format" })
 -- map("n", "<leader>gs", ":vertical Git status<cr>", { desc = "Git status" })
 
 -- plugins
+
 require("lazy").setup({
-    -- disable lazy's update install features since nix handles that part
+    -- disable lazy's update / install features since nix handles that part
     rocks = { enabled = false },
     pkg = { enabled = false },
     checker = { enabled = false },
     change_detection = { enabled = false },
-    install = { missing = false },
+    install = { missing = false, colorscheme = { 'onedark' } },
+    spec = {
+        {
+            name = "onedarkpro",
+            dir = P["onedarkpro.nvim"],
+            priority = 1000
+        },
+        {
+            name = "mini.files",
+            dir = P["mini.files"]
+        },
+    }
 })
