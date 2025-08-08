@@ -9,7 +9,7 @@ require("brunhild.plugins.minisnippets")
 require("brunhild.plugins.minisurround")
 require("brunhild.plugins.treesitter")
 require("brunhild.plugins.typstpreview")
-require("brunhild.plugins.snacks")
+-- require("brunhild.plugins.snacks")
 
 require("colorizer").setup()
 require("dap-view").setup()

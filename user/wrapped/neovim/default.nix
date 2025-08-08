@@ -76,4 +76,4 @@ in
         pkgs.nixd
         pkgs.taplo
       ];
-  }g
+  }
