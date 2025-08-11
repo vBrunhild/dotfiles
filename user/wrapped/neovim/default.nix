@@ -1,13 +1,17 @@
 {pkgs, ...}: let
   inherit (builtins) attrValues;
-
+  
+  homix = {
+    ".config/nvim/lsp".source = ./lsp;
+  };
+  
   plugins =
     (attrValues {
-      inherit
-        (pkgs.vimPlugins)
+      inherit (pkgs.vimPlugins)
         blink-cmp
         conform-nvim
         friendly-snippets
+        lazy-nvim
         mini-bufremove
         mini-clue
         mini-comment
@@ -51,14 +55,12 @@
       '';
     };
 
-  # nix build --impure --show-trace --expr 'let pkgs = import <nixpkgs> {}; in pkgs.callPackage ./user/wrapped/neovim/default.nix {}'
-
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
     withPython3 = false;
     withRuby = false;
     withNodeJs = false;
     customLuaRC = builtins.readFile ./init.lua;
-    plugins = [pkgs.vimPlugins.lazy-nvim pluginsLuaModule] ++ plugins;
+    plugins = [pluginsLuaModule] ++ plugins;
   };
 
   neovim = pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig;
