@@ -3,7 +3,8 @@
 
   plugins =
     (attrValues {
-      inherit (pkgs.vimPlugins)
+      inherit
+        (pkgs.vimPlugins)
         blink-cmp
         conform-nvim
         friendly-snippets
@@ -17,7 +18,6 @@
         mini-hipatterns
         mini-icons
         mini-indentscope
-        mini-keymap
         mini-operators
         mini-pairs
         mini-pick
@@ -30,8 +30,6 @@
         nvim-dap
         nvim-dap-view
         nvim-lint
-        nvim-nio
-        nvim-osc52
         onedarkpro-nvim
         snacks-nvim
         typst-preview-nvim
@@ -40,27 +38,27 @@
     })
     ++ [pkgs.vimPlugins.nvim-treesitter.withAllGrammars];
 
-  pluginsSymlink = pkgs.symlinkJoin {
-    name = "neovim-plugins";
-    paths = plugins;
-  };
-
   pluginsLuaModule = let
     lineFor = plugin: ''P["${plugin.pname}"] = "${plugin}"'';
-    body = builtins.concatStringsSep "\n" (builtins.map lineFor plugins);
   in
-    ''
-      local P = {}
-      ${body}
-    '';
+    pkgs.vimUtils.buildVimPlugin {
+      pname = "nixplugins";
+      version = "1.0.0";
+      src = pkgs.writeTextDir "lua/nixplugins.lua" ''
+        local P = {}
+        ${builtins.concatStringsSep "\n" (builtins.map lineFor plugins)}
+        return P
+      '';
+    };
+
   # nix build --impure --show-trace --expr 'let pkgs = import <nixpkgs> {}; in pkgs.callPackage ./user/wrapped/neovim/default.nix {}'
 
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
     withPython3 = false;
     withRuby = false;
     withNodeJs = false;
-    customLuaRC = (pluginsLuaModule + builtins.readFile ./init.lua);
-    plugins = [pkgs.vimPlugins.lazy-nvim];
+    customLuaRC = builtins.readFile ./init.lua;
+    plugins = [pkgs.vimPlugins.lazy-nvim pluginsLuaModule] ++ plugins;
   };
 
   neovim = pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig;
@@ -69,7 +67,6 @@ in
     name = "neovim-wrapped";
     paths = [
       neovim
-      pluginsSymlink
       pkgs.alejandra
       pkgs.dprint
       pkgs.dprint-plugins.dprint-plugin-json
