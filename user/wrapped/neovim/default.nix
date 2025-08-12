@@ -7,7 +7,7 @@
         blink-cmp
         conform-nvim
         friendly-snippets
-        lazy-nvim
+        lze
         mini-bufremove
         mini-clue
         mini-comment
@@ -38,25 +38,12 @@
     })
     ++ [pkgs.vimPlugins.nvim-treesitter.withAllGrammars];
 
-  pluginsLuaModule = let
-    lineFor = plugin: ''P["${plugin.pname}"] = "${plugin}"'';
-  in
-    pkgs.vimUtils.buildVimPlugin {
-      pname = "nixplugins";
-      version = "1.0.0";
-      src = pkgs.writeTextDir "lua/nixplugins.lua" ''
-        local P = {}
-        ${builtins.concatStringsSep "\n" (builtins.map lineFor plugins)}
-        return P
-      '';
-    };
-
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
     withPython3 = false;
     withRuby = false;
     withNodeJs = false;
     customLuaRC = builtins.readFile ./init.lua;
-    plugins = [pluginsLuaModule] ++ plugins;
+    plugins = plugins;
   };
 
   neovim = pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig;
