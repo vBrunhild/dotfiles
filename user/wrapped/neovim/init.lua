@@ -20,9 +20,6 @@ end
 local autocommand = vim.api.nvim_create_autocmd
 local command = vim.api.nvim_create_user_command
 
--- import for nix compat
-local P = require("nixplugins")
-
 -- configs
 vim.g.clipboard = "osc52"
 vim.o.autoindent = true
@@ -236,58 +233,47 @@ vim.lsp.config("groovyls", {
     root_markers = { 'Jenkinsfile', '.git' },
 })
 
--- vim.lsp.config("lua_ls", {
---     cmd = { 'lua-language-server' },
---     filetypes = { 'lua' },
---     root_markers = {
---         '.luarc.json',
---         '.luarc.jsonc',
---         '.luacheckrc',
---         '.stylua.toml',
---         'stylua.toml',
---         'selene.toml',
---         'selene.yml',
---         '.git'
---     },
---     settings = {
---         cmd = { 'lua-language-server' },
---         filetypes = { 'lua' },
---         root_markers = {
---             '.luarc.json',
---             '.luarc.jsonc',
---             '.luacheckrc',
---             '.stylua.toml',
---             'stylua.toml',
---             'selene.toml',
---             'selene.yml',
---             '.git'
---         },
---         settings = {
---             Lua = {
---                 runtime = {
---                     version = 'LuaJIT',
---                     path = {
---                         'lua/?.lua',
---                         'lua/?/init.lua'
---                     }
---                 },
---                 diagnostics = {
---                     globals = { 'vim' }
---                 },
---                 workspace = {
---                     library = (function()
---                         local lib = { vim.env.VIMRUNTIME }
---                         for _, path in pairs(P) do
---                             table.insert(lib, path)
---                         end
---                         return lib
---                     end)(),
---                     checkThirdParty = false
---                 },
---             }
---         }
---     },
--- })
+vim.lsp.config("lua_ls", {
+    cmd = { 'lua-language-server' },
+    filetypes = { 'lua' },
+    root_markers = {
+        '.luarc.json',
+        '.luarc.jsonc',
+        '.luacheckrc',
+        '.stylua.toml',
+        'stylua.toml',
+        'selene.toml',
+        'selene.yml',
+        '.git'
+    },
+    on_init = function(client)
+        if client.workspace_folders then
+            local path = client.workspace_folders[1].name
+            if
+                path ~= vim.fn.stdpath("config")
+                and (vim.uv.fs_stat(path .. "/.luarc.json") or vim.uv.fs_stat(path .. "/.luarc.jsonc"))
+            then
+                return
+            end
+        end
+        client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+            runtime = {
+                version = "LuaJIT",
+                path = { "lua/?.lua", "lua/?/init.lua" }
+            },
+            workspace = {
+                checkThirdParty = false,
+                library = {
+                    vim.env.VIMRUNTIME,
+                    vim.api.nvim_get_runtime_file('', true)
+                }
+            }
+        })
+    end,
+    settings = {
+        Lua = {}
+    }
+})
 
 vim.lsp.enable({
     "basedpyright",
@@ -330,32 +316,15 @@ autocommand("TextYankPost", {
     end
 })
 
--- autocommand("FileType", {
---     -- set wrap for specific files
---     pattern = {
---         "markdown",
---         "typst"
---     },
---     callback = function()
---         vim.opt_local.textwidth = 100
---         vim.opt_local.columns = 100
---         vim.opt_local.wrap = true
---         vim.opt_local.linebreak = true
---         vim.opt_local.breakindent = true
---         vim.opt_local.showbreak = "↪ "
---         vim.opt_local.colorcolumn = ""
---     end
--- })
-
 autocommand("FileType", {
     -- set indent for specific files
     pattern = {
         "nix"
     },
     callback = function()
-        vim.bo.tabstop = 2
-        vim.bo.softtabstop = 2
         vim.bo.shiftwidth = 2
+        vim.bo.softtabstop = 2
+        vim.bo.tabstop = 2
     end
 })
 
@@ -388,6 +357,8 @@ if vim.env.NVIM_MINIMAL then
     -- this lets me open neovim with some configs but no plugins in case of fuck ups
     return
 end
+
+local P = require("nixplugins")
 
 require("nvim-treesitter.configs").setup({
     ensure_installed = {},
@@ -590,12 +561,9 @@ local spec = {
                 width_preview = 35
             }
         },
-        keys = {
-            function(self, _)
-                --local minifiles = require("mini.files")
-                return { "<leader>e", function() self.close() or self.open() end, desc = "Open explorer" }
-            end,
-        }
+        init = function()
+            map("n", "<leader>e", ":lua if not MiniFiles.close() then MiniFiles.open() end<cr>", { desc = "File explorer" }) 
+        end
     },
     { name = "mini.git",         dir = P["mini-git"],         opts = {} },
     { name = "mini.hipatterns",  dir = P["mini.hipatterns"],  opts = {} },
@@ -640,7 +608,18 @@ local spec = {
     { name = "mini.splitjoin",  dir = P["mini.splitjoin"],     opts = {} },
     { name = "mini.statusline", dir = P["mini.statusline"],    opts = {} },
     { name = "mini.surround",   dir = P["mini.surround"],      opts = {} },
-    { name = "mini.trailspace", dir = P["mini.trailspace"],    opts = {} },
+    {
+        name = "mini.trailspace",
+        dir = P["mini.trailspace"],
+        opts = {},
+        init = function()
+            autocommand("BufWritePre", {
+                callback = function()
+                    MiniTrailspace.trim_last_lines()
+                end
+            })
+        end
+    },
     {
         name = "colorizer",
         dir = P["nvim-colorizer.lua"],

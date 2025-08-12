@@ -1,10 +1,6 @@
 {pkgs, ...}: let
   inherit (builtins) attrValues;
-  
-  homix = {
-    ".config/nvim/lsp".source = ./lsp;
-  };
-  
+
   plugins =
     (attrValues {
       inherit (pkgs.vimPlugins)
