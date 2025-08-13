@@ -309,22 +309,19 @@ vim.lsp.config("lua_ls", {
         local workspace = client.workspace_folders[1].name
         local luarc_exists = vim.fn.glob(workspace .. "/.luarc.json") ~= "" or vim.fn.glob(workspace .. "/.luarc.jsonc") ~= ""
         if luarc_exists then return end
-
-        local package_paths = vim.split(package.path, ";", { trimempty = true })
-        local paths = { vim.env.VIMRUNTIME, vim.api.nvim_get_runtime_file('*/myNeovimPackages/start', false)[1] }
-
-        local settings = {
+        client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
             runtime = {
                 version = "LuaJIT",
-                path = vim.list_extend({ "lua/?.lua", "lua/?/init.lua" }, package_paths)
+                path = vim.split(package.path, ";", { trimempty = true })
             },
             workspace = {
                 checkThirdParty = false,
-                library = paths
+                library = {
+                    vim.env.VIMRUNTIME,
+                    vim.api.nvim_get_runtime_file('*/myNeovimPackages/start', false)[1]
+                }
             }
-        }
-
-        client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, settings)
+        })
     end,
     settings = {
         Lua = {
@@ -756,8 +753,9 @@ require("lze").load({
         }
     },
     {
-        "dap",
-        config = function()
+        "nvim-dap",
+        event = "DeferredUIEnter",
+        after = function()
             local dap = require("dap")
             dap.adapters.delve = function(callback, config)
                 if config.mode == "remote" and config.request == "attach" then
@@ -818,7 +816,8 @@ require("lze").load({
         end
     },
     {
-        "dap-view",
+        "nvim-dap-view",
+        event = "DeferredUIEnter"
     },
     {
         "lint",
