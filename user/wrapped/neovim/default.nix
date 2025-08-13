@@ -26,7 +26,6 @@
         mini-statusline
         mini-surround
         mini-trailspace
-        nvim-colorizer-lua
         nvim-dap
         nvim-dap-view
         nvim-lint

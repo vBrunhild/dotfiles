@@ -13,12 +13,22 @@ end
 --- @param opts? vim.keymap.set.Opts
 local map = function(mode, lhs, rhs, opts)
     opts = opts or {}
-    opts.silent = opts.silent or true
+    if opts.silent == nil then
+        opts.silent = true
+    end
     vim.keymap.set(mode, lhs, rhs, opts)
 end
 
+---comment
+---@param name string
+---@param command string|fun(args: vim.api.keyset.create_user_command.command_args)
+---@param opts? vim.api.keyset.user_command
+local command = function(name, command, opts)
+    opts = opts or {}
+    vim.api.nvim_create_user_command(name, command, opts)
+end
+
 local autocommand = vim.api.nvim_create_autocmd
-local command = vim.api.nvim_create_user_command
 
 -- configs
 vim.g.clipboard = "osc52"
@@ -96,12 +106,11 @@ autocommand("FileType", {
 autocommand("VimLeave", { command = "silent !zellij action switch-mode normal" })
 
 -- commands
-command("ZellijPaneNew", "silent !zellij action new-pane", {})
-command("ZellijTabNew", "silent !zellij action new-tab", {})
+command("ZellijPaneNew", "silent !zellij action new-pane")
+command("ZellijTabNew", "silent !zellij action new-tab")
 
 -- keymaps
 vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
 
 map({ "n", "x", "v" }, "Y", '"+y', { desc = "Yank to clipboard" })
 map({ "n", "x", "v" }, "<C-a>", "ggVG", { desc = "Select all" })
@@ -307,9 +316,12 @@ vim.lsp.config("lua_ls", {
     ---@param client vim.lsp.Client
     on_init = function(client)
         local workspace = client.workspace_folders[1].name
-        local luarc_exists = vim.fn.glob(workspace .. "/.luarc.json") ~= "" or vim.fn.glob(workspace .. "/.luarc.jsonc") ~= ""
+        local luarc_exists = vim.fn.glob(workspace .. "/.luarc.json") ~= "" or
+            vim.fn.glob(workspace .. "/.luarc.jsonc") ~= ""
         if luarc_exists then return end
-        client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+        local config = client.config.settings.Lua
+        ---@cast config table
+        client.config.settings.Lua = vim.tbl_deep_extend("force", config, {
             runtime = {
                 version = "LuaJIT",
                 path = vim.split(package.path, ";", { trimempty = true })
@@ -420,23 +432,30 @@ if vim.env.NVIM_MINIMAL then
     return
 end
 
-require("nvim-treesitter.configs").setup({
-    ensure_installed = {},
-    sync_install = false,
-    auto_install = false,
-    ignore_install = { "all" },
-    modules = {},
-    highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false,
-    },
-    indent = {
-        enable = true
-    }
-})
-
 ---@type lze.PluginSpec[]
 require("lze").load({
+    {
+        "nvim-treesitter",
+        lazy = vim.fn.argc(-1) == 0,
+        event = { "BufNewFile", "BufReadPost", "FileReadPost" },
+        beforeAll = function()
+            require("nvim-treesitter.query_predicates")
+        end,
+        after = function()
+            ---@type TSConfig
+            ---@diagnostic disable-next-line: missing-fields
+            local treesitter_config = {
+                highlight = {
+                    enable = true,
+                    additional_vim_regex_highlighting = false,
+                },
+                indent = {
+                    enable = true
+                }
+            }
+            require("nvim-treesitter.configs").setup(treesitter_config)
+        end
+    },
     {
         "blink.cmp",
         event = "DeferredUIEnter",
@@ -517,25 +536,35 @@ require("lze").load({
         "conform",
         event = { "BufWritePre" },
         cmd = { "ConformInfo" },
+        keys = { "<leader>lf", desc = "LSP format" },
         after = function()
-            require("conform").setup({
+            ---@type conform.setupOpts
+            local conform_config = {
                 formatters = {
                     dprint = {
                         command = "dprint",
                         args = { "fmt", "--stdin", "$FILENAME" },
                         stdin = true
-                    }
+                    },
+                    ["npm-groovy-lint"] = {
+                        command = "npm-groovy-lint",
+                        args = { "--fix", "$FILENAME" },
+                        stdin = false,
+                        exit_codes = { 0, 1 },
+                    },
                 },
                 formatters_by_ft = {
+                    groovy = { "npm-groovy-lint" },
                     json = { "dprint" },
                     jsonc = { "dprint" },
                     nix = { "alejandra" },
-                    rust = { "rustfmt" }
+                    rust = { "rustfmt" },
                 },
                 default_format_opts = {
                     lsp_format = "fallback"
                 }
-            })
+            }
+            require("conform").setup(conform_config)
             vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
         end
     },
@@ -615,7 +644,16 @@ require("lze").load({
     {
         "mini.diff",
         event = "DeferredUIEnter",
-        after = function() require("mini.diff").setup() end
+        keys = {
+            { "<leader>go", ":lua MiniDiff.toggle_overlay()<cr>", silent = true, desc = "Toggle overlay" },
+        },
+        after = function()
+            require("mini.diff").setup({
+                view = {
+                    style = "sign"
+                }
+            })
+        end
     },
     {
         "mini.extra",
@@ -641,6 +679,13 @@ require("lze").load({
     },
     {
         "mini.git",
+        cmd = "Git",
+        keys = {
+            { "<leader>gh", ":lua MiniGit.show_at_cursor()<cr>", silent = true, desc = "Git history" },
+            { "<leader>gb", ":vertical Git blame -- %<cr>",      silent = true, desc = "Git blame" },
+            { "<leader>gd", ":vertical Git diff -- %<cr>",       silent = true, desc = "Git diff" },
+            { "<leader>gs", ":vertical Git status<cr>",          silent = true, desc = "Git status" },
+        },
         beforeAll = function()
             autocommand("User", {
                 pattern = "MiniGitCommandSplit",
@@ -660,21 +705,23 @@ require("lze").load({
         after = function()
             require("mini.git").setup()
         end,
-        cmd = "Git",
-        keys = {
-            { "<leader>gh", ":lua MiniGit.show_at_cursor()<cr>", silent = true, desc = "Git history" },
-            { "<leader>gb", ":vertical Git blame -- %<cr>",      silent = true, desc = "Git blame" },
-            { "<leader>gd", ":vertical Git diff -- %<cr>",       silent = true, desc = "Git diff" },
-            { "<leader>gs", ":vertical Git status<cr>",          silent = true, desc = "Git status" },
-        }
     },
     {
         "mini.hipatterns",
         event = "DeferredUIEnter",
-        after = function() require("mini.hipatterns").setup() end
+        after = function()
+            local minihipatterns = require("mini.hipatterns")
+            minihipatterns.setup({
+                highlighters = {
+                    hex_color = minihipatterns.gen_highlighter.hex_color()
+                }
+            })
+            command("TogglePatterns", minihipatterns.toggle)
+        end
     },
     {
         "mini.icons",
+        lazy = true,
         after = function() require("mini.icons").setup() end
     },
     {
@@ -699,6 +746,7 @@ require("lze").load({
             { "<leader>fh", ":lua MiniExtra.pickers.git_hunks(nil, { tool = 'rg' })<cr>",  silent = true, desc = "Find hunks" },
             { "<leader>fd", ":lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })<cr>", silent = true, desc = "Find diagnostics" },
             { "<leader>fv", ":lua MiniPick.builtin.help({ tool = 'rg' })<cr>",             silent = true, desc = "Find vim help" },
+            { "<leader>fd", ":lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })", silent = true, desc = "Find diagnostics" },
         },
         after = function() require("mini.pick").setup() end,
     },
@@ -721,16 +769,17 @@ require("lze").load({
     },
     {
         "mini.splitjoin",
-        keys = "gS",
+        keys = { "gS", desc = "Splitjoin operator" },
         after = function() require("mini.splitjoin").setup() end,
     },
     {
         "mini.statusline",
+        event = "DeferredUIEnter",
         after = function() require("mini.statusline").setup() end
     },
     {
         "mini.surround",
-        keys = "s",
+        keys = { "s", desc = "Surround" },
         after = function() require("mini.surround").setup() end,
     },
     {
@@ -746,15 +795,35 @@ require("lze").load({
         end
     },
     {
-        "nvim-colorizer",
-        cmd = { "ColorizerToggle" },
-        keys = {
-            { "<leader>c", ":ColorizerToggle<cr>", silent = true, desc = "Colorizer toggle" }
-        }
-    },
-    {
         "nvim-dap",
-        event = "DeferredUIEnter",
+        cmd = {
+            "DapClearBreakpoints",
+            "DapContinue",
+            "DapDisconnect",
+            "DapEval",
+            "DapNew",
+            "DapPause",
+            "DapRestartFrame",
+            "DapSetLogLevel",
+            "DapShowLog",
+            "DapStepInto",
+            "DapStepOut",
+            "DapStepOver",
+            "DapTerminate",
+            "DapToggleBreakpoint",
+            "DapToggleRepl",
+            "DapViewToggle",
+        },
+        keys = {
+            { "<leader>db", ":DapToggleBreakpoint<cr>", silent = true, desc = "Toggle breakpoint" },
+            { "<leader>dc", ":DapContinue<cr>",         silent = true, desc = "Run / Continue" },
+            { "<leader>ds", ":DapPause<cr>",            silent = true, desc = "Pause" },
+            { "<leader>dt", ":DapTerminate<cr>",        silent = true, desc = "Terminate" },
+            { "<leader>di", ":DapStepInto<cr>",         silent = true, desc = "Step into" },
+            { "<leader>do", ":DapStepOut<cr>",          silent = true, desc = "Step out" },
+            { "<leader>dO", ":DapStepOver<cr>",         silent = true, desc = "Step over" },
+            { "<leader>dv", ":DapViewToggle<cr>",       silent = true, desc = "Toggle view" },
+        },
         after = function()
             local dap = require("dap")
             dap.adapters.delve = function(callback, config)
@@ -817,15 +886,26 @@ require("lze").load({
     },
     {
         "nvim-dap-view",
-        event = "DeferredUIEnter"
+        dep_of = "nvim-dap",
+        after = function()
+            ---@type dapview.Config
+            local dap_view_config = {}
+            require("dap-view").setup(dap_view_config)
+        end
     },
     {
-        "lint",
-        event = "DeferredUIEnter",
-        config = function()
+        "nvim-lint",
+        ft = "groovy",
+        after = function()
             require("lint").linters_by_ft = {
                 groovy = { "npm-groovy-lint" }
             }
+            autocommand({ "BufEnter", "BufWritePost" }, {
+                pattern = "*.groovy",
+                callback = function()
+                    require("lint").try_lint()
+                end
+            })
         end
     },
     {
@@ -860,8 +940,11 @@ require("lze").load({
         end
     },
     {
-        "typst-preview",
-        ft = "typst"
+        "typst-preview.nvim",
+        cmd = { "TypstPreview", "TypstPreviewToggle" },
+        after = function()
+            require("typst-preview").setup()
+        end
     },
     {
         "zellij-nav",
