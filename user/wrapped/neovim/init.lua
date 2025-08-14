@@ -487,7 +487,9 @@ require("lze").load({
                         }
                     },
                     keymap = {
-                        ["<CR>"] = { "accept_and_enter", "fallback" }
+                        ["<CR>"] = { "accept_and_enter", "fallback" },
+                        ["<Left>"] = false,
+                        ["<Right>"] = false,
                     }
                 },
                 sources = {
@@ -520,7 +522,7 @@ require("lze").load({
                                     end
                                 },
                                 kind = {
-                                    highlight = function (ctx)
+                                    highlight = function(ctx)
                                         local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
                                         return hl
                                     end
@@ -558,7 +560,7 @@ require("lze").load({
     },
     {
         "conform",
-        event = { "BufWritePre" },
+        event = { "BufEnter" },
         cmd = { "ConformInfo" },
         after = function()
             ---@type conform.setupOpts
@@ -608,8 +610,8 @@ require("lze").load({
             miniclue.setup({
                 triggers = {
                     -- Leader triggers
-                    { mode = "n", keys = "<Leader>" },
-                    { mode = "x", keys = "<Leader>" },
+                    { mode = "n", keys = "<leader>" },
+                    { mode = "x", keys = "<leader>" },
                     -- Built-in completion
                     { mode = "i", keys = "<C-x>" },
                     -- `g` key
@@ -745,7 +747,7 @@ require("lze").load({
     },
     {
         "mini.icons",
-        dep_of = { "blink.cmp", "mini.pick" },
+        dep_of = { "blink.cmp", "mini.files", "mini.pick" },
         after = function() require("mini.icons").setup() end
     },
     {
@@ -758,8 +760,8 @@ require("lze").load({
         keys = {
             { "g=", desc = "Evaluate operator", mode = { "n", "v", "x" } },
             { "gm", desc = "Multiply operator", mode = { "n", "v", "x" } },
-            { "gr", desc = "Replace operator", mode = { "n", "v", "x" } },
-            { "gs", desc = "Sort operator", mode = { "n", "v", "x" } },
+            { "gr", desc = "Replace operator",  mode = { "n", "v", "x" } },
+            { "gs", desc = "Sort operator",     mode = { "n", "v", "x" } },
             { "gx", desc = "Exchange operator", mode = { "n", "v", "x" } },
         },
         after = function() require("mini.operators").setup() end
@@ -773,12 +775,11 @@ require("lze").load({
         "mini.pick",
         keys = {
             { "<leader> ",  "<Cmd>lua MiniPick.builtin.files({ tool = 'fd' })<cr>",            silent = true, desc = "Find files" },
-            { "<leader>fg", "<Cmd>lua MiniPick.builtin.grep_live({ tool = 'rg' })<cr>",        silent = true, desc = "Find grep" },
             { "<leader>fb", "<Cmd>lua MiniExtra.pickers.buf_lines(nil, { tool = 'rg' })<cr>",  silent = true, desc = "Find in buffers" },
+            { "<leader>fd", "<Cmd>lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })<cr>", silent = true, desc = "Find diagnostics" },
+            { "<leader>fg", "<Cmd>lua MiniPick.builtin.grep_live({ tool = 'rg' })<cr>",        silent = true, desc = "Find grep" },
             { "<leader>fh", "<Cmd>lua MiniExtra.pickers.git_hunks(nil, { tool = 'rg' })<cr>",  silent = true, desc = "Find hunks" },
-            { "<leader>fd", "<Cmd>lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })<cr>", silent = true, desc = "Find diagnostics" },
             { "<leader>fv", "<Cmd>lua MiniPick.builtin.help({ tool = 'rg' })<cr>",             silent = true, desc = "Find vim help" },
-            { "<leader>fd", "<Cmd>lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })<cr>", silent = true, desc = "Find diagnostics" },
         },
         after = function() require("mini.pick").setup() end,
     },
