@@ -114,7 +114,7 @@ vim.g.mapleader = " "
 
 map({ "n", "x", "v" }, "Y", '"+y', { desc = "Yank to clipboard" })
 map({ "n", "x", "v" }, "<C-a>", "ggVG", { desc = "Select all" })
-map("n", "P", ":pu<cr>", { desc = "Paste in new line" })
+map("n", "P", "<Cmd>pu<cr>", { desc = "Paste in new line" })
 
 map({ "n", "x" }, "<leader>ld", vim.lsp.buf.definition, { desc = "LSP goto definition" })
 map({ "n", "x" }, "<leader>lr", vim.lsp.buf.rename, { desc = "LSP rename" })
@@ -324,7 +324,11 @@ vim.lsp.config("lua_ls", {
         client.config.settings.Lua = vim.tbl_deep_extend("force", config, {
             runtime = {
                 version = "LuaJIT",
-                path = vim.split(package.path, ";", { trimempty = true })
+                path = {
+                    "lua/?.lua",
+                    "lua/?/init.lua"
+                }
+                --vim.split(package.path, ";", { trimempty = true })
             },
             workspace = {
                 checkThirdParty = false,
@@ -437,14 +441,16 @@ require("lze").load({
     {
         "nvim-treesitter",
         lazy = vim.fn.argc(-1) == 0,
-        event = { "BufNewFile", "BufReadPost", "FileReadPost" },
-        beforeAll = function()
+        event = "BufEnter",
+        before = function()
             require("nvim-treesitter.query_predicates")
         end,
         after = function()
             ---@type TSConfig
             ---@diagnostic disable-next-line: missing-fields
             local treesitter_config = {
+                auto_install = false,
+                sync_install = false,
                 highlight = {
                     enable = true,
                     additional_vim_regex_highlighting = false,
@@ -458,7 +464,7 @@ require("lze").load({
     },
     {
         "blink.cmp",
-        event = "DeferredUIEnter",
+        event = { "InsertEnter", "CmdlineEnter" },
         after = function()
             require("blink.cmp").setup({
                 snippets = { preset = "mini_snippets" },
@@ -502,6 +508,24 @@ require("lze").load({
                         scrolloff = 1,
                         scrollbar = false,
                         draw = {
+                            components = {
+                                kind_icon = {
+                                    text = function(ctx)
+                                        local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
+                                        return kind_icon
+                                    end,
+                                    highlight = function(ctx)
+                                        local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
+                                        return hl
+                                    end
+                                },
+                                kind = {
+                                    highlight = function (ctx)
+                                        local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
+                                        return hl
+                                    end
+                                }
+                            },
                             columns = {
                                 { "kind_icon" },
                                 { "label",      "label_description", gap = 1 },
@@ -536,7 +560,6 @@ require("lze").load({
         "conform",
         event = { "BufWritePre" },
         cmd = { "ConformInfo" },
-        keys = { "<leader>lf", desc = "LSP format" },
         after = function()
             ---@type conform.setupOpts
             local conform_config = {
@@ -620,6 +643,7 @@ require("lze").load({
                     { mode = "n", keys = "<Leader>f", desc = "+Picker" },
                     { mode = "n", keys = "<Leader>l", desc = "+LSP" },
                     { mode = "n", keys = "<Leader>g", desc = "+Git" },
+                    { mode = "n", keys = "<Leader>d", desc = "+Dap" },
                     miniclue.gen_clues.builtin_completion(),
                     miniclue.gen_clues.g(),
                     miniclue.gen_clues.marks(),
@@ -645,7 +669,7 @@ require("lze").load({
         "mini.diff",
         event = "DeferredUIEnter",
         keys = {
-            { "<leader>go", ":lua MiniDiff.toggle_overlay()<cr>", silent = true, desc = "Toggle overlay" },
+            { "<leader>go", "<Cmd>lua MiniDiff.toggle_overlay()<cr>", silent = true, desc = "Toggle overlay" },
         },
         after = function()
             require("mini.diff").setup({
@@ -674,17 +698,17 @@ require("lze").load({
             })
         end,
         keys = {
-            { "<leader>e", ":lua if not MiniFiles.close() then MiniFiles.open() end<cr>", silent = true, desc = "File explorer" }
+            { "<leader>e", "<Cmd>lua if not MiniFiles.close() then MiniFiles.open() end<cr>", silent = true, desc = "File explorer" }
         }
     },
     {
         "mini.git",
         cmd = "Git",
         keys = {
-            { "<leader>gh", ":lua MiniGit.show_at_cursor()<cr>", silent = true, desc = "Git history" },
-            { "<leader>gb", ":vertical Git blame -- %<cr>",      silent = true, desc = "Git blame" },
-            { "<leader>gd", ":vertical Git diff -- %<cr>",       silent = true, desc = "Git diff" },
-            { "<leader>gs", ":vertical Git status<cr>",          silent = true, desc = "Git status" },
+            { "<leader>gh", "<Cmd>lua MiniGit.show_at_cursor()<cr>", silent = true, desc = "Git history" },
+            { "<leader>gb", "<Cmd>vertical Git blame -- %<cr>",      silent = true, desc = "Git blame" },
+            { "<leader>gd", "<Cmd>vertical Git diff -- %<cr>",       silent = true, desc = "Git diff" },
+            { "<leader>gs", "<Cmd>vertical Git status<cr>",          silent = true, desc = "Git status" },
         },
         beforeAll = function()
             autocommand("User", {
@@ -721,7 +745,7 @@ require("lze").load({
     },
     {
         "mini.icons",
-        lazy = true,
+        dep_of = { "blink.cmp", "mini.pick" },
         after = function() require("mini.icons").setup() end
     },
     {
@@ -731,22 +755,30 @@ require("lze").load({
     },
     {
         "mini.operators",
+        keys = {
+            { "g=", desc = "Evaluate operator", mode = { "n", "v", "x" } },
+            { "gm", desc = "Multiply operator", mode = { "n", "v", "x" } },
+            { "gr", desc = "Replace operator", mode = { "n", "v", "x" } },
+            { "gs", desc = "Sort operator", mode = { "n", "v", "x" } },
+            { "gx", desc = "Exchange operator", mode = { "n", "v", "x" } },
+        },
         after = function() require("mini.operators").setup() end
     },
     {
         "mini.pairs",
+        event = "InsertEnter",
         after = function() require("mini.pairs").setup() end
     },
     {
         "mini.pick",
         keys = {
-            { "<leader> ",  ":lua MiniPick.builtin.files({ tool = 'fd' })<cr>",            silent = true, desc = "Find files" },
-            { "<leader>fg", ":lua MiniPick.builtin.grep_live({ tool = 'rg' })<cr>",        silent = true, desc = "Find grep" },
-            { "<leader>fb", ":lua MiniExtra.pickers.buf_lines(nil, { tool = 'rg' })<cr>",  silent = true, desc = "Find in buffers" },
-            { "<leader>fh", ":lua MiniExtra.pickers.git_hunks(nil, { tool = 'rg' })<cr>",  silent = true, desc = "Find hunks" },
-            { "<leader>fd", ":lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })<cr>", silent = true, desc = "Find diagnostics" },
-            { "<leader>fv", ":lua MiniPick.builtin.help({ tool = 'rg' })<cr>",             silent = true, desc = "Find vim help" },
-            { "<leader>fd", ":lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })", silent = true, desc = "Find diagnostics" },
+            { "<leader> ",  "<Cmd>lua MiniPick.builtin.files({ tool = 'fd' })<cr>",            silent = true, desc = "Find files" },
+            { "<leader>fg", "<Cmd>lua MiniPick.builtin.grep_live({ tool = 'rg' })<cr>",        silent = true, desc = "Find grep" },
+            { "<leader>fb", "<Cmd>lua MiniExtra.pickers.buf_lines(nil, { tool = 'rg' })<cr>",  silent = true, desc = "Find in buffers" },
+            { "<leader>fh", "<Cmd>lua MiniExtra.pickers.git_hunks(nil, { tool = 'rg' })<cr>",  silent = true, desc = "Find hunks" },
+            { "<leader>fd", "<Cmd>lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })<cr>", silent = true, desc = "Find diagnostics" },
+            { "<leader>fv", "<Cmd>lua MiniPick.builtin.help({ tool = 'rg' })<cr>",             silent = true, desc = "Find vim help" },
+            { "<leader>fd", "<Cmd>lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })<cr>", silent = true, desc = "Find diagnostics" },
         },
         after = function() require("mini.pick").setup() end,
     },
@@ -769,7 +801,7 @@ require("lze").load({
     },
     {
         "mini.splitjoin",
-        keys = { "gS", desc = "Splitjoin operator" },
+        keys = { "gS", desc = "Splitjoin operator", mode = { "n", "v", "x" } },
         after = function() require("mini.splitjoin").setup() end,
     },
     {
@@ -784,6 +816,7 @@ require("lze").load({
     },
     {
         "mini.trailspace",
+        event = "BufEnter",
         after = function()
             local minitrailspace = require("mini.trailspace")
             minitrailspace.setup()
@@ -815,14 +848,14 @@ require("lze").load({
             "DapViewToggle",
         },
         keys = {
-            { "<leader>db", ":DapToggleBreakpoint<cr>", silent = true, desc = "Toggle breakpoint" },
-            { "<leader>dc", ":DapContinue<cr>",         silent = true, desc = "Run / Continue" },
-            { "<leader>ds", ":DapPause<cr>",            silent = true, desc = "Pause" },
-            { "<leader>dt", ":DapTerminate<cr>",        silent = true, desc = "Terminate" },
-            { "<leader>di", ":DapStepInto<cr>",         silent = true, desc = "Step into" },
-            { "<leader>do", ":DapStepOut<cr>",          silent = true, desc = "Step out" },
-            { "<leader>dO", ":DapStepOver<cr>",         silent = true, desc = "Step over" },
-            { "<leader>dv", ":DapViewToggle<cr>",       silent = true, desc = "Toggle view" },
+            { "<leader>db", "<Cmd>DapToggleBreakpoint<cr>", silent = true, desc = "Toggle breakpoint" },
+            { "<leader>dc", "<Cmd>DapContinue<cr>",         silent = true, desc = "Run / Continue" },
+            { "<leader>ds", "<Cmd>DapPause<cr>",            silent = true, desc = "Pause" },
+            { "<leader>dt", "<Cmd>DapTerminate<cr>",        silent = true, desc = "Terminate" },
+            { "<leader>di", "<Cmd>DapStepInto<cr>",         silent = true, desc = "Step into" },
+            { "<leader>do", "<Cmd>DapStepOut<cr>",          silent = true, desc = "Step out" },
+            { "<leader>dO", "<Cmd>DapStepOver<cr>",         silent = true, desc = "Step over" },
+            { "<leader>dv", "<Cmd>DapViewToggle<cr>",       silent = true, desc = "Toggle view" },
         },
         after = function()
             local dap = require("dap")
@@ -886,7 +919,7 @@ require("lze").load({
     },
     {
         "nvim-dap-view",
-        dep_of = "nvim-dap",
+        dep_of = "dap",
         after = function()
             ---@type dapview.Config
             local dap_view_config = {}
@@ -922,12 +955,9 @@ require("lze").load({
     },
     {
         "snacks.nvim",
-        lazy = false,
-        priority = 999,
+        event = "DeferredUIEnter",
         after = function()
             require("snacks").setup({
-                bigfile = { enabled = true },
-                quickfile = { enabled = true },
                 rename = { enabled = true },
                 words = { enabled = true },
             })
@@ -941,7 +971,7 @@ require("lze").load({
     },
     {
         "typst-preview.nvim",
-        cmd = { "TypstPreview", "TypstPreviewToggle" },
+        ft = "typst",
         after = function()
             require("typst-preview").setup()
         end
@@ -950,10 +980,10 @@ require("lze").load({
         "zellij-nav",
         cmd = { "ZellijNavigateLeftTab", "ZellijNavigateDown", "ZellijNavigateUp", "ZellijNavigateRightTab" },
         keys = {
-            { "<A-h>", ":ZellijNavigateLeftTab<cr>",  silent = true, desc = "Navigate left" },
-            { "<A-j>", ":ZellijNavigateDown<cr>",     silent = true, desc = "Navigate down" },
-            { "<A-k>", ":ZellijNavigateUp<cr>",       silent = true, desc = "Navigate up" },
-            { "<A-l>", ":ZellijNavigateRightTab<cr>", silent = true, desc = "Navigate right" }
+            { "<A-h>", "<Cmd>ZellijNavigateLeftTab<cr>",  silent = true, desc = "Navigate left" },
+            { "<A-j>", "<Cmd>ZellijNavigateDown<cr>",     silent = true, desc = "Navigate down" },
+            { "<A-k>", "<Cmd>ZellijNavigateUp<cr>",       silent = true, desc = "Navigate up" },
+            { "<A-l>", "<Cmd>ZellijNavigateRightTab<cr>", silent = true, desc = "Navigate right" }
         },
         after = function()
             require("zellij-nav").setup()
