@@ -7,15 +7,18 @@ if vim.env.PROF then
 end
 
 -- functions
---- @param mode string|string[]
---- @param lhs string
---- @param rhs string|function
---- @param opts? vim.keymap.set.Opts
-local map = function(mode, lhs, rhs, opts)
+---@class MapOpts : vim.keymap.set.Opts
+---@field mode? string|string[]
+
+---@param lhs string
+---@param rhs string|function
+---@param opts? MapOpts
+local map = function(lhs, rhs, opts)
     opts = opts or {}
     if opts.silent == nil then
         opts.silent = true
     end
+    local mode = opts.mode or "n"
     vim.keymap.set(mode, lhs, rhs, opts)
 end
 
@@ -69,7 +72,7 @@ vim.diagnostic.config({
 -- autocommands
 local buf_easy_close = function(buf)
     vim.bo[buf].buflisted = false
-    vim.keymap.set("n", "q", ":close<cr>", { buffer = buf, silent = true })
+    map("q", "<Cmd>close<cr>", { buffer = buf, silent = true })
 end
 
 autocommand("FileType", {
@@ -112,15 +115,15 @@ command("ZellijTabNew", "silent !zellij action new-tab")
 -- keymaps
 vim.g.mapleader = " "
 
-map({ "n", "x", "v" }, "Y", '"+y', { desc = "Yank to clipboard" })
-map({ "n", "x", "v" }, "<C-a>", "ggVG", { desc = "Select all" })
-map("n", "P", "<Cmd>pu<cr>", { desc = "Paste in new line" })
+map("Y", '"+y', { mode = { "n", "x", "v" }, desc = "Yank to clipboard" })
+map("<C-a>", "ggVG", { mode = { "n", "x", "v" }, desc = "Select all" })
+map("P", "<Cmd>pu<cr>", { desc = "Paste in new line" })
 
-map({ "n", "x" }, "<leader>ld", vim.lsp.buf.definition, { desc = "LSP goto definition" })
-map({ "n", "x" }, "<leader>lr", vim.lsp.buf.rename, { desc = "LSP rename" })
-map({ "n", "x" }, "<leader>lh", vim.lsp.buf.hover, { desc = "LSP hover" })
-map({ "n", "x" }, "<leader>la", vim.lsp.buf.code_action, { desc = "LSP code action" })
-map({ "n", "x" }, "<leader>lf", vim.lsp.buf.format, { desc = "LSP format" })
+map("<leader>ld", vim.lsp.buf.definition, { mode = { "n", "x" }, desc = "LSP goto definition" })
+map("<leader>lr", vim.lsp.buf.rename, { mode = { "n", "x" }, desc = "LSP rename" })
+map("<leader>lh", vim.lsp.buf.hover, { mode = { "n", "x" }, desc = "LSP hover" })
+map("<leader>la", vim.lsp.buf.code_action, { mode = { "n", "x" }, desc = "LSP code action" })
+map("<leader>lf", vim.lsp.buf.format, { mode = { "n", "x" }, desc = "LSP format" })
 
 -- lsp
 vim.lsp.config("basedpyright", {
