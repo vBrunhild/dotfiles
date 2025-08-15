@@ -33,7 +33,6 @@ local autocommand = vim.api.nvim_create_autocmd
 -- configs
 vim.g.clipboard = "osc52"
 vim.o.autoindent = true
-vim.o.cmdheight = 0
 vim.o.colorcolumn = "121"
 vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
