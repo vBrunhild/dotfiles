@@ -19,6 +19,7 @@ local map = function(lhs, rhs, opts)
         opts.silent = true
     end
     local mode = opts.mode or "n"
+    opts.mode = nil
     vim.keymap.set(mode, lhs, rhs, opts)
 end
 
@@ -126,83 +127,119 @@ map("<leader>la", vim.lsp.buf.code_action, { mode = { "n", "x" }, desc = "LSP co
 map("<leader>lf", vim.lsp.buf.format, { mode = { "n", "x" }, desc = "LSP format" })
 
 -- lsp
+local get_typescript_server = function(root_dir)
+    local project_roots = vim.fs.find("node_modules", {
+        path = root_dir,
+        upward = true,
+        limit = math.huge
+    })
+    for _, project_root in ipairs(project_roots) do
+        local typescript_path = project_root .. "/typescript"
+        local stat = vim.loop.fs_stat(typescript_path)
+        if stat and stat.type == "directory" then
+            return typescript_path .. "/lib"
+        end
+    end
+    return ""
+end
+
+vim.lsp.config("astro", {
+    cmd = { "astro-ls", "--stdio" },
+    filetypes = "astro",
+    root_markers = { "package.json", "tsconfig.json", ".git" },
+    init_options = {
+        typescript = {}
+    },
+    before_init = function(_, config)
+        if config.init_options and config.init_options.typescript and not config.init_options.typescript.tsdk then
+            config.init_options.typescript.tsdk = get_typescript_server(config.root_dir)
+        end
+    end
+})
+
 vim.lsp.config("basedpyright", {
-    cmd = { 'basedpyright-langserver', '--stdio' },
-    filetypes = { 'python' },
+    cmd = { "basedpyright-langserver", "--stdio" },
+    filetypes = { "python" },
     root_markers = {
-        'pyproject.toml',
-        'setup.py',
-        'setup.cfg',
-        'requirements.txt',
-        'Pipfile',
-        'pyrightconfig.json',
-        '.git',
+        "pyproject.toml",
+        "setup.py",
+        "setup.cfg",
+        "requirements.txt",
+        "Pipfile",
+        "pyrightconfig.json",
+        ".git",
     },
     settings = {
         basedpyright = {
             analysis = {
                 autoSearchPaths = true,
                 useLibraryCodeForTypes = true,
-                diagnosticMode = 'openFilesOnly',
+                diagnosticMode = "openFilesOnly",
             },
         },
     }
 })
 
 vim.lsp.config("dprint", {
-    cmd = { 'dprint', 'lsp' },
+    cmd = { "dprint", "lsp" },
     filetypes = {
-        'json',
-        'jsonc'
+        "javascript",
+        "javascriptreact",
+        "json",
+        "jsonc",
+        "markdown",
+        "toml",
+        "typescript",
+        "typescriptreact",
     },
-    root_marker = { 'dprint.json', '.dprint.json', 'dprint.jsonc', '.dprint.jsonc' },
+    root_marker = { "dprint.json", ".dprint.json", "dprint.jsonc", ".dprint.jsonc" },
     settings = {}
 })
 
 vim.lsp.config("golangci_lint_ls", {
     default_config = {
-        cmd = { 'golangci-lint-langserver' },
-        filetypes = { 'go', 'gomod' },
+        cmd = { "golangci-lint-langserver" },
+        filetypes = { "go", "gomod" },
         init_options = {
-            command = { 'golangci-lint', 'run', '--output.json.path=stdout', '--show-stats=false' },
+            command = { "golangci-lint", "run", "--output.json.path=stdout", "--show-stats=false" },
         },
         root_markers = {
-            '.golangci.yml',
-            '.golangci.yaml',
-            '.golangci.toml',
-            '.golangci.json',
-            'go.work',
-            'go.mod',
-            '.git',
+            ".golangci.yml",
+            ".golangci.yaml",
+            ".golangci.toml",
+            ".golangci.json",
+            "go.work",
+            "go.mod",
+            ".git",
         },
         before_init = function(_, config)
             local v1
-            if vim.fn.executable 'go' == 1 then
-                local exe = vim.fn.exepath 'golangci-lint'
-                local version = vim.system({ 'go', 'version', '-m', exe }):wait()
-                v1 = string.match(version.stdout, '\tmod\tgithub.com/golangci/golangci%-lint\t')
+            if vim.fn.executable "go" == 1 then
+                local exe = vim.fn.exepath "golangci-lint"
+                local version = vim.system({ "go", "version", "-m", exe }):wait()
+                v1 = string.match(version.stdout, "\tmod\tgithub.com/golangci/golangci%-lint\t")
             else
-                local version = vim.system({ 'golangci-lint', 'version' }):wait()
-                v1 = string.match(version.stdout, 'version v?1%.')
+                local version = vim.system({ "golangci-lint", "version" }):wait()
+                v1 = string.match(version.stdout, "version v?1%.")
             end
             if v1 then
-                config.init_options.command = { 'golangci-lint', 'run', '--out-format', 'json' }
+                config.init_options.command = { "golangci-lint", "run", "--out-format", "json" }
             end
         end,
     }
 })
 
 vim.lsp.config("gopls", {
-    cmd = { 'gopls' },
-    filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
+    cmd = { "gopls" },
+    filetypes = { "go", "gomod", "gowork", "gotmpl" },
     root_markers = {
-        '.golangci.yml',
-        '.golangci.yaml',
-        '.golangci.toml',
-        '.golangci.json',
-        'go.work',
-        'go.mod',
-        '.git',
+        ".golangci.yml",
+        ".golangci.yaml",
+        ".golangci.toml",
+        ".golangci.json",
+        "go.work",
+        "go.mod",
+        ".git",
     },
     settings = {
         gopls = {
@@ -298,23 +335,23 @@ vim.lsp.config("gopls", {
 })
 
 vim.lsp.config("groovyls", {
-    cmd = { 'groovy-language-server' },
-    filetypes = { 'groovy' },
-    root_markers = { 'Jenkinsfile', '.git' },
+    cmd = { "groovy-language-server" },
+    filetypes = { "groovy" },
+    root_markers = { "Jenkinsfile", ".git" },
 })
 
 vim.lsp.config("lua_ls", {
-    cmd = { 'lua-language-server' },
-    filetypes = { 'lua' },
+    cmd = { "lua-language-server" },
+    filetypes = { "lua" },
     root_markers = {
-        '.luarc.json',
-        '.luarc.jsonc',
-        '.luacheckrc',
-        '.stylua.toml',
-        'stylua.toml',
-        'selene.toml',
-        'selene.yml',
-        '.git'
+        ".luarc.json",
+        ".luarc.jsonc",
+        ".luacheckrc",
+        ".stylua.toml",
+        "stylua.toml",
+        "selene.toml",
+        "selene.yml",
+        ".git"
     },
     ---@param client vim.lsp.Client
     on_init = function(client)
@@ -337,7 +374,7 @@ vim.lsp.config("lua_ls", {
                 checkThirdParty = false,
                 library = {
                     vim.env.VIMRUNTIME,
-                    vim.api.nvim_get_runtime_file('*/myNeovimPackages/start', false)[1]
+                    vim.api.nvim_get_runtime_file("*/myNeovimPackages/start", false)[1]
                 }
             }
         })
@@ -356,22 +393,22 @@ vim.lsp.config("nil_ls", {
 })
 
 vim.lsp.config("nixd", {
-    cmd = { 'nixd' },
-    filetypes = { 'nix' },
-    root_markers = { 'flake.nix', 'git' }
+    cmd = { "nixd" },
+    filetypes = { "nix" },
+    root_markers = { "flake.nix", "git" }
 })
 
 vim.lsp.config("rust_analyzer", {
-    cmd = { 'rust-analyzer' },
-    filetypes = { 'rust' },
+    cmd = { "rust-analyzer" },
+    filetypes = { "rust" },
     capabilites = {
         experimental = {
             serverStatusNotification = true,
         }
     },
     before_init = function(init_params, config)
-        if config.settings and config.settings['rust-analyzer'] then
-            init_params.initializationOptions = config.settings['rust-analyzer']
+        if config.settings and config.settings["rust-analyzer"] then
+            init_params.initializationOptions = config.settings["rust-analyzer"]
         end
     end,
     ---@param client vim.lsp.Client
@@ -417,7 +454,91 @@ vim.lsp.config("taplo", {
     root_markers = { ".taplo.toml", "taplo.toml", ".git" }
 })
 
+vim.lsp.config("ts_ls", {
+    init_options = { hostInfo = "neovim" },
+    cmd = { "typescript-language-server", "--stdio" },
+    filetypes = {
+        "javascript",
+        "javascript.jsx",
+        "javascriptreact",
+        "typescript",
+        "typescript.jsx",
+        "typescriptreact",
+    },
+    root_dir = function(bufnr, on_dir)
+        local project_root_markers = { "package-lock.json", "yarn.lock", "pnpmp-lock.yaml", "bun.lockb", "bun.lock" }
+        local project_root = vim.fs.root(bufnr, project_root_markers)
+        if not project_root then
+            return nil
+        end
+
+        local ts_config_files = { "tsconfig.json", "jsconfig.json" }
+        local is_buffer_using_typescript = vim.fs.find(ts_config_files, {
+            path = vim.api.nvim_buf_get_name(bufnr),
+            type = "file",
+            limit = 1,
+            upward = true,
+            stop = vim.fs.dirname(project_root)
+        })[1]
+        if not is_buffer_using_typescript then
+            return nil
+        end
+
+        on_dir(project_root)
+    end,
+    handlers = {
+        ["_typescript.rename"] = function(_, result, ctx)
+            local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
+            vim.lsp.util.show_document({
+                uri = result.textDocument.uri,
+                range = {
+                    start = result.position,
+                    ["end"] = result.position
+                }
+            }, client.offset_encoding)
+            vim.lsp.buf.rename()
+            return vim.NIL
+        end
+    },
+    commands = {
+        ["editor.actions.showReferences"] = function(command, ctx)
+            local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
+            local file_uri, position, references = unpack(command.arguments)
+            local quickfix_items = vim.lsp.util.locations_to_items(references, client.offset_encoding)
+            vim.fn.setqflist({}, " ", {
+                title = command.title,
+                items = quickfix_items,
+                context = {
+                    command = command,
+                    bufnr = ctx.bufnr
+                }
+            })
+            vim.lsp.show_document({
+                uri = file_uri,
+                range = {
+                    start = position,
+                    ["end"] = position
+                }
+            }, client.offset_encoding)
+            vim.cmd("botright copen")
+        end
+    },
+    on_attach = function(client, bufnr)
+        command("LspTypescriptSourceAction", function()
+            local source_actions = vim.tbl_filter(function(action)
+                return vim.startswith(action, "source.")
+            end, client.server_capabilities.codeActionProvider.codeActionKinds)
+            vim.lsp.buf.code_actions({
+                context = {
+                    only = source_actions
+                }
+            })
+        end, { bufnr = bufnr })
+    end
+})
+
 vim.lsp.enable({
+    "astro",
     "basedpyright",
     "dprint",
     "golangci_lint_ls",
@@ -429,6 +550,7 @@ vim.lsp.enable({
     "rust_analyzer",
     "taplo",
     "tinymist",
+    "ts_ls",
 })
 
 vim.lsp.inlay_hint.enable(true)
@@ -932,13 +1054,15 @@ require("lze").load({
     },
     {
         "nvim-lint",
-        ft = "groovy",
+        event = "BufEnter",
         after = function()
+            vim.env.ESLINT_D_PPID = vim.fn.getpid()
             require("lint").linters_by_ft = {
-                groovy = { "npm-groovy-lint" }
+                groovy = { "npm-groovy-lint" },
+                javascript = { "eslint_d" },
+                typescript = { "eslint_d" },
             }
             autocommand({ "BufEnter", "BufWritePost" }, {
-                pattern = "*.groovy",
                 callback = function()
                     require("lint").try_lint()
                 end

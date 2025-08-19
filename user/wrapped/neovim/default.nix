@@ -54,6 +54,8 @@ in
       pkgs.alejandra
       pkgs.dprint
       pkgs.dprint-plugins.dprint-plugin-json
+      pkgs.dprint-plugins.dprint-plugin-markdown
+      pkgs.dprint-plugins.dprint-plugin-typescript
       pkgs.lua-language-server
       pkgs.nil
       pkgs.nixd
