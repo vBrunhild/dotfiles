@@ -17,10 +17,10 @@
     }:
     let
       forAllSystems = nixpkgs.lib.genAttrs [
-        "aarch64-linux"
-        "x86_64-linux"
-        "x86_64-darwin"
         "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "x86_64-linux"
       ];
 
       pkgsFor =
@@ -42,10 +42,11 @@
         {
           default = pkgs.mkShell.override { stdenv = wildStdenv; } {
             packages = [
-              pkgs.rustc
               pkgs.cargo
-              pkgs.rust-analyzer
               pkgs.clippy
+              pkgs.rust-analyzer
+              pkgs.rustc
+              pkgs.rustfmt
             ];
           };
         }

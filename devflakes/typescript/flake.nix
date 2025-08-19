@@ -1,5 +1,5 @@
 {
-  description = "My dev flake for Python!";
+  description = "My dev flake for Typescript!";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -16,8 +16,6 @@
       ];
     in
     {
-      environment.localBinInPath = true;
-
       devShells = forAllSystems (
         system:
         let
@@ -26,8 +24,12 @@
         {
           default = pkgs.mkShell {
             buildInputs = [
-              pkgs.basedpyright
-              pkgs.uv
+              pkgs.astro-language-server
+              pkgs.eslint_d
+              pkgs.fnm
+              pkgs.nodejs_24
+              pkgs.typescript
+              pkgs.typescript-language-server
             ];
           };
         }
