@@ -1,11 +1,3 @@
-if vim.env.PROF then
-    require("snacks.profiler").startup({
-        startup = {
-            event = "VimEnter"
-        }
-    })
-end
-
 -- functions
 ---@class MapOpts : vim.keymap.set.Opts
 ---@field mode? string|string[]
@@ -708,6 +700,7 @@ require("lze").load({
                     json = { "dprint" },
                     jsonc = { "dprint" },
                     nix = { "alejandra" },
+                    python = { "ruff" },
                     rust = { "rustfmt" },
                 },
                 default_format_opts = {
@@ -1078,22 +1071,6 @@ require("lze").load({
                     transparency = true,
                     highlight_inactive_windows = true
                 }
-            })
-        end
-    },
-    {
-        "snacks.nvim",
-        event = "DeferredUIEnter",
-        after = function()
-            require("snacks").setup({
-                rename = { enabled = true },
-                words = { enabled = true },
-            })
-            autocommand("User", {
-                pattern = "MiniFilesActionRename",
-                callback = function(event)
-                    require("snacks.rename").on_rename_file(event.data.from, event.data.to)
-                end
             })
         end
     },

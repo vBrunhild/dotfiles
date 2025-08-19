@@ -1,4 +1,5 @@
-{pkgs, ...}: let
+{ pkgs, ... }:
+let
   inherit (builtins) attrValues;
 
   plugins =
@@ -30,12 +31,11 @@
         nvim-dap-view
         nvim-lint
         onedarkpro-nvim
-        snacks-nvim
         typst-preview-nvim
         zellij-nav-nvim
       ;
     })
-    ++ [pkgs.vimPlugins.nvim-treesitter.withAllGrammars];
+    ++ [ pkgs.vimPlugins.nvim-treesitter.withAllGrammars ];
 
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
     withPython3 = false;
@@ -47,18 +47,18 @@
 
   neovim = pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig;
 in
-  pkgs.symlinkJoin {
-    name = "neovim-wrapped";
-    paths = [
-      neovim
-      pkgs.alejandra
-      pkgs.dprint
-      pkgs.dprint-plugins.dprint-plugin-json
-      pkgs.dprint-plugins.dprint-plugin-markdown
-      pkgs.dprint-plugins.dprint-plugin-typescript
-      pkgs.lua-language-server
-      pkgs.nil
-      pkgs.nixd
-      pkgs.taplo
-    ];
-  }
+pkgs.symlinkJoin {
+  name = "neovim-wrapped";
+  paths = [
+    neovim
+    pkgs.alejandra
+    pkgs.dprint
+    pkgs.dprint-plugins.dprint-plugin-json
+    pkgs.dprint-plugins.dprint-plugin-markdown
+    pkgs.dprint-plugins.dprint-plugin-typescript
+    pkgs.lua-language-server
+    pkgs.nil
+    pkgs.nixd
+    pkgs.taplo
+  ];
+}
