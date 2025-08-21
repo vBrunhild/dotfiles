@@ -390,6 +390,23 @@ vim.lsp.config("nixd", {
     root_markers = { "flake.nix", "git" }
 })
 
+-- vim.lsp.config("pyrefly", {
+--     cmd = { "pyrefly", "lsp" },
+--     filetypes = { "python" },
+--     root_markers = {
+--         ".git",
+--         "Pipfile",
+--         "pyproject.toml",
+--         "pyrefly.toml",
+--         "requirements.txt",
+--         "setup.cfg",
+--         "setup.py",
+--     },
+--     on_exit = function(code, _, _)
+--         vim.notify("LSP Pyrefly exited with code: " .. code, vim.log.levels.INFO)
+--     end
+-- })
+
 vim.lsp.config("rust_analyzer", {
     cmd = { "rust-analyzer" },
     filetypes = { "rust" },
@@ -493,15 +510,15 @@ vim.lsp.config("ts_ls", {
         end
     },
     commands = {
-        ["editor.actions.showReferences"] = function(command, ctx)
+        ["editor.actions.showReferences"] = function(cmd, ctx)
             local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
-            local file_uri, position, references = unpack(command.arguments)
+            local file_uri, position, references = unpack(cmd.arguments)
             local quickfix_items = vim.lsp.util.locations_to_items(references, client.offset_encoding)
             vim.fn.setqflist({}, " ", {
-                title = command.title,
+                title = cmd.title,
                 items = quickfix_items,
                 context = {
-                    command = command,
+                    command = cmd,
                     bufnr = ctx.bufnr
                 }
             })
@@ -539,6 +556,7 @@ vim.lsp.enable({
     "lua_ls",
     "nil_ls",
     "nixd",
+    -- "pyrefly",
     "rust_analyzer",
     "taplo",
     "tinymist",
@@ -772,7 +790,7 @@ require("lze").load({
                     miniclue.gen_clues.z(),
                 },
                 window = {
-                    delay = 500,
+                    delay = 1000,
                     config = {
                         width = "auto"
                     }
@@ -806,20 +824,30 @@ require("lze").load({
     },
     {
         "mini.files",
+        keys = {
+            {
+                "<leader>e",
+                "<Cmd>lua if not MiniFiles.close() then MiniFiles.open() end<cr>",
+                silent = true,
+                desc = "File explorer"
+            },
+            {
+                "<leader>E",
+                "<Cmd>lua if not MiniFiles.close() then MiniFiles.open(vim.api.nvim_buf_get_name(0), false) end<cr>",
+                silent = true,
+                desc = "File explorer on current directory"
+            },
+        },
         after = function()
             require("mini.files").setup({
                 windows = {
                     max_number = 3,
-                    preview = true,
                     width_focus = 35,
                     width_nofocus = 35,
                     widthpreview = 35
                 }
             })
         end,
-        keys = {
-            { "<leader>e", "<Cmd>lua if not MiniFiles.close() then MiniFiles.open() end<cr>", silent = true, desc = "File explorer" }
-        }
     },
     {
         "mini.git",
