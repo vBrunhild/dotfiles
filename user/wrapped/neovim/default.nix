@@ -41,16 +41,26 @@ let
   };
 
   neovim = pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped neovimConfig;
+
+  # dprint-fixed = pkgs.dprint.overrideAttrs (old: {
+  #   version = "0.50.0";
+  #   src = pkgs.fetchFromGitHub {
+  #     owner = "dprint";
+  #     repo = "dprint";
+  #     tag = old.version;
+  #     hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+  #   };
+  # });
 in
 pkgs.symlinkJoin {
   name = "neovim-wrapped";
   paths = [
     neovim
+    # dprint-fixed
     pkgs.alejandra
-    pkgs.dprint
-    pkgs.dprint-plugins.dprint-plugin-json
-    pkgs.dprint-plugins.dprint-plugin-markdown
-    pkgs.dprint-plugins.dprint-plugin-typescript
+    # pkgs.dprint-plugins.dprint-plugin-json
+    # pkgs.dprint-plugins.dprint-plugin-markdown
+    # pkgs.dprint-plugins.dprint-plugin-typescript
     pkgs.lua-language-server
     pkgs.nil
     pkgs.nixd
