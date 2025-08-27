@@ -24,10 +24,10 @@
         {
           default = pkgs.mkShell {
             buildInputs = [
-              pkgs.astro-language-server
               pkgs.eslint_d
-              pkgs.fnm
               pkgs.nodejs_24
+              pkgs.pnpm
+              pkgs.prettierd
               pkgs.typescript
               pkgs.typescript-language-server
             ];
