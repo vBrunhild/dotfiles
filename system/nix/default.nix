@@ -1,5 +1,4 @@
 { pkgs, ... }:
-
 {
   nix = {
     gc.automatic = false;
@@ -9,8 +8,8 @@
       flake-registry = "/etc/nix/registry.json";
       auto-optimise-store = true;
       builders-use-substitutes = true;
-      allowed-users = ["@wheel"];
-      trusted-users = ["@wheel"];
+      allowed-users = [ "@wheel" ];
+      trusted-users = [ "@wheel" ];
       commit-lockfile-summary = "chore: Update flake.lock";
       accept-flake-config = true;
       keep-derivations = true;
@@ -20,8 +19,11 @@
       max-jobs = "auto";
       keep-going = true;
       log-lines = 20;
-      extra-experimental-features = ["flakes" "nix-command" "recursive-nix" "ca-derivations"];
-      substituters = ["https://cache.nixos.org"];
+      extra-experimental-features = [
+        "flakes"
+        "nix-command"
+      ];
+      substituters = [ "https://cache.nixos.org" ];
     };
   };
 
