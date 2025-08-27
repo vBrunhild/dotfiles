@@ -1,33 +1,27 @@
 { pkgs, ... }:
-let
-  inherit (builtins) attrValues;
-in
 {
   environment.sessionVariables.FREETYPE_PROPERTIES = "cff:no-stem-darkening=0 autofitter:no-stem-darkening=0";
 
   fonts = {
-    packages =
-      attrValues {
-        inherit (pkgs)
-          material-icons
-          material-design-icons
-          roboto
-          work-sans
-          comic-neue
-          source-sans
-          twemoji-color-font
-          comfortaa
-          inter
-          lato
-          lexend
-          jost
-          dejavu_fonts
-          noto-fonts
-          noto-fonts-cjk-sans
-          noto-fonts-emoji
-          ;
-      }
-      ++ [ pkgs.nerd-fonts.jetbrains-mono ];
+    packages = [
+      pkgs.comfortaa
+      pkgs.comic-neue
+      pkgs.dejavu_fonts
+      pkgs.inter
+      pkgs.jost
+      pkgs.lato
+      pkgs.lexend
+      pkgs.material-design-icons
+      pkgs.material-icons
+      pkgs.nerd-fonts.jetbrains-mono
+      pkgs.noto-fonts
+      pkgs.noto-fonts-cjk-sans
+      pkgs.noto-fonts-emoji
+      pkgs.roboto
+      pkgs.source-sans
+      pkgs.twemoji-color-font
+      pkgs.work-sans
+    ];
 
     enableDefaultPackages = false;
 
