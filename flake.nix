@@ -1,7 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixos-wsl.url = "github:nix-community/NixOS-WSL";
+    nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
 
     zen-browser = {
       url = "github:youwen5/zen-browser-flake";
@@ -60,8 +60,6 @@
               wslConf.automount.root = "/mnt";
               defaultUser = "brunhild";
             };
-
-            system.stateVersion = "24.11";
           }
         ]
         ++ builtins.attrValues self.nixosModules;

@@ -40,6 +40,7 @@
   };
 
   systemd.services.nix-daemon = {
+    enable = true;
     environment.TMPDIR = "/var/tmp";
   };
 

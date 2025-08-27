@@ -2,7 +2,8 @@
   flake,
   pkgs,
   ...
-}: {
+}:
+{
   users = {
     mutableUsers = false;
     users = {
@@ -14,17 +15,17 @@
 
         hashedPasswordFile = "/persist/secrets/brunhild";
         extraGroups = [
-          "wheel"
-          "systemd-journal"
-          "vboxusers"
           "audio"
-          "plugdev"
-          "video"
           "input"
           "lp"
           "networkmanager"
-          "power"
           "nix"
+          "plugdev"
+          "power"
+          "systemd-journal"
+          "vboxusers"
+          "video"
+          "wheel"
         ];
         uid = 1000;
       };
@@ -37,13 +38,21 @@
       extraRules = [
         {
           commands =
-            builtins.map (command: {
-              command = "/run/current-system/sw/bin/${command}";
-              options = ["NOPASSWD"];
-            })
-            ["poweroff" "reboot" "nixos-rebuild" "nix-env" "bandwhich" "systemctl"];
+            builtins.map
+              (command: {
+                command = "/run/current-system/sw/bin/${command}";
+                options = [ "NOPASSWD" ];
+              })
+              [
+                "bandwhich"
+                "nix-env"
+                "nixos-rebuild"
+                "poweroff"
+                "reboot"
+                "systemctl"
+              ];
 
-          groups = ["wheel"];
+          groups = [ "wheel" ];
         }
       ];
     };
