@@ -1,7 +1,6 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 add_newline = false
-palette = 'one_dark'
 continuation_prompt = ' '
 
 format = """
@@ -18,52 +17,16 @@ $line_break\
 $character
 """
 
-[palettes.one_dark]
-mono0 = '#d7dae0'
-mono1 = '#abb2bf'
-mono2 = '#828997'
-mono3 = '#5c6370'
-mono4 = '#3f4451'
-color_red0 = '#e06c75'
-color_red1 = '#be5046'
-color_green = '#98c379'
-color_yellow = '#e5c07b'
-color_blue = '#61afef'
-color_purple = '#c678dd'
-color_cyan = '#56b6c2'
-color_orange = '#d19a66'
-syntax_fg = '#abb2bf'
-syntax_bg = '#282c34'
-color_bg2 = '#665c54'
-syntax_gutter = '#647382'
-syntax_accent = "#528cff"
-
-color_ok = '#98c379'
-color_danger = '#be5046'
-color_caution = '#d19a66'
-
-color_username = '#e06c75'
-color_directory = '#e5c07b'
-color_git = '#61afef'
-color_git_added = '#98c379'
-color_git_deleted = '#be5046'
-color_env = '#c678dd'
-color_docker = '#56b6c2'
-color_shell = '#56b6c2'
-color_container = '#56b6c2'
-color_other = '#56b6c2'
-color_duration = '#528cff'
-
 [username]
 show_always = true
-style_user = "fg:color_username"
-style_root = "bold fg:color_danger"
+style_user = "fg:red"
+style_root = "bold fg:red"
 format = '[$user]($style) '
 
 [directory]
-style = "fg:color_directory"
-read_only_style = "fg:color_directory"
-repo_root_style = "bold fg:color_directory"
+style = "fg:yellow"
+read_only_style = "fg:yellow"
+repo_root_style = "bold fg:yellow"
 format = "[$path]($style) "
 read_only = ""
 home_symbol = "~"
@@ -75,7 +38,7 @@ use_logical_path = true
 
 [git_branch]
 symbol = ""
-style = "fg:color_git"
+style = "fg:blue"
 format = '([$symbol $branch]($style))'
 only_attached = true
 ignore_branches = []
@@ -85,7 +48,7 @@ always_show_remote = false
 disabled = false
 
 [git_commit]
-style = "fg:color_git"
+style = "fg:blue"
 format = "([($tag)(@$hash)]($style))"
 commit_hash_length = 7
 only_detached = true
@@ -94,7 +57,7 @@ tag_disabled = false
 disabled = false
 
 [git_status]
-style = "fg:color_git"
+style = "fg:blue"
 format = '([$ahead_behind]($style))([$all_status]($style))'
 stashed = "*${count}"
 ahead = "⇡${count}"
@@ -111,7 +74,7 @@ ignore_submodules = false
 disabled = false
 
 [git_state]
-style = "fg:color_danger"
+style = "fg:red"
 format = '([$state($progress_current/$progress_total)]($style bold)) '
 rebase = "REBASING"
 merge = "MERGING"
@@ -135,20 +98,20 @@ require_repo = true
 disabled = false
 
 [memory_usage]
-style = "fg:color_green"
+style = "fg:green"
 format = '[${ram}]($style) '
 threshold = -1
 disabled = false
 
 [cmd_duration]
-style = "fg:color_cyan"
+style = "fg:cyan"
 min_time = 0
 show_milliseconds = true
 format = "[$duration](style)"
 
 [character]
-success_symbol = "[❯](fg:color_green)"
-error_symbol = "[❯](fg:color_danger)"
+success_symbol = "[❯](fg:green)"
+error_symbol = "[❯](fg:red)"
 
 [c]
 symbol = " "
