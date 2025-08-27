@@ -1,41 +1,36 @@
 { pkgs, ... }:
 let
-  inherit (builtins) attrValues;
-
-  plugins =
-    (attrValues {
-      inherit (pkgs.vimPlugins)
-        blink-cmp
-        conform-nvim
-        friendly-snippets
-        lze
-        mini-bufremove
-        mini-clue
-        mini-comment
-        mini-diff
-        mini-extra
-        mini-files
-        mini-git
-        mini-hipatterns
-        mini-icons
-        mini-indentscope
-        mini-operators
-        mini-pairs
-        mini-pick
-        mini-snippets
-        mini-splitjoin
-        mini-statusline
-        mini-surround
-        mini-trailspace
-        nvim-dap
-        nvim-dap-view
-        nvim-lint
-        onedarkpro-nvim
-        typst-preview-nvim
-        zellij-nav-nvim
-      ;
-    })
-    ++ [ pkgs.vimPlugins.nvim-treesitter.withAllGrammars ];
+  plugins = [
+    pkgs.vimPlugins.blink-cmp
+    pkgs.vimPlugins.conform-nvim
+    pkgs.vimPlugins.friendly-snippets
+    pkgs.vimPlugins.lze
+    pkgs.vimPlugins.mini-align
+    pkgs.vimPlugins.mini-bufremove
+    pkgs.vimPlugins.mini-clue
+    pkgs.vimPlugins.mini-colors
+    pkgs.vimPlugins.mini-comment
+    pkgs.vimPlugins.mini-diff
+    pkgs.vimPlugins.mini-extra
+    pkgs.vimPlugins.mini-files
+    pkgs.vimPlugins.mini-git
+    pkgs.vimPlugins.mini-hipatterns
+    pkgs.vimPlugins.mini-icons
+    pkgs.vimPlugins.mini-indentscope
+    pkgs.vimPlugins.mini-operators
+    pkgs.vimPlugins.mini-pick
+    pkgs.vimPlugins.mini-snippets
+    pkgs.vimPlugins.mini-splitjoin
+    pkgs.vimPlugins.mini-statusline
+    pkgs.vimPlugins.mini-surround
+    pkgs.vimPlugins.mini-trailspace
+    pkgs.vimPlugins.nvim-dap
+    pkgs.vimPlugins.nvim-dap-view
+    pkgs.vimPlugins.nvim-lint
+    pkgs.vimPlugins.nvim-treesitter.withAllGrammars
+    pkgs.vimPlugins.onedarkpro-nvim
+    pkgs.vimPlugins.typst-preview-nvim
+  ];
 
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
     withPython3 = false;
