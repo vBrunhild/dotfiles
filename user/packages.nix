@@ -5,33 +5,29 @@
 }: let
   inherit (builtins) attrValues;
 in {
-  environment.systemPackages =
-    attrValues {
-      inherit (pkgs)
-        bat
-        bottom
-        curl
-        direnv
-        fd
-        fish
-        git
-        git-credential-manager
-        jujutsu
-        nh
-        openssh
-        ripgrep
-        starship
-        tealdeer
-        tinymist
-        typst
-        uutils-coreutils-noprefix
-        wezterm
-        wikiman
-        zellij
-        zoxide
-      ;
-    }
-    ++ [
+  environment.systemPackages = [
       inputs.zen-browser.packages.${pkgs.system}.default
-    ];
+      pkgs.ascii-image-converter
+      pkgs.bat
+      pkgs.bottom
+      pkgs.curl
+      pkgs.direnv
+      pkgs.fd
+      pkgs.fish
+      pkgs.git
+      pkgs.git-credential-manager
+      pkgs.jujutsu
+      pkgs.nh
+      pkgs.openssh
+      pkgs.ripgrep
+      pkgs.starship
+      pkgs.tealdeer
+      pkgs.tinymist
+      pkgs.typst
+      pkgs.uutils-coreutils-noprefix
+      pkgs.wezterm
+      pkgs.wikiman
+      pkgs.zellij
+      pkgs.zoxide
+  ];
 }
