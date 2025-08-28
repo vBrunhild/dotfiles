@@ -189,6 +189,37 @@ vim.lsp.config["basedpyright"] = {
     }
 }
 
+---@class ClangdInitializeResult: lsp.InitializeResult
+---@field offsetEncoding? string
+vim.lsp.config["clangd"] = {
+    cmd = { 'clangd' },
+    filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
+    root_markers = {
+        '.clangd',
+        '.clang-tidy',
+        '.clang-format',
+        'compile_commands.json',
+        'compile_flags.txt',
+        'configure.ac',
+        '.git',
+    },
+    capabilities = {
+        textDocument = {
+            completion = {
+                editsNearCursor = true,
+            },
+        },
+        offsetEncoding = { 'utf-8', 'utf-16' },
+    },
+    ---@param client vim.lsp.Client
+    ---@param init_result ClangdInitializeResult
+    on_init = function(client, init_result)
+        if init_result.offsetEncoding then
+            client.offset_encoding = init_result.offsetEncoding
+        end
+    end,
+}
+
 vim.lsp.config["dprint"] = {
     cmd = { "dprint", "lsp" },
     filetypes = {
@@ -549,6 +580,7 @@ vim.lsp.config["ts_ls"] = {
 
 vim.lsp.enable({
     "basedpyright",
+    "clangd",
     "dprint",
     "golangci_lint_ls",
     "gopls",
@@ -801,6 +833,7 @@ require("lze").load({
                     },
                 },
                 formatters_by_ft = {
+                    cpp = { "clang-format" },
                     groovy = { "npm-groovy-lint" },
                     javascript = { "dprint", "prettierd" },
                     json = { "dprint" },
@@ -1169,15 +1202,26 @@ require("lze").load({
     },
     {
         "nvim-lint",
-        event = "BufEnter",
+        ft = {
+            "cpp",
+            "groovy",
+            "javascript",
+            "typescript",
+        },
         after = function()
-            vim.env.ESLINT_D_PPID = vim.fn.getpid()
             require("lint").linters_by_ft = {
+                cpp = { "clang-tidy", "cppcheck" },
                 groovy = { "npm-groovy-lint" },
                 javascript = { "eslint_d" },
                 typescript = { "eslint_d" },
             }
-            autocommand({ "BufEnter", "BufWritePost" }, {
+            autocommand("BufWritePost", {
+                pattern = {
+                    "cpp",
+                    "groovy",
+                    "javascript",
+                    "typescript",
+                },
                 callback = function()
                     require("lint").try_lint()
                 end
