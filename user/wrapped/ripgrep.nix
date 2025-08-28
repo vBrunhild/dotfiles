@@ -7,11 +7,10 @@ pkgs.symlinkJoin {
     # bash
     ''
       wrapProgram $out/bin/rg \
-        --add-flags "--max-columns=150" \
-        --add-flags "--max-columns-preview" \
+        --max-columns=150 \
+        --max-columns-preview \
         --add-flags "--hidden" \
+        --add-flags "--glob=!.git/" \
         --add-flags "--smart-case" \
-        --add-flags "--glob=!.git/*" \
-        --add-flags "--colors=line:style:bold"
     '';
 }
