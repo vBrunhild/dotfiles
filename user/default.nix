@@ -7,6 +7,7 @@ rec {
     {
       fish = pkgs.fish;
       neovim = callPackage ./wrapped/neovim { };
+      ripgrep = callPackage ./wrapped/ripgrep.nix { };
       zellijPlugins = callPackage ./wrapped/zellij-plugins.nix { };
     };
 
@@ -17,7 +18,6 @@ rec {
         environment = {
           systemPackages = builtins.attrValues (packages pkgs);
           variables = {
-            RIPGREP_CONFIG_PATH = "$HOME/.config/ripgrep/.ripgreprc";
             EDITOR = "nvim";
             VISUAL = "nvim";
           };
@@ -45,9 +45,9 @@ rec {
       };
 
       imports = [
-        ./packages.nix
         ./git.nix
         ./homix-config.nix
+        ./packages.nix
       ];
     };
 }
