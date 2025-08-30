@@ -5,9 +5,7 @@ rec {
       inherit (pkgs) callPackage;
     in
     {
-      fish = pkgs.fish;
       neovim = callPackage ./wrapped/neovim { };
-      ripgrep = callPackage ./wrapped/ripgrep.nix { };
       zellijPlugins = callPackage ./wrapped/zellij-plugins.nix { };
     };
 
@@ -45,8 +43,8 @@ rec {
       };
 
       imports = [
+        ./config
         ./git.nix
-        ./homix-config.nix
         ./packages.nix
       ];
     };

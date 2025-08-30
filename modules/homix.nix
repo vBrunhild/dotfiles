@@ -3,9 +3,9 @@
   lib,
   pkgs,
   ...
-}:
-let
-  inherit (lib)
+}: let
+  inherit
+    (lib)
     attrValues
     filterAttrs
     flatten
@@ -15,12 +15,11 @@ let
     mkOption
     types
     ;
-  inherit (builtins) map listToAttrs attrNames;
-in
-{
+  inherit (builtins) map attrNames;
+in {
   options = {
     homix = mkOption {
-      default = { };
+      default = {};
       type = types.attrsOf (
         types.submodule (
           {
@@ -28,8 +27,7 @@ in
             config,
             options,
             ...
-          }:
-          {
+          }: {
             options = {
               path = mkOption {
                 type = types.str;
@@ -52,9 +50,9 @@ in
             config = {
               source = mkIf (config.text != null) (
                 let
-                  name' = "homix-" + lib.replaceStrings [ "/" ] [ "-" ] name;
+                  name' = "homix-" + lib.replaceStrings ["/"] ["-"] name;
                 in
-                mkDerivedConfig options.text (pkgs.writeText name')
+                  mkDerivedConfig options.text (pkgs.writeText name')
               );
             };
           }
@@ -70,62 +68,39 @@ in
     };
   };
 
-  config =
-    let
-      users = attrNames (filterAttrs (name: user: user.homix) config.users.users);
+  config = let
+    users = attrNames (filterAttrs (name: user: user.homix) config.users.users);
 
-      homix-link =
-        let
-          files = map (
-            file:
-            # bash
-            ''
-              FILE="$HOME/${file.path}"
-
-              mkdir -p "$(dirname $FILE)"
-
-              if [ -d "$FILE" ]; then
-                echo "HOMIX-ERROR: Directory exists at '$FILE'. Cannot overwrite directory with file link."
-                exit 1
-              elif [ -L "$FILE" ]; then
-                echo "HOMIX-WARNING: Removing existing symlink '$FILE' before linking."
-                unlink "$FILE"
-              elif [ -f "$FILE" ]; then
-                echo "HOMIX-WARNING: Renaming file '$FILE' to '$FILE.bak'."
-                mv "$FILE" "$FILE.bak"
-              fi
-
-              ln -s ${file.source} $FILE
-            '') (attrValues config.homix);
-        in
-        pkgs.writeShellScript "homix-link" ''
-          #!/bin/sh
-          set -e
-          set -u
-          ${builtins.concatStringsSep "\n" files}
-        '';
-
-      mkServices = user: [
-        {
-          name = "homix-link-${user}";
-          value = {
-            wantedBy = [ "multi-user.target" ];
-            description = "Setup homix environment for ${user}.";
-            serviceConfig = {
-              Type = "oneshot";
-              User = "${user}";
-              ExecStart = "${homix-link}";
-            };
-            environment = {
-              HOME = config.users.users.${user}.home;
-            };
-          };
-        }
-      ];
-
-      services = listToAttrs (flatten (map mkServices users));
+    mkTmpfilesRules = user: let
+      home = config.users.users.${user}.home;
+      uid = toString config.users.users.${user}.uid;
+      group = toString config.users.users.${user}.group;
     in
-    {
-      systemd.services = services;
-    };
+      map (file: "L+ ${home}/${file.path} - ${uid} ${group} - ${file.source}") (attrValues config.homix);
+
+    tmpfilesRules = flatten (map mkTmpfilesRules users);
+
+  activationScript = let
+    mkActivationScript = user:
+      let
+        home = config.users.users.${user}.home;
+        uid = toString config.users.users.${user}.uid;
+        group = toString config.users.users.${user}.group;
+        files = map (file:
+        # bash
+        ''
+          #!/bin/sh
+          FILE="$(dirname "${home}/${file.path}")"
+          mkdir -p "$FILE"
+          ln -sfn "${file.source}" "$FILE"
+          chown -h ${uid}:${group} "$FILE"
+        '') (attrValues config.homix);
+      in
+        builtins.concatStringsSep "\n" files;
+    in
+      builtins.concatStringsSep "\n" (map mkActivationScript users);
+  in {
+    systemd.tmpfiles.rules = tmpfilesRules;
+    system.activationScripts.homix = activationScript;
+  };
 }

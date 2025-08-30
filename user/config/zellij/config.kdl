@@ -203,8 +203,6 @@ keybinds clear-defaults=true {
     }
 }
 
-// Plugin aliases - can be used to change the implementation of Zellij
-// changing these requires a restart to take effect
 plugins {
     about location="zellij:about"
     compact-bar location="zellij:compact-bar" {
@@ -216,7 +214,7 @@ plugins {
     }
     plugin-manager location="zellij:plugin-manager"
     session-manager location="zellij:session-manager"
-    status-bar location="zellij:status-bar"
+    // status-bar location="zellij:status-bar"
     strider location="zellij:strider"
     tab-bar location="zellij:tab-bar"
     welcome-screen location="zellij:session-manager" {
@@ -226,16 +224,18 @@ plugins {
         is_enable true
         triggers "nvim"
         reaction_seconds "0.3"
-        print_to_log true
+        print_to_log false
     }
 }
 
 load_plugins {
     autolock
 }
- 
-theme "onedark"
+
+default_layout "compact"
 default_mode "normal"
+mouse_mode false
 pane_frames false
-support_kitty_keyboard_protocol true
 show_startup_tips false
+support_kitty_keyboard_protocol true
+theme "ansi"
