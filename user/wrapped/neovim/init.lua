@@ -34,30 +34,46 @@ local autocommand = vim.api.nvim_create_autocmd
 
 -- configs
 vim.g.clipboard = "osc52"
-vim.o.autoindent = true
+vim.o.backup = false
+vim.o.breakindent = true
 vim.o.colorcolumn = "121"
 vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
 vim.o.expandtab = true
+vim.o.fillchars = "eob: "
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
+vim.o.ignorecase = true
 vim.o.incsearch = true
+vim.o.infercase = true
 vim.o.jumpoptions = "stack,view"
+vim.o.linebreak = true
+vim.o.list = true
+vim.o.listchars = "tab:> ,extends:…,precedes:…,nbsp:␣"
 vim.o.mouse = ""
 vim.o.number = true
 vim.o.relativenumber = true
+vim.o.ruler = false
 vim.o.scrolloff = 10
 vim.o.shiftwidth = 4
+vim.o.showmode = false
 vim.o.signcolumn = "yes"
+vim.o.smartcase = true
 vim.o.smartindent = true
 vim.o.softtabstop = 4
+vim.o.splitbelow = true
+vim.o.splitkeep = "screen"
+vim.o.splitright = true
 vim.o.splitright = true
 vim.o.swapfile = false
 vim.o.tabstop = 4
 vim.o.termguicolors = true
+vim.o.undofile = true
+vim.o.virtualedit = "block"
+vim.o.winblend = 30
 vim.o.winborder = "rounded"
 vim.o.wrap = false
-vim.opt.fillchars:append(",eob: ")
+vim.o.writebackup = false
 vim.opt.shortmess:append("I")
 
 vim.diagnostic.config({
@@ -76,7 +92,7 @@ local buf_easy_close = function(buf)
 end
 
 autocommand("FileType", {
-    -- easy close
+    desc = "Easy close",
     pattern = {
         "help",
         "man",
@@ -88,14 +104,14 @@ autocommand("FileType", {
 })
 
 autocommand("TextYankPost", {
-    -- highlight on yank
+    desc = "Highlight on yank",
     callback = function()
         vim.hl.on_yank()
     end
 })
 
 autocommand("FileType", {
-    -- set indent for specific files
+    desc = "Set indent for specific files",
     pattern = {
         "css",
         "html",
@@ -145,25 +161,29 @@ local nav = function(direction, move_tab)
     end
 end
 
----@type MapConfig[]
-local keymaps = {
+map({
     -- general stuff
-    { "<C-a>",      "ggVG",                        mode = { "n", "x", "v" },  desc = "Select all" },
-    { "P",          "<Cmd>pu<cr>",                 desc = "Paste in new line" },
-    { "Y",          '"+y',                         mode = { "n", "x", "v" },  desc = "Yank to clipboard" },
+    { "<C-a>",      "ggVG",                                                        mode = { "n", "x" },          desc = "Select all" },
+    { "<C-j>",      "<C-d>zz",                                                     mode = { "n", "x" },          desc = "Page down" },
+    { "<C-k>",      "<C-u>zz",                                                     mode = { "n", "x" },          desc = "Page up" },
+    { "<leader>w",  "<Cmd>setlocal wrap!<cr>",                                     desc = "Toggle wrap" },
+    { "P",          "<Cmd>pu<cr>",                                                 desc = "Paste in new line" },
+    { "g/",         "<Esc>/\\%V",                                                  mode = "x",                   desc = "Search inside visual selection" },
+    { "gO",         "<Cmd>call append(line('.') - 1, repeat([''], v:count1))<Cr>", desc = "Put empty line above" },
+    { "go",         "<Cmd>call append(line('.'), repeat([''], v:count1))<Cr>",     desc = "Put empty line below" },
+    { "gp",         '"+P',                                                         mode = "x",                   desc = "Paste from clipboard" },
+    { "gp",         '"+p',                                                         desc = "Paste from clipboard" },
+    { "gy",         '"+y',                                                         mode = { "n", "x" },          desc = "Yank to clipboard" },
     -- lsp stuff
-    { "<leader>la", vim.lsp.buf.code_action,       mode = { "n", "x" },       desc = "LSP code action" },
-    { "<leader>ld", vim.lsp.buf.definition,        mode = { "n", "x" },       desc = "LSP goto definition" },
-    { "<leader>lf", vim.lsp.buf.format,            mode = { "n", "x", "v" },  desc = "LSP format" },
-    { "<leader>lr", vim.lsp.buf.rename,            mode = { "n", "x" },       desc = "LSP rename" },
+    { "<leader>la", vim.lsp.buf.code_action,                                       mode = { "n", "x" },          desc = "LSP code action" },
+    { "<leader>ld", vim.lsp.buf.definition,                                        mode = { "n", "x" },          desc = "LSP goto definition" },
+    { "<leader>lr", vim.lsp.buf.rename,                                            mode = { "n", "x" },          desc = "LSP rename" },
     -- zellij
-    { "<A-h>",      function() nav("h", true) end, desc = "Navigate left" },
-    { "<A-j>",      function() nav("j") end,       desc = "Navigate down" },
-    { "<A-k>",      function() nav("k") end,       desc = "Navigate up" },
-    { "<A-l>",      function() nav("l", true) end, desc = "Navigate right" },
-}
-
-map(keymaps)
+    { "<A-h>",      function() nav("h", true) end,                                 desc = "Navigate left",       silent = true },
+    { "<A-j>",      function() nav("j") end,                                       desc = "Navigate down",       silent = true },
+    { "<A-k>",      function() nav("k") end,                                       desc = "Navigate up",         silent = true },
+    { "<A-l>",      function() nav("l", true) end,                                 desc = "Navigate right",      silent = true },
+})
 
 -- lsp
 vim.lsp.config["basedpyright"] = {
@@ -605,12 +625,8 @@ end
 ---@param text string[]
 ---@return string[]
 local center_text = function(text)
-    local height = vim.api.nvim_win_get_height(0)
-    local width = vim.api.nvim_win_get_width(0)
-
-    local pad_top = math.floor((height - #text) / 2)
-    local pad_left = math.floor((width - vim.fn.strdisplaywidth(text[1])) / 2)
-
+    local pad_top = math.floor((vim.api.nvim_win_get_height(0) - #text) / 2)
+    local pad_left = math.floor((vim.api.nvim_win_get_width(0) - vim.fn.strdisplaywidth(text[1])) / 2)
     local padded = {}
     for _ = 1, pad_top do
         table.insert(padded, "")
@@ -619,7 +635,6 @@ local center_text = function(text)
         line = string.rep(" ", pad_left) .. line
         table.insert(padded, line)
     end
-
     return padded
 end
 
@@ -637,39 +652,39 @@ local startup = function()
     vim.opt_local.signcolumn = "no"
     vim.opt_local.colorcolumn = ""
     local text = {
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠛⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠉⠀⠀⠀⠀⠀⠀⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣿⣿⣿⣿⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⢀⠞⠛⣿⣿⣿⣿⣿⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⣠⣿⣀⣴⣿⣿⢿⣿⣿⠟⠹⣟⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠰⣿⣿⣿⣿⡿⢃⣼⣿⠟⠀⠀⠈⠿⣩⣷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠈⠙⣷⣶⠟⠛⠉⠀⠀⠀⠀⠀⠀⠹⣏⣥⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣤⣤⣤⣾⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣹⣿⣿⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣷⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣯⡴⠖⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⠿⢻⡟⢻⣟⣩⣤⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⠟⣽⠏⣸⡏⠀⣼⡇⣾⢹⣿⡶⣚⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⡟⠘⣿⡴⠞⢁⣴⡟⠁⣰⡿⢠⣿⢸⡏⡏⣿⣫⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢳⡀⠘⣿⣶⠛⢋⣠⣴⠟⢁⣾⠇⣼⠇⡇⣿⢹⣿⣴⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡄⠸⣌⣿⣟⣉⣠⣴⡿⢋⣼⡟⣸⣇⡿⣿⣹⣟⣣⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣻⣾⣟⡽⠙⢿⣉⣡⣴⠿⢋⣰⣟⣼⣿⣏⡟⣹⡿⢧⡄⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠿⣿⣿⡇⢀⣀⢙⣿⣤⣶⣿⣯⣾⣿⣿⡾⢁⡟⢿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⢻⠰⣿⣿⣿⣽⢝⣿⣿⡿⠿⠿⣋⣤⠟⢀⣸⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⢣⡏⡏⠈⢿⡙⡟⣿⣎⡌⢻⣆⠀⠚⠉⠀⠀⠀⢹⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡏⣸⢇⠇⠀⠘⣧⠸⡈⢿⣷⡀⠻⣧⠀⠀⠀⠀⠀⢾⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡇⣿⣼⠀⠀⠀⠘⢧⣧⠀⢻⣷⣤⣽⣷⣄⡀⠀⠀⢼⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣷⣿⠄⠀⠀⠀⠀⠈⢻⣧⠀⢻⣿⣿⣿⣿⣿⣷⣤⣾⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡏⠉⠉⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⡿⠀⠀⠀⠀⢀⣀⣀⣹⣧⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢷⡄⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⢠⠀⠀⠀⠀⢠⣤⡼⠿⠋⢁⣀⠘⠋⠉⠉⠋⠉⠉⢿⣿⣿⣿⣿⣿⠟⠁⠀⢸⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣸⣿⡆⠀⠀⠀⢹⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠛⠻⠿⠿⠿⠶⣶⣾⣿⣿⡋⠉⠀⠀⠀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣴⣶⣿⣿⣿⣿⠇⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⢻⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⣠⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠤⢤⣤⣤⣶⣶⣶⣿⣿⣿⣿⡿⠿⠿⠿⠛⠛⠁⠀⠀⠀⣠⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠙⢦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠲⠲⠦⠤⣤⣤⣤⣤⣤⣤⣤⣤⢤⡤⠦⠴⠖⠛⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣠⣤⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠛⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠉⠀⠀⠀⠀⠀⠀⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣿⣿⣿⣿⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⢀⠞⠛⣿⣿⣿⣿⣿⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⣠⣿⣀⣴⣿⣿⢿⣿⣿⠟⠹⣟⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠰⣿⣿⣿⣿⡿⢃⣼⣿⠟⠀⠀⠈⠿⣩⣷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠈⠙⣷⣶⠟⠛⠉⠀⠀⠀⠀⠀⠀⠹⣏⣥⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣤⣤⣤⣾⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣹⣿⣿⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣷⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣯⡴⠖⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⠿⢻⡟⢻⣟⣩⣤⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⠟⣽⠏⣸⡏⠀⣼⡇⣾⢹⣿⡶⣚⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⡟⠘⣿⡴⠞⢁⣴⡟⠁⣰⡿⢠⣿⢸⡏⡏⣿⣫⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢳⡀⠘⣿⣶⠛⢋⣠⣴⠟⢁⣾⠇⣼⠇⡇⣿⢹⣿⣴⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡄⠸⣌⣿⣟⣉⣠⣴⡿⢋⣼⡟⣸⣇⡿⣿⣹⣟⣣⡄⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣻⣾⣟⡽⠙⢿⣉⣡⣴⠿⢋⣰⣟⣼⣿⣏⡟⣹⡿⢧⡄⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠿⣿⣿⡇⢀⣀⢙⣿⣤⣶⣿⣯⣾⣿⣿⡾⢁⡟⢿⣿⡇⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⢻⠰⣿⣿⣿⣽⢝⣿⣿⡿⠿⠿⣋⣤⠟⢀⣸⣿⣧⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⢣⡏⡏⠈⢿⡙⡟⣿⣎⡌⢻⣆⠀⠚⠉⠀⠀⠀⢹⣿⡟⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡏⣸⢇⠇⠀⠘⣧⠸⡈⢿⣷⡀⠻⣧⠀⠀⠀⠀⠀⢾⣿⣿⠃⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡇⣿⣼⠀⠀⠀⠘⢧⣧⠀⢻⣷⣤⣽⣷⣄⡀⠀⠀⢼⣿⣿⡄⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣷⣿⠄⠀⠀⠀⠀⠈⢻⣧⠀⢻⣿⣿⣿⣿⣿⣷⣤⣾⣿⣿⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡏⠉⠉⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⡿⠀⠀⠀⠀⢀⣀⣀⣹⣧⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢷⡄⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⢠⠀⠀⠀⠀⢠⣤⡼⠿⠋⢁⣀⠘⠋⠉⠉⠋⠉⠉⢿⣿⣿⣿⣿⣿⠟⠁⠀⢸⡟⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣸⣿⡆⠀⠀⠀⢹⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠛⠻⠿⠿⠿⠶⣶⣾⣿⣿⡋⠉⠀⠀⠀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣴⣶⣿⣿⣿⣿⠇⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⢻⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⣠⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠤⢤⣤⣤⣶⣶⣶⣿⣿⣿⣿⡿⠿⠿⠿⠛⠛⠁⠀⠀⠀⣠⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠙⢦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠲⠲⠦⠤⣤⣤⣤⣤⣤⣤⣤⣤⢤⡤⠦⠴⠖⠛⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣠⣤⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
     }
     vim.api.nvim_buf_set_lines(0, 0, -1, false, center_text(text))
 end
@@ -707,47 +722,18 @@ require("lze").load({
             require("blink.cmp").setup({
                 snippets = { preset = "mini_snippets" },
                 signature = { enabled = true },
-                appearance = {
-                    use_nvim_cmp_as_default = false,
-                    nerd_font_variant = "mono",
-                },
-                keymap = {
-                    preset = "super-tab",
-                },
+                keymap = { preset = "super-tab" },
                 cmdline = {
-                    completion = {
-                        menu = { auto_show = true },
-                        list = {
-                            selection = {
-                                preselect = false,
-                                auto_insert = true
-                            }
-                        }
-                    },
                     keymap = {
                         ["<CR>"] = { "accept_and_enter", "fallback" },
                         ["<Left>"] = false,
                         ["<Right>"] = false,
                     }
                 },
-                sources = {
-                    default = { "lsp", "path", "snippets", "buffer" },
-                    providers = {
-                        cmdline = {
-                            min_keyword_length = 0
-                        }
-                    },
-                },
                 completion = {
-                    accept = {
-                        auto_brackets = {
-                            enabled = true
-                        }
-                    },
+                    accept = { auto_brackets = { enabled = false } },
                     menu = {
-                        scrolloff = 1,
                         scrollbar = false,
-                        winblend = 0,
                         draw = {
                             components = {
                                 kind_icon = {
@@ -776,21 +762,17 @@ require("lze").load({
                         }
                     },
                     documentation = {
-                        window = {
-                            scrollbar = false,
-                        },
+                        window = { scrollbar = false, },
                         auto_show = true,
-                        auto_show_delay_ms = 500
                     },
                     list = {
                         selection = {
                             preselect = false,
                             auto_insert = true
                         }
-                    },
+                    }
                 },
                 fuzzy = {
-                    implementation = "prefer_rust_with_warning",
                     sorts = { "exact", "score", "sort_text" }
                 }
             })
@@ -800,8 +782,15 @@ require("lze").load({
         "conform",
         event = { "BufEnter" },
         cmd = { "ConformInfo" },
-        keys = keymaps[6],
-        before = function()
+        keys = {
+            {
+                "<leader>lf",
+                function() require("conform").format({ async = true }) end,
+                mode = { "n", "x", "v" },
+                desc = "LSP format"
+            }
+        },
+        beforeAll = function()
             vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
         end,
         after = function()
@@ -826,7 +815,7 @@ require("lze").load({
                     javascript = { "dprint", "prettierd" },
                     json = { "dprint" },
                     jsonc = { "dprint" },
-                    nix = { "alejandra" },
+                    nix = { "alejandra", lsp_format = "never" },
                     python = { "ruff" },
                     rust = { "rustfmt" },
                     typescript = { "dprint", "prettierd" },
@@ -855,7 +844,7 @@ require("lze").load({
     },
     {
         "mini.bufremove",
-        event = "BufDelete",
+        event = "DeferredUIEnter",
         after = function() require("mini.bufremove").setup() end
     },
     {
@@ -944,6 +933,7 @@ require("lze").load({
     },
     {
         "mini.files",
+        lazy = vim.fn.argc(-1) == 0,
         keys = {
             {
                 "<leader>e",
@@ -1013,7 +1003,7 @@ require("lze").load({
     },
     {
         "mini.icons",
-        dep_of = { "blink.cmp", "mini.files", "mini.pick" },
+        dep_of = { "blink.cmp", "mini.files", "mini.pick", "mini.statusline" },
         after = function() require("mini.icons").setup() end
     },
     {
@@ -1069,7 +1059,30 @@ require("lze").load({
     {
         "mini.statusline",
         event = "DeferredUIEnter",
-        after = function() require("mini.statusline").setup() end
+        after = function()
+            local statusline = require("mini.statusline")
+            local content = function()
+                local diagnostics_signs = { ERROR = " ", WARN = " ", INFO = " ", HINT = "󱧡 " }
+                local mode, mode_hl     = statusline.section_mode({ trunc_width = 120 })
+                local diff              = statusline.section_diff({ trunc_width = 75 })
+                local diagnostics       = statusline.section_diagnostics({ trunc_width = 75, signs = diagnostics_signs })
+                local filename          = statusline.section_filename({ trunc_width = 140 })
+                local search            = statusline.section_searchcount({ trunc_width = 75 })
+                local location          = statusline.section_location({ trunc_width = 75 })
+                return statusline.combine_groups({
+                    { hl = mode_hl,                 strings = { mode } },
+                    { hl = "MiniStatuslineDevinfo", strings = { diff } },
+                    "%<", -- Mark general truncate point
+                    { hl = "MiniStatuslineFilename", strings = { filename } },
+                    "%=", -- End left alignment
+                    { hl = "MiniStatuslineDevinfo",  strings = { diagnostics } },
+                    { hl = mode_hl,                  strings = { search, location } },
+                })
+            end
+            statusline.setup({
+                content = { active = content }
+            })
+        end
     },
     {
         "mini.surround",

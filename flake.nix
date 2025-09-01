@@ -2,11 +2,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
-
-    zen-browser = {
-      url = "github:youwen5/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = inputs @ {
@@ -26,13 +22,14 @@
     packages = forAllSystems (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
-      in (user.packages pkgs)
+      in (user.packages {inherit inputs pkgs;})
     );
 
     formatter = forAllSystems (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
-      in pkgs.alejandra
+      in
+        pkgs.alejandra
     );
 
     devShells = forAllSystems (
