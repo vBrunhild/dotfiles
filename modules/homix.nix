@@ -78,29 +78,32 @@ in {
     in
       map (file: "L+ ${home}/${file.path} - ${uid} ${group} - ${file.source}") (attrValues config.homix);
 
-    tmpfilesRules = flatten (map mkTmpfilesRules users);
+    mkActivationScript = user: let
+      home = config.users.users.${user}.home;
+      uid = toString config.users.users.${user}.uid;
+      group = toString config.users.users.${user}.group;
+      gid = toString config.users.groups.${group}.gid;
 
-  activationScript = let
-    mkActivationScript = user:
-      let
-        home = config.users.users.${user}.home;
-        uid = toString config.users.users.${user}.uid;
-        group = toString config.users.users.${user}.group;
-        files = map (file:
-        # bash
-        ''
-          #!/bin/sh
-          FILE="$(dirname "${home}/${file.path}")"
-          mkdir -p "$FILE"
-          ln -sfn "${file.source}" "$FILE"
-          chown -h ${uid}:${group} "$FILE"
-        '') (attrValues config.homix);
-      in
-        builtins.concatStringsSep "\n" files;
+      dirs = lib.unique (map (
+        file:
+          builtins.dirOf "${home}/${file.path}"
+      ) (attrValues config.homix));
+
+      mkdirCommands =
+        map (dir: ''
+          if [ ! d "${dir}" ]; then
+            mkdir -p "${dir}"
+            chown ${uid}:${gid} "${dir}"
+          fi
+        '')
+        dirs;
     in
-      builtins.concatStringsSep "\n" (map mkActivationScript users);
+      builtins.concatStringsSep "\n" mkdirCommands;
+
+    tmpfilesRules = flatten (map mkTmpfilesRules users);
+    activationScript = lib.genAttrs users (user: {text = mkActivationScript user;});
   in {
     systemd.tmpfiles.rules = tmpfilesRules;
-    system.activationScripts.homix = activationScript;
+    system.activationScripts = activationScript;
   };
 }
