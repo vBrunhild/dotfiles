@@ -1,5 +1,4 @@
 {
-  flake,
   pkgs,
   ...
 }:
@@ -11,7 +10,7 @@
       brunhild = {
         isNormalUser = true;
         homix = true;
-        shell = flake.packages.${pkgs.system}.fish;
+        shell = pkgs.fish;
 
         hashedPasswordFile = "/persist/secrets/brunhild";
         extraGroups = [
