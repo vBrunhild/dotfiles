@@ -65,12 +65,15 @@ config.font = wezterm.font_with_fallback({ "JetBrains Mono", "Noto Emoji" })
 config.font_size = 9.2
 config.front_end = "Software"
 config.text_background_opacity = 1
-config.window_background_opacity = 0.95
+config.window_background_opacity = 0.90
 config.window_decorations = "RESIZE"
 
-for _, domain in ipairs(wezterm.default_wsl_domains()) do
-    if domain.name == "WSL:NixOS" then
-        config.default_domain = "WSL:NixOS"
+if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
+    for _, domain in ipairs(wezterm.default_wsl_domains()) do
+        if domain.name == "WSL:NixOS" then
+            config.default_domain = "WSL:NixOS"
+            break
+        end
     end
 end
 
