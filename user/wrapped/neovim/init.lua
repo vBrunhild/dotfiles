@@ -43,6 +43,7 @@ vim.o.expandtab = true
 vim.o.fillchars = "eob: "
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
+vim.o.foldmethod = "indent"
 vim.o.ignorecase = true
 vim.o.incsearch = true
 vim.o.infercase = true
@@ -64,8 +65,8 @@ vim.o.softtabstop = 4
 vim.o.splitbelow = true
 vim.o.splitkeep = "screen"
 vim.o.splitright = true
-vim.o.splitright = true
 vim.o.swapfile = false
+vim.o.synmaxcol = 300
 vim.o.tabstop = 4
 vim.o.termguicolors = true
 vim.o.undofile = true
@@ -448,6 +449,29 @@ vim.lsp.config["lua_ls"] = {
     }
 }
 
+vim.lsp.config["markdown_oxide"] = {
+    cmd = { "markdown-oxide" },
+    filetypes = { "markdown" },
+    root_markers = { ".git", ".obsidian", "moxide.toml" },
+    on_attach = function(client, bufnr)
+        for _, cmd in ipairs({ "today", "tomorrow", "yesterday" }) do
+            local title = ("MarkdownOxide%s"):format(cmd:gsub("^%l", string.upper))
+            command(
+                title,
+                function()
+                    client:exec_cmd({
+                        title = title,
+                        command = "jump",
+                        arguments = { cmd },
+                        bufnr = bufnr,
+                    })
+                end,
+                { desc = ("Open %s daily note"):format(cmd) }
+            )
+        end
+    end
+}
+
 vim.lsp.config["nil_ls"] = {
     cmd = { "nil" },
     filetypes = { "nix" },
@@ -478,6 +502,7 @@ vim.lsp.config["rust_analyzer"] = {
     on_attach = function(client, bufnr)
         vim.api.nvim_buf_create_user_command(bufnr, "LspCargoReload", function()
             vim.notify("Reloading cargo workspace")
+            ---@diagnostic disable-next-line: param-type-mismatch
             client:request("rust-analyzer/reloadWorkspace", nil, function(err)
                 if err then
                     error(tostring(err))
@@ -606,6 +631,7 @@ vim.lsp.enable({
     "gopls",
     "groovyls",
     "lua_ls",
+    "markdown_oxide",
     "nil_ls",
     "nixd",
     "rust_analyzer",

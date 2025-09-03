@@ -104,6 +104,7 @@ in
       pkgs.dprint-plugins.dprint-plugin-markdown
       pkgs.dprint-plugins.dprint-plugin-typescript
       pkgs.lua-language-server
+      pkgs.markdown-oxide
       pkgs.nil
       pkgs.nixd
       pkgs.taplo
