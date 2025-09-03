@@ -1,5 +1,15 @@
 local wezterm = require("wezterm")
 
+wezterm.on("toggle-opacity", function(window, _)
+    local overrides = window:get_config_overrides() or {}
+    if not overrides.window_background_opacity then
+        overrides.window_background_opacity = 0.90
+    else
+        overrides.window_background_opacity = nil
+    end
+    window:set_config_overrides(overrides)
+end)
+
 local config = wezterm.config_builder()
 
 local palette = {
@@ -65,8 +75,15 @@ config.font = wezterm.font_with_fallback({ "JetBrains Mono", "Noto Emoji" })
 config.font_size = 9.2
 config.front_end = "Software"
 config.text_background_opacity = 1
-config.window_background_opacity = 0.90
 config.window_decorations = "RESIZE"
+
+config.keys = {
+    {
+        key = "O",
+        mods = "CTRL|SHIFT",
+        action = wezterm.action.EmitEvent "toggle-opacity"
+    }
+}
 
 if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
     for _, domain in ipairs(wezterm.default_wsl_domains()) do
