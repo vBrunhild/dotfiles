@@ -1038,6 +1038,36 @@ require("lze").load({
         after = function() require("mini.indentscope").setup() end
     },
     {
+        "mini.map",
+        event = "DeferredUIEnter",
+        allow_again = true,
+        keys = {
+            {
+                "<leader>m",
+                function() require("mini.map").toggle() end,
+                desc = "Toggle map",
+                mode = "n"
+            }
+        },
+        after = function()
+            local minimap = require("mini.map")
+            minimap.setup({
+                integrations = {
+                    minimap.gen_integration.builtin_search(),
+                    minimap.gen_integration.diagnostic(),
+                    minimap.gen_integration.diff(),
+                },
+                symbols = {
+                    encode = minimap.gen_encode_symbols.dot("4x2"),
+                    scroll_line = nil,
+                    scroll_view = "",
+                }
+            })
+            vim.api.nvim_set_hl(0, "MiniMapSymbolLine", { bg = "", fg = "#c678dd" })
+            minimap.open()
+        end
+    },
+    {
         "mini.operators",
         keys = {
             { "g=", desc = "Evaluate operator", mode = { "n", "v", "x" } },
