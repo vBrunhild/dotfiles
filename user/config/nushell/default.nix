@@ -3,10 +3,27 @@
     ".config/nushell/config.nu".text =
       # nu
       ''
+        $env.config = {
+            hooks: {
+                env_change: {
+                    PWD: (
+                        $env.config.hooks.env_change.PWD? | default []
+                        | append {||
+                            if (which direnv | is-empty) {
+                                return
+                            }
+                            direnv export json | from json | default {} | load-env
+                        }
+                    )
+                }
+            }
+        }
+
         $env.config.show_banner = false
         $env.config.edit_mode = "vi"
         $env.config.completions.algorithm = "fuzzy"
 
+        plugin add ${pkgs.nushellPlugins.gstat}/bin/nu_plugin_gstat
         plugin add ${pkgs.nushellPlugins.polars}/bin/nu_plugin_polars
         plugin add ${pkgs.nushellPlugins.query}/bin/nu_plugin_query
 
@@ -32,8 +49,8 @@
         }
 
         start_zellij
-      '';
-    ".config/nushell/env.nu".text =
+    '';
+  ".config/nushell/env.nu".text =
       # nu
       ''
         zoxide init nushell | save -f ~/.zoxide.nu
