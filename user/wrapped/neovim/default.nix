@@ -36,6 +36,7 @@
       pkgs.vimPlugins.nvim-treesitter-parsers.markdown
       pkgs.vimPlugins.nvim-treesitter-parsers.markdown_inline
       pkgs.vimPlugins.nvim-treesitter-parsers.nix
+      pkgs.vimPlugins.nvim-treesitter-parsers.nu
       pkgs.vimPlugins.nvim-treesitter-parsers.python
       pkgs.vimPlugins.nvim-treesitter-parsers.regex
       pkgs.vimPlugins.nvim-treesitter-parsers.rust

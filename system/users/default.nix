@@ -10,7 +10,7 @@
       brunhild = {
         isNormalUser = true;
         homix = true;
-        shell = pkgs.fish;
+        shell = pkgs.nushell;
 
         hashedPasswordFile = "/persist/secrets/brunhild";
         extraGroups = [

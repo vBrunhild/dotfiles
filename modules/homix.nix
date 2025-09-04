@@ -98,7 +98,10 @@ in {
         '')
         dirs;
     in
-      builtins.concatStringsSep "\n" mkdirCommands;
+      ''
+        #!/bin/sh
+        ${builtins.concatStringsSep "\n" mkdirCommands}
+      '';
 
     tmpfilesRules = flatten (map mkTmpfilesRules users);
     activationScript = lib.genAttrs users (user: {text = mkActivationScript user;});

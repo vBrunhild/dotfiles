@@ -14,6 +14,7 @@
     pkgs.git-credential-manager
     pkgs.jujutsu
     pkgs.nh
+    pkgs.nushell
     pkgs.openssh
     pkgs.ripgrep
     pkgs.starship
