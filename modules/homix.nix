@@ -91,17 +91,14 @@ in {
 
       mkdirCommands =
         map (dir: ''
-          if [ ! d "${dir}" ]; then
+          if [ ! -d "${dir}" ]; then
             mkdir -p "${dir}"
             chown ${uid}:${gid} "${dir}"
           fi
         '')
         dirs;
     in
-      ''
-        #!/bin/sh
-        ${builtins.concatStringsSep "\n" mkdirCommands}
-      '';
+      builtins.concatStringsSep "\n" mkdirCommands;
 
     tmpfilesRules = flatten (map mkTmpfilesRules users);
     activationScript = lib.genAttrs users (user: {text = mkActivationScript user;});
