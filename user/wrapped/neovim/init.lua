@@ -118,6 +118,7 @@ autocommand("FileType", {
         "html",
         "javascript",
         "nix",
+        "nu",
         "typescript",
         "typst",
     },
@@ -484,6 +485,14 @@ vim.lsp.config["nixd"] = {
     root_markers = { "flake.nix", "git" }
 }
 
+vim.lsp.config["nu"] = {
+    cmd = { "nu", "--lsp" },
+    filetypes = { "nu" },
+    root_dir = function(bufnr, on_dir)
+        on_dir(vim.fs.root(bufnr, { ".git" }) or vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr)))
+    end
+}
+
 vim.lsp.config["rust_analyzer"] = {
     cmd = { "rust-analyzer" },
     filetypes = { "rust" },
@@ -634,6 +643,7 @@ vim.lsp.enable({
     "markdown_oxide",
     "nil_ls",
     "nixd",
+    "nu",
     "rust_analyzer",
     "taplo",
     "tinymist",
