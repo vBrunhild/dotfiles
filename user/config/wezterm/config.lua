@@ -31,8 +31,6 @@ local palette = {
 config.colors = {
     background = palette.black,
     foreground = palette.light_gray,
-    cursor_bg  = palette.magenta,
-    cursor_fg  = palette.full_black,
     ansi       = {
         palette.black,
         palette.red,
@@ -69,6 +67,7 @@ config.font_size = 9.2
 config.front_end = "Software"
 config.text_background_opacity = 1
 config.window_decorations = "RESIZE"
+config.window_padding = { left = 2, right = 2, top = 2, bottom = 2 }
 
 config.keys = {
     {
