@@ -6,10 +6,11 @@
         plugin add ${pkgs.nushellPlugins.polars}/bin/nu_plugin_polars
         plugin add ${pkgs.nushellPlugins.query}/bin/nu_plugin_query
 
-        source ${./git.nu}
         source ${./theme.nu}
-        source ${./zellij.nu}
-        source ${./zoxide.nu}
+        source ${./completions/cargo.nu}
+        source ${./completions/git.nu}
+        source ${./completions/zellij.nu}
+        source ${./completions/zoxide.nu}
 
         $env.config.hooks = {
           env_change: {

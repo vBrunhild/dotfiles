@@ -137,9 +137,9 @@ def "nu-complete git mergable sources" [] {
   let branches = get-mergable-sources
   {
     options: {
-        case_sensitive: false,
-        completion_algorithm: prefix,
-        sort: false,
+      case_sensitive: false,
+      completion_algorithm: prefix,
+      sort: false,
     },
     completions: $branches
   }
@@ -150,9 +150,9 @@ def "nu-complete git switch" [] {
   let branches = get-mergable-sources
   {
     options: {
-        case_sensitive: false,
-        completion_algorithm: prefix,
-        sort: false,
+      case_sensitive: false,
+      completion_algorithm: prefix,
+      sort: false,
     },
     completions: $branches
   }
@@ -186,9 +186,9 @@ def "nu-complete git checkout" [context: string, position?:int] {
   let commits = ^git rev-list -n 400 --remotes --oneline | lines | split column -n 2 ' ' value description | upsert description {|x| $'Commit, ($x.value) ($x.description)' } | insert style 'light_cyan_dimmed'
   {
     options: {
-        case_sensitive: false,
-        completion_algorithm: prefix,
-        sort: false,
+      case_sensitive: false,
+      completion_algorithm: prefix,
+      sort: false,
     },
     completions: [...$branches, ...$files, ...$commits]
   }
@@ -200,8 +200,8 @@ def "nu-complete git rebase" [] {
   | parse "{value}"
   | insert description "local branch"
   | append (nu-complete git remote branches with prefix
-            | parse "{value}"
-            | insert description "remote branch")
+    | parse "{value}"
+    | insert description "remote branch")
   | append (nu-complete git commits all)
 }
 
