@@ -26,13 +26,6 @@ local palette = {
     blue           = "#61afef",
     magenta        = "#c678dd",
     cyan           = "#56b6c2",
-    -- brights
-    bright_red     = "#ff7b86",
-    bright_green   = "#b4e88d",
-    bright_yellow  = "#ffd98e",
-    bright_blue    = "#72cfff",
-    bright_magenta = "#e48bff",
-    bright_cyan    = "#6fe7f7",
 }
 
 config.colors = {
@@ -52,12 +45,12 @@ config.colors = {
     },
     brights    = {
         palette.dark_gray,
-        palette.bright_red,
-        palette.bright_green,
-        palette.bright_yellow,
-        palette.bright_blue,
-        palette.bright_magenta,
-        palette.bright_cyan,
+        palette.red,
+        palette.green,
+        palette.yellow,
+        palette.blue,
+        palette.magenta,
+        palette.cyan,
         palette.white,
     }
 }
