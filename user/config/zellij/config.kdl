@@ -238,4 +238,4 @@ mouse_mode false
 pane_frames false
 show_startup_tips false
 support_kitty_keyboard_protocol true
-theme "ansi"
+theme "onedark"
