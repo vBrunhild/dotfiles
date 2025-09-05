@@ -17,7 +17,6 @@
     pkgs.nushell
     pkgs.openssh
     pkgs.ripgrep
-    pkgs.starship
     pkgs.tealdeer
     pkgs.tinymist
     pkgs.typst
