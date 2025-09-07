@@ -1,12 +1,12 @@
 module prompt_utils {
-  export def color [color: string] {
+  export def color [color: string]: string -> string {
     $"(ansi $color)($in)(ansi reset)"
   }
 
-  export def git_display [] {
+  def git_display []: nothing -> string {
     if not (git branch --show-current | complete | get stderr | is-empty) { return "" }
 
-    const display_symbols = {
+    const display_symbols: record = {
       "?": "?",
       "A": "+",
       "M": "!",
@@ -14,7 +14,7 @@ module prompt_utils {
       "D": "×",
     }
 
-    let ahead_behind = git rev-list --left-right --count @{u}...HEAD
+    let ahead_behind: string = git rev-list --left-right --count @{u}...HEAD
     | split row "\t"
     | each { |n| into int }
     | do {
@@ -23,7 +23,7 @@ module prompt_utils {
       $"($ahead)($behind)" | str trim
     }
 
-    let count = git status --porcelain=1
+    let count: string = git status --porcelain=1
     | lines
     | group-by { |line| str replace -r `^\s?\w?([?\w]).*` "$1" }
     | sort
@@ -37,53 +37,59 @@ module prompt_utils {
     | if ($count == "") { $in } else { $in + $"\(($count)\)" }
     | color blue
   }
-}
 
-def left_prompt [] {
-  use prompt_utils *
-  let user = $env.USER | color red
+  export def left_prompt []: nothing -> string {
+    let user: string = $env.USER | color red
 
-  let pwd = $env.PWD
-  | str replace -r $"^($env.HOME)" "~"
-  | path split
-  | if ($in | length) > 4 { $in | last 3 | prepend "..." } else { $in }
-  | path join
-  | color yellow
+    let pwd: string = $env.PWD
+    | str replace -r $"^($env.HOME)" "~"
+    | path split
+    | if ($in | length) > 4 { $in | last 3 | prepend "..." } else { $in }
+    | path join
+    | color yellow
 
-  let memory = sys mem
-  | select used total
-  | items { |k, v| {$k: ($v | into string | parse "{size} {unit}" | into record)} }
-  | into record
-  | do {
-    let used = if $in.used.unit == $in.total.unit {
-      $in.used.size 
-    } else { 
-      $"($in.used.size)($in.used.unit)"
+    let memory: string = sys mem
+    | select used total
+    | items { |k, v| {$k: ($v | into string | parse "{size} {unit}" | into record)} }
+    | into record
+    | do {
+      let used = if $in.used.unit == $in.total.unit {
+        $in.used.size 
+      } else { 
+        $"($in.used.size)($in.used.unit)"
+      }
+      $"($used)/($in.total.size)($in.total.unit)"
     }
-    $"($used)/($in.total.size)($in.total.unit)"
+    | color green
+
+    let git: string = git_display
+
+    $"($user) ($pwd) ($memory)"
+    | if $git == "" { $in } else { $"($in) ($git)" }
+    | color blue
   }
-  | color green
 
-  let git = git_display
+  export def right_prompt []: nothing -> string {
+    let duration: string = {
+      seconds: (($env.CMD_DURATION_MS | into int) // 1000)
+      ms: (($env.CMD_DURATION_MS | into int) mod 1000)
+    }
+    | $"($in.seconds)s($in.ms)ms"
+    | color $env.config.color_config.hints 
 
-  $"($user) ($pwd) ($memory)"
-  | if $git == "" { $"($in)\n" } else { $"($in) ($git)\n" }
-  | color blue
+    let datetime: string = date now | format date "%d/%m/%Y %H:%M:%S" | color purple
+
+    $"($duration) ($datetime)"
+  }
 }
 
-def right_prompt [] {
-  use prompt_utils *
-  let duration = {
-    seconds: (($env.CMD_DURATION_MS | into int) // 1000)
-    ms: (($env.CMD_DURATION_MS | into int) mod 1000)
-  }
-  | $"($in.seconds)s($in.ms)ms"
-  | color $env.config.color_config.hints 
-
-  let datetime = date now | format date "%d/%m/%Y %H:%M:%S" | color purple
-
-  $"($duration) ($datetime)"
-}
-
-$env.PROMPT_COMMAND = { left_prompt }
-$env.PROMPT_COMMAND_RIGHT = { right_prompt }
+use prompt_utils
+$env.PROMPT_COMMAND = { prompt_utils left_prompt }
+$env.PROMPT_COMMAND_RIGHT = { prompt_utils right_prompt }
+$env.PROMPT_INDICATOR = { "\n:" | prompt_utils color cyan }
+$env.PROMPT_INDICATOR_VI_NORMAL = { "\n> " | prompt_utils color cyan }
+$env.PROMPT_INDICATOR_VI_INSERT = { "\n: " | prompt_utils color cyan }
+$env.PROMPT_MULTILINE_INDICATOR = { ": " | prompt_utils color cyan }
+$env.TRANSIENT_PROMPT_INDICATOR = { "\n" }
+$env.TRANSIENT_PROMPT_INDICATOR_VI_NORMAL = { "\n" }
+$env.TRANSIENT_PROMPT_INDICATOR_VI_INSERT = { "\n" }
