@@ -3,9 +3,12 @@
     ".config/nushell/config.nu".text =
       # nu
       ''
+        use ${./op.nu} *  
+
         plugin add ${pkgs.nushellPlugins.polars}/bin/nu_plugin_polars
         plugin add ${pkgs.nushellPlugins.query}/bin/nu_plugin_query
 
+        source ${./prompt.nu}
         source ${./theme.nu}
         source ${./completions/cargo.nu}
         source ${./completions/git.nu}
