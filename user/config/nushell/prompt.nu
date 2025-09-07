@@ -3,15 +3,6 @@ module prompt_utils {
     $"(ansi $color)($in)(ansi reset)"
   }
 
-  def git_count [] {
-    git status --porcelain=1
-    | lines
-    | group-by { |line| str replace -r `^\s?\w?([?\w]).*` "$1" }
-    | sort
-    | transpose status count
-    | update count { |c| length }
-  }
-
   export def git_display [] {
     if not (git branch --show-current | complete | get stderr | is-empty) { return "" }
 
@@ -27,14 +18,9 @@ module prompt_utils {
     | split row "\t"
     | each { |n| into int }
     | do {
-      let input = $in
-      if $input == "" {
-        ""
-      } else {
-        let ahead = if $input.1 == 0 { "" } else { $"⇡($input.1)" }
-        let behind = if $input.0 == 0 { "" } else { $"⇣($input.0)" }
-        $"($ahead)($behind)"
-      }
+      let ahead = if $in.1 == 0 { "" } else { $"⇡($in.1)" }
+      let behind = if $in.0 == 0 { "" } else { $"⇣($in.0)" }
+      $"($ahead)($behind)" | str trim
     }
 
     let count = git status --porcelain=1
@@ -45,10 +31,10 @@ module prompt_utils {
     | update count { |c| length }
     | each { |line| $"($line.count)($display_symbols | get $line.status)" }
     | str join
-  
+
     git branch --show-current
-    | if ahead_behind == "" { $in } else { $"($in)($ahead_behind)" }
-    | if count == "" { $in } else { $"($in)\(($count)\)" }
+    | if ($ahead_behind == "") { $in } else { $in + $ahead_behind }
+    | if ($count == "") { $in } else { $in + $"\(($count)\)" }
     | color blue
   }
 }
