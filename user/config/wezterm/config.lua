@@ -73,7 +73,12 @@ config.keys = {
     {
         key = "O",
         mods = "CTRL|SHIFT",
-        action = wezterm.action.EmitEvent "toggle-opacity"
+        action = wezterm.action.EmitEvent "toggle-opacity",
+    },
+    {
+        key = "Enter",
+        mods = "ALT",
+        action = wezterm.action.DisableDefaultAssignment,
     }
 }
 
