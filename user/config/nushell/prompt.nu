@@ -22,13 +22,33 @@ module prompt_utils {
       "R": ">",
       "D": "×",
     }
-  
-    let count = git_count
+
+    let ahead_behind = git rev-list --left-right --count @{u}...HEAD
+    | split row "\t"
+    | each { |n| into int }
+    | do {
+      let input = $in
+      if $input == "" {
+        ""
+      } else {
+        let ahead = if $input.1 == 0 { "" } else { $"⇡($input.1)" }
+        let behind = if $input.0 == 0 { "" } else { $"⇣($input.0)" }
+        $"($ahead)($behind)"
+      }
+    }
+
+    let count = git status --porcelain=1
+    | lines
+    | group-by { |line| str replace -r `^\s?\w?([?\w]).*` "$1" }
+    | sort
+    | transpose status count
+    | update count { |c| length }
     | each { |line| $"($line.count)($display_symbols | get $line.status)" }
     | str join
   
     git branch --show-current
-    | if count == "" { $in } else { $"\(($in)\)($count)" }
+    | if ahead_behind == "" { $in } else { $"($in)($ahead_behind)" }
+    | if count == "" { $in } else { $"($in)\(($count)\)" }
     | color blue
   }
 }
