@@ -20,7 +20,6 @@ rec {
       programs.bat.enable = true;
       programs.direnv.enable = true;
       programs.ssh.startAgent = true;
-      programs.starship.enable = true;
       programs.zoxide.enable = true;
     };
 
