@@ -15,12 +15,20 @@ module prompt_utils {
     }
 
     let ahead_behind: string = git rev-list --left-right --count @{u}...HEAD
-    | split row "\t"
-    | each { |n| into int }
+    | complete
     | do {
-      let ahead = if $in.1 == 0 { "" } else { $"⇡($in.1)" }
-      let behind = if $in.0 == 0 { "" } else { $"⇣($in.0)" }
-      $"($ahead)($behind)" | str trim
+      if $in.exit_code == 0 {
+        $in.stdout
+        | split row "\t"
+        | each { |n| into int }
+        | do {
+          let ahead = if $in.1 == 0 { "" } else { $"⇡($in.1)" }
+          let behind = if $in.0 == 0 { "" } else { $"⇣($in.0)" }
+          $"($ahead)($behind)" | str trim
+        }
+      } else {
+        ""
+      }
     }
 
     let count: string = git status --porcelain=1
