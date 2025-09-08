@@ -16,6 +16,7 @@
     pkgs.nh
     pkgs.nushell
     pkgs.openssh
+    pkgs.pandoc
     pkgs.ripgrep
     pkgs.tealdeer
     pkgs.tinymist
