@@ -402,6 +402,34 @@ vim.lsp.config["groovyls"] = {
     root_markers = { "Jenkinsfile", ".git" },
 }
 
+vim.lsp.config["harper_ls"] = {
+    cmd = { "harper-ls", "--stdio" },
+    filetypes = {
+        "c",
+        "cmake",
+        "cpp",
+        "cs",
+        "gitcommit",
+        "go",
+        "haskell",
+        "html",
+        "java",
+        "javascript",
+        "lua",
+        "markdown",
+        "nix",
+        "php",
+        "python",
+        "ruby",
+        "rust",
+        "toml",
+        "typescript",
+        "typescriptreact",
+        "typst",
+    },
+    root_markers = { ".git" },
+}
+
 vim.lsp.config["lua_ls"] = {
     cmd = { "lua-language-server" },
     filetypes = { "lua" },
@@ -639,6 +667,7 @@ vim.lsp.enable({
     "golangci_lint_ls",
     "gopls",
     "groovyls",
+    "harper_ls",
     "lua_ls",
     "markdown_oxide",
     "nil_ls",

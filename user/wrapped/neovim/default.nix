@@ -105,6 +105,7 @@ in
       pkgs.dprint-plugins.dprint-plugin-json
       pkgs.dprint-plugins.dprint-plugin-markdown
       pkgs.dprint-plugins.dprint-plugin-typescript
+      pkgs.harper
       pkgs.lua-language-server
       pkgs.markdown-oxide
       pkgs.nil
