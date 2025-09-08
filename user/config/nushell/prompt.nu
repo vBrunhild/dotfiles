@@ -95,9 +95,11 @@ use prompt_utils
 $env.PROMPT_COMMAND = { prompt_utils left_prompt }
 $env.PROMPT_COMMAND_RIGHT = { prompt_utils right_prompt }
 $env.PROMPT_INDICATOR = { "\n:" | prompt_utils color cyan }
-$env.PROMPT_INDICATOR_VI_NORMAL = { "\n> " | prompt_utils color cyan }
 $env.PROMPT_INDICATOR_VI_INSERT = { "\n: " | prompt_utils color cyan }
-$env.PROMPT_MULTILINE_INDICATOR = { ": " | prompt_utils color cyan }
+$env.PROMPT_INDICATOR_VI_NORMAL = { "\n> " | prompt_utils color cyan }
+$env.PROMPT_MULTILINE_INDICATOR = { "# " | prompt_utils color cyan }
+$env.TRANSIENT_PROMPT_COMMAND = null
+$env.TRANSIENT_PROMPT_COMMAND_RIGHT = null
 $env.TRANSIENT_PROMPT_INDICATOR = { "\n" }
-$env.TRANSIENT_PROMPT_INDICATOR_VI_NORMAL = { "\n" }
 $env.TRANSIENT_PROMPT_INDICATOR_VI_INSERT = { "\n" }
+$env.TRANSIENT_PROMPT_INDICATOR_VI_NORMAL = { "\n" }
