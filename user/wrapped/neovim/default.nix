@@ -70,7 +70,6 @@
     pkgs.vimPlugins.mini-hipatterns
     pkgs.vimPlugins.mini-icons
     pkgs.vimPlugins.mini-indentscope
-    pkgs.vimPlugins.mini-map
     pkgs.vimPlugins.mini-operators
     pkgs.vimPlugins.mini-pick
     pkgs.vimPlugins.mini-snippets

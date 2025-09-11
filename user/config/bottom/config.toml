@@ -1,0 +1,38 @@
+[styles]
+[styles.cpu]
+all_entry_color = "green"
+avg_entry_color = "red"
+cpu_core_colors = ["cyan", "blue", "green", "yellow", "magenta", "red"]
+
+[styles.memory]
+ram_color = "magenta"
+cache_color = "red"
+swap_color = "yellow"
+arc_color = "cyan"
+gpu_colors = ["cyan", "blue", "green", "yellow", "magenta", "red"]
+
+[styles.network]
+rx_color = "magenta"
+tx_color = "yellow"
+rx_total_color = "cyan"
+tx_total_color = "green"
+
+[styles.battery]
+high_battery_color = "green"
+medium_battery_color = "yellow"
+low_battery_color = "red"
+
+[styles.tables]
+headers = {color = "blue", bold = true}
+
+[styles.graphs]
+graph_color = "gray"
+legend_text = {color = "gray"}
+
+[styles.widgets]
+border_color = "gray"
+selected_border_color = "green"
+widget_title = {color = "magenta"}
+text = {color = "gray"}
+selected_text = {color = "black", bg_color = "green"}
+disabled_text = {color = "dark gray"}

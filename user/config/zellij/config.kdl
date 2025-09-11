@@ -1,6 +1,15 @@
 keybinds clear-defaults=true {
+    normal {
+        bind "Enter" {
+            WriteChars "\u{000D}";
+            MessagePlugin "autolock" {};
+        }
+    }
     locked {
-        bind "Ctrl g" { SwitchToMode "normal"; }
+        bind "Alt z" { 
+            MessagePlugin "autolock" { payload "disable"; };
+            SwitchToMode "normal"; 
+        }
     }
     pane {
         bind "c" { SwitchToMode "renamepane"; PaneNameInput 0; }
@@ -105,17 +114,26 @@ keybinds clear-defaults=true {
             SwitchToMode "normal"
         }
     }
+    shared {
+        bind "Alt Shift z" {
+            MessagePlugin "aulock" { payload "enable"; }
+        }
+        bind "Alt f" { ToggleFloatingPanes; }
+    }
     shared_except "locked" {
         bind "Alt +" { Resize "Increase"; }
         bind "Alt -" { Resize "Decrease"; }
         bind "Alt =" { Resize "Increase"; }
         bind "Alt [" { PreviousSwapLayout; }
         bind "Alt ]" { NextSwapLayout; }
-        bind "Alt f" { ToggleFloatingPanes; }
         bind "Ctrl g" { SwitchToMode "locked"; }
         bind "Alt i" { MoveTab "left"; }
         bind "Alt n" { NewPane; }
         bind "Alt o" { MoveTab "right"; }
+        bind "Alt z" {
+            MessagePlugin "autolock" { payload "disable"; };
+            SwitchToMode "Locked";
+        }
     }
     shared_except "locked" "move" {
         bind "Ctrl h" { SwitchToMode "move"; }

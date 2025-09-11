@@ -18,6 +18,7 @@
     pkgs.openssh
     pkgs.pandoc
     pkgs.ripgrep
+    pkgs.tabiew
     pkgs.tealdeer
     pkgs.tinymist
     pkgs.typst

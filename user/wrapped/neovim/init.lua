@@ -36,7 +36,6 @@ local autocommand = vim.api.nvim_create_autocmd
 vim.g.clipboard = "osc52"
 vim.o.backup = false
 vim.o.breakindent = true
-vim.o.colorcolumn = "121"
 vim.o.completeopt = "menuone,noselect,fuzzy,nosort"
 vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
@@ -80,7 +79,7 @@ vim.opt.shortmess:append("I")
 vim.diagnostic.config({
     float = { source = true },
     severity_sort = true,
-    underline = true,
+    underline = false,
     update_in_insert = false,
     virtual_lines = false,
     virtual_text = true,
@@ -1061,44 +1060,8 @@ require("lze").load({
         after = function() require("mini.indentscope").setup() end
     },
     {
-        "mini.map",
-        event = "DeferredUIEnter",
-        allow_again = true,
-        keys = {
-            {
-                "<leader>m",
-                function() require("mini.map").toggle() end,
-                desc = "Toggle map",
-                mode = "n"
-            }
-        },
-        after = function()
-            local minimap = require("mini.map")
-            minimap.setup({
-                integrations = {
-                    minimap.gen_integration.builtin_search(),
-                    minimap.gen_integration.diagnostic(),
-                    minimap.gen_integration.diff(),
-                },
-                symbols = {
-                    encode = minimap.gen_encode_symbols.dot("4x2"),
-                    scroll_line = nil,
-                    scroll_view = "",
-                }
-            })
-            vim.api.nvim_set_hl(0, "MiniMapSymbolLine", { bg = "", fg = "#c678dd" })
-            minimap.open()
-        end
-    },
-    {
         "mini.operators",
-        keys = {
-            { "g=", desc = "Evaluate operator", mode = { "n", "v", "x" } },
-            { "gm", desc = "Multiply operator", mode = { "n", "v", "x" } },
-            { "gr", desc = "Replace operator",  mode = { "n", "v", "x" } },
-            { "gs", desc = "Sort operator",     mode = { "n", "v", "x" } },
-            { "gx", desc = "Exchange operator", mode = { "n", "v", "x" } },
-        },
+        event = "DeferredUIEnter",
         after = function() require("mini.operators").setup() end
     },
     {
