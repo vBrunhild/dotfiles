@@ -8,3 +8,6 @@ email = "brunomoretti100@gmail.com"
 behavior = "own"
 backend = "ssh"
 key = "~/.ssh/id_ed25519.pub"
+
+[ui]
+paginate = "never"
