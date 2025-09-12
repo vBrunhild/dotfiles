@@ -250,6 +250,25 @@ load_plugins {
     autolock
 }
 
+layouts {
+    develop {
+        tab name="Main" focus=true hide_floating_panes=true {
+            pane split_direction="vertical" {
+                pane command="nvim" size="50%"
+                pane size="50%" {
+                    pane size="75%"
+                    pane size="25%" command="btm"
+                }
+            }
+            pane size=1 boderless=true {
+                plugin location="zellij:compact-bar" {
+                    tooltip "F1"
+                }
+            }
+        }
+    }
+} 
+
 default_layout "compact"
 default_mode "normal"
 mouse_mode false
