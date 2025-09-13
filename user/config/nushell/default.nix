@@ -12,6 +12,7 @@
         source ${./theme.nu}
         source ${./completions/cargo.nu}
         source ${./completions/git.nu}
+        source ${./completions/jj.nu}
         source ${./completions/zellij.nu}
         source ${./completions/zoxide.nu}
 
