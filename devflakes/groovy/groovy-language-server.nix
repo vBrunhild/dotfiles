@@ -4,7 +4,7 @@
   ...
 }: let
   inherit (pkgs) stdenv fetchFromGitHub makeWrapper;
-  gradle = pkgs.gradle_7;
+  gradle = pkgs.gradle_8;
 
   groovy-language-server = stdenv.mkDerivation {
     pname = "groovy-language-server";
@@ -13,8 +13,8 @@
     src = fetchFromGitHub {
       owner = "GroovyLanguageServer";
       repo = "groovy-language-server";
-      rev = "4866a3f2c180f628405b1e4efbde0949a1418c10";
-      sha256 = "sha256-LXCdF/cUYWy7mD3howFXexG0+fGfwFyKViuv9xZfgXc=";
+      rev = "21f6d1f8d3d9b9ae27674dee0bb1aef7f983977a";
+      sha256 = "sha256-sfXM/NtUQHjhMOntXYIs+FBKpcP6Pw3YwHPACQ0Td50=";
     };
 
     nativeBuildInputs = [gradle makeWrapper];
