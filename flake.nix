@@ -13,28 +13,35 @@
     user = import ./user;
 
     forAllSystems = nixpkgs.lib.genAttrs [
-      "aarch64-linux"
-      "x86_64-linux"
-      "x86_64-darwin"
       "aarch64-darwin"
+      "aarch64-linux"
+      "x86_64-darwin"
+      "x86_64-linux"
     ];
+
+    mkPkgs = system:
+      import nixpkgs {
+        inherit system;
+        overlays = [inputs.neovim-nightly-overlay.overlays.default];
+      };
+
+    allPkgs = forAllSystems mkPkgs;
   in {
     packages = forAllSystems (
       system: let
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = allPkgs.${system};
       in (user.packages {inherit inputs pkgs;})
     );
 
     formatter = forAllSystems (
       system: let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-        pkgs.alejandra
+        pkgs = allPkgs.${system};
+      in (pkgs.alejandra)
     );
 
     devShells = forAllSystems (
       system: let
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = allPkgs.${system};
       in {default = user.shell pkgs;}
     );
 
