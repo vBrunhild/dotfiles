@@ -37,6 +37,7 @@
       pkgs.vimPlugins.nvim-treesitter-parsers.markdown_inline
       pkgs.vimPlugins.nvim-treesitter-parsers.nix
       pkgs.vimPlugins.nvim-treesitter-parsers.nu
+      pkgs.vimPlugins.nvim-treesitter-parsers.ocaml
       pkgs.vimPlugins.nvim-treesitter-parsers.python
       pkgs.vimPlugins.nvim-treesitter-parsers.regex
       pkgs.vimPlugins.nvim-treesitter-parsers.rust
@@ -80,6 +81,7 @@
     pkgs.vimPlugins.nvim-dap
     pkgs.vimPlugins.nvim-dap-view
     pkgs.vimPlugins.nvim-lint
+    pkgs.vimPlugins.nvim-lspconfig
     pkgs.vimPlugins.nvim-treesitter
     pkgs.vimPlugins.onedarkpro-nvim
     pkgs.vimPlugins.typst-preview-nvim
@@ -90,7 +92,7 @@
     withRuby = false;
     withNodeJs = false;
     customLuaRC = builtins.readFile ./init.lua;
-    plugins = plugins;
+    inherit plugins;
   };
 
   neovim = pkgs.wrapNeovimUnstable inputs.neovim-nightly-overlay.packages.${pkgs.system}.default neovimConfig;
@@ -110,5 +112,6 @@ in
       pkgs.nil
       pkgs.nixd
       pkgs.taplo
+      pkgs.vscode-langservers-extracted
     ];
   }

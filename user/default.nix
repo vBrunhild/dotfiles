@@ -1,12 +1,19 @@
 rec {
-  packages = {inputs, pkgs}: let
+  packages = {
+    inputs,
+    pkgs,
+  }: let
     inherit (pkgs) callPackage;
   in {
     neovim = callPackage ./wrapped/neovim {inherit inputs;};
     zellijPlugins = callPackage ./wrapped/zellij-plugins.nix {};
   };
 
-  module = {inputs, pkgs, ...}: {
+  module = {
+    inputs,
+    pkgs,
+    ...
+  }: {
     config = {
       environment = {
         systemPackages = builtins.attrValues (packages {inherit inputs pkgs;});
