@@ -4,7 +4,7 @@ module prompt_utils {
   }
 
   def git_display []: nothing -> string {
-    if not (git branch --show-current | complete | get stderr | is-empty) { return "" }
+    if (git branch --show-current | complete | get exit_code) != 0 { return "" }
 
     const display_symbols: record = {
       "?": "?",
@@ -12,6 +12,7 @@ module prompt_utils {
       "M": "!",
       "R": ">",
       "D": "×",
+      "U": "=",
     }
 
     let ahead_behind: string = git rev-list --left-right --count @{u}...HEAD
