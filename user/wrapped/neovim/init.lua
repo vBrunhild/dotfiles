@@ -187,230 +187,10 @@ map({
 })
 
 -- lsp
-vim.lsp.config["basedpyright"] = {
-    cmd = { "basedpyright-langserver", "--stdio" },
-    filetypes = { "python" },
-    root_markers = {
-        ".git",
-        "Pipfile",
-        "pyproject.toml",
-        "pyrightconfig.json",
-        "requirements.txt",
-        "setup.cfg",
-        "setup.py",
-    },
-    settings = {
-        basedpyright = {
-            analysis = {
-                autoSearchPaths = true,
-                useLibraryCodeForTypes = true,
-                diagnosticMode = "openFilesOnly",
-            },
-        },
-    }
-}
-
----@class ClangdInitializeResult: lsp.InitializeResult
----@field offsetEncoding? string
-vim.lsp.config["clangd"] = {
-    cmd = { 'clangd' },
-    filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
-    root_markers = {
-        '.clangd',
-        '.clang-tidy',
-        '.clang-format',
-        'compile_commands.json',
-        'compile_flags.txt',
-        'configure.ac',
-        '.git',
-    },
-    capabilities = {
-        textDocument = {
-            completion = {
-                editsNearCursor = true,
-            },
-        },
-        offsetEncoding = { 'utf-8', 'utf-16' },
-    },
-    ---@param client vim.lsp.Client
-    ---@param init_result ClangdInitializeResult
-    on_init = function(client, init_result)
-        if init_result.offsetEncoding then
-            client.offset_encoding = init_result.offsetEncoding
-        end
-    end,
-}
-
-vim.lsp.config["dprint"] = {
-    cmd = { "dprint", "lsp" },
-    filetypes = {
-        "javascript",
-        "javascriptreact",
-        "json",
-        "jsonc",
-        "markdown",
-        "toml",
-        "typescript",
-        "typescriptreact",
-    },
-    root_marker = { "dprint.json", ".dprint.json", "dprint.jsonc", ".dprint.jsonc" },
-    settings = {}
-}
-
-vim.lsp.config["golangci_lint_ls"] = {
-    default_config = {
-        cmd = { "golangci-lint-langserver" },
-        filetypes = { "go", "gomod" },
-        init_options = {
-            command = { "golangci-lint", "run", "--output.json.path=stdout", "--show-stats=false" },
-        },
-        root_markers = {
-            ".golangci.yml",
-            ".golangci.yaml",
-            ".golangci.toml",
-            ".golangci.json",
-            "go.work",
-            "go.mod",
-            ".git",
-        },
-        before_init = function(_, config)
-            local v1
-            if vim.fn.executable "go" == 1 then
-                local exe = vim.fn.exepath "golangci-lint"
-                local version = vim.system({ "go", "version", "-m", exe }):wait()
-                v1 = string.match(version.stdout, "\tmod\tgithub.com/golangci/golangci%-lint\t")
-            else
-                local version = vim.system({ "golangci-lint", "version" }):wait()
-                v1 = string.match(version.stdout, "version v?1%.")
-            end
-            if v1 then
-                config.init_options.command = { "golangci-lint", "run", "--out-format", "json" }
-            end
-        end,
-    }
-}
-
-vim.lsp.config["gopls"] = {
-    cmd = { "gopls" },
-    filetypes = { "go", "gomod", "gowork", "gotmpl" },
-    root_markers = {
-        ".golangci.yml",
-        ".golangci.yaml",
-        ".golangci.toml",
-        ".golangci.json",
-        "go.work",
-        "go.mod",
-        ".git",
-    },
-    settings = {
-        gopls = {
-            codelenses = {
-                gc_details = false,
-                generate = true,
-                regenerate_cgo = true,
-                run_govulncheck = true,
-                test = true,
-                tidy = true,
-                upgrade_dependency = true,
-                vendor = true
-            },
-            hints = {
-                assignVariableTypes = true,
-                compositeLiteralFields = true,
-                compositeLiteralTypes = true,
-                constantValues = true,
-                functionTypeParameters = true,
-                parameterValues = true,
-                rangeVariableTypes = true
-            },
-            analyses = {
-                nilness = true,
-                unusedparams = true,
-                unusedwrite = true,
-                useany = true,
-                unreachable = true,
-                modernize = true,
-                stylecheck = true,
-                appends = true,
-                asmdecl = true,
-                assign = true,
-                atomic = true,
-                bools = true,
-                buildtag = true,
-                cgocall = true,
-                composite = true,
-                contextcheck = true,
-                deba = true,
-                atomicalign = true,
-                composites = true,
-                copylocks = true,
-                deepequalerrors = true,
-                defers = true,
-                deprecated = true,
-                directive = true,
-                embed = true,
-                errorsas = true,
-                fillreturns = true,
-                framepointer = true,
-                gofix = true,
-                hostport = true,
-                infertypeargs = true,
-                lostcancel = true,
-                httpresponse = true,
-                ifaceassert = true,
-                loopclosure = true,
-                nilfunc = true,
-                nonewvars = true,
-                noresultvalues = true,
-                printf = true,
-                shadow = true,
-                shift = true,
-                sigchanyzer = true,
-                simplifycompositelit = true,
-                simplifyrange = true,
-                simplifyslice = true,
-                slog = true,
-                sortslice = true,
-                stdmethods = true,
-                stdversion = true,
-                stringintconv = true,
-                structtag = true,
-                testinggoroutine = true,
-                tests = true,
-                timeformat = true,
-                unmarshal = true,
-                unsafeptr = true,
-                unusedfunc = true,
-                unusedresult = true,
-                waitgroup = true,
-                yield = true,
-                unusedvariable = true
-            },
-            usePlaceholders = true,
-            completeUnimported = true,
-            staticcheck = true,
-            directoryFilters = { "-.git" },
-            semanticTokens = true
-        }
-    }
-}
-
 vim.lsp.config["groovyls"] = {
     cmd = { "groovy-language-server" },
     filetypes = { "groovy" },
     root_markers = { "Jenkinsfile", ".git" },
-}
-
-vim.lsp.config["harper_ls"] = {
-    cmd = { "harper-ls", "--stdio" },
-    filetypes = {
-        "gitcommit",
-        "html",
-        "markdown",
-        "toml",
-        "typst",
-    },
-    root_markers = { ".git" },
 }
 
 vim.lsp.config["lua_ls"] = {
@@ -426,7 +206,6 @@ vim.lsp.config["lua_ls"] = {
         "selene.yml",
         ".git"
     },
-    ---@param client vim.lsp.Client
     on_init = function(client)
         local workspace = client.workspace_folders[1].name
         local luarc_exists = vim.fn.glob(workspace .. "/.luarc.json") ~= "" or
@@ -443,7 +222,6 @@ vim.lsp.config["lua_ls"] = {
                     "lua/?.lua",
                     "lua/?/init.lua",
                 }
-                --vim.split(package.path, ";", { trimempty = true })
             },
             workspace = {
                 checkThirdParty = false,
@@ -461,201 +239,22 @@ vim.lsp.config["lua_ls"] = {
     }
 }
 
-vim.lsp.config["markdown_oxide"] = {
-    cmd = { "markdown-oxide" },
-    filetypes = { "markdown" },
-    root_markers = { ".git", ".obsidian", "moxide.toml" },
-    on_attach = function(client, bufnr)
-        for _, cmd in ipairs({ "today", "tomorrow", "yesterday" }) do
-            local title = ("MarkdownOxide%s"):format(cmd:gsub("^%l", string.upper))
-            command(
-                title,
-                function()
-                    client:exec_cmd({
-                        title = title,
-                        command = "jump",
-                        arguments = { cmd },
-                        bufnr = bufnr,
-                    })
-                end,
-                { desc = ("Open %s daily note"):format(cmd) }
-            )
-        end
-    end
-}
-
-vim.lsp.config["nil_ls"] = {
-    cmd = { "nil" },
-    filetypes = { "nix" },
-    root_markers = { "flake.nix", "git" }
-}
-
-vim.lsp.config["nixd"] = {
-    cmd = { "nixd" },
-    filetypes = { "nix" },
-    root_markers = { "flake.nix", "git" }
-}
-
-vim.lsp.config["nu"] = {
-    cmd = { "nu", "--lsp" },
-    filetypes = { "nu" },
-    root_dir = function(bufnr, on_dir)
-        on_dir(vim.fs.root(bufnr, { ".git" }) or vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr)))
-    end
-}
-
-vim.lsp.config["rust_analyzer"] = {
-    cmd = { "rust-analyzer" },
-    filetypes = { "rust" },
-    capabilites = {
-        experimental = {
-            serverStatusNotification = true,
-        }
-    },
-    before_init = function(init_params, config)
-        if config.settings and config.settings["rust-analyzer"] then
-            init_params.initializationOptions = config.settings["rust-analyzer"]
-        end
-    end,
-    ---@param client vim.lsp.Client
-    ---@param bufnr integer
-    on_attach = function(client, bufnr)
-        vim.api.nvim_buf_create_user_command(bufnr, "LspCargoReload", function()
-            vim.notify("Reloading cargo workspace")
-            ---@diagnostic disable-next-line: param-type-mismatch
-            client:request("rust-analyzer/reloadWorkspace", nil, function(err)
-                if err then
-                    error(tostring(err))
-                end
-                vim.notify("Cargo workspace reloaded")
-            end, bufnr)
-        end, { desc = "Reload current cargo workspace" })
-    end,
-    settings = {
-        ["rust-analyzer"] = {
-            cargo = {
-                buildScripts = {
-                    enable = true
-                }
-            },
-            procMacro = {
-                enable = true
-            },
-            inlayHints = {
-                typeHints = { enable = true },
-                parameterHints = { enable = true },
-                chainingHints = { enable = true },
-                bindingModeHints = { enable = true },
-                renderColons = true
-            },
-            check = {
-                command = "clippy"
-            }
-        }
-    }
-}
-
-vim.lsp.config["taplo"] = {
-    cmd = { "taplo", "lsp", "stdio" },
-    filetypes = { "toml" },
-    root_markers = { ".taplo.toml", "taplo.toml", ".git" }
-}
-
-vim.lsp.config["ts_ls"] = {
-    init_options = { hostInfo = "neovim" },
-    cmd = { "typescript-language-server", "--stdio" },
-    filetypes = {
-        "javascript",
-        "javascript.jsx",
-        "javascriptreact",
-        "typescript",
-        "typescript.jsx",
-        "typescriptreact",
-    },
-    root_dir = function(bufnr, on_dir)
-        local project_root_markers = { "package-lock.json", "yarn.lock", "pnpmp-lock.yaml", "bun.lockb", "bun.lock" }
-        local project_root = vim.fs.root(bufnr, project_root_markers)
-        if not project_root then
-            return
-        end
-        local ts_config_files = { "tsconfig.json", "jsconfig.json" }
-        local is_buffer_using_typescript = vim.fs.find(ts_config_files, {
-            path = vim.api.nvim_buf_get_name(bufnr),
-            type = "file",
-            limit = 1,
-            upward = true,
-            stop = vim.fs.dirname(project_root)
-        })[1]
-        if not is_buffer_using_typescript then
-            return
-        end
-        on_dir(project_root)
-    end,
-    handlers = {
-        ["_typescript.rename"] = function(_, result, ctx)
-            local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
-            vim.lsp.util.show_document({
-                uri = result.textDocument.uri,
-                range = {
-                    start = result.position,
-                    ["end"] = result.position
-                }
-            }, client.offset_encoding)
-            vim.lsp.buf.rename()
-            return vim.NIL
-        end
-    },
-    commands = {
-        ["editor.actions.showReferences"] = function(cmd, ctx)
-            local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
-            local file_uri, position, references = unpack(cmd.arguments)
-            ---@diagnostic disable-next-line: param-type-mismatch
-            local quickfix_items = vim.lsp.util.locations_to_items(references, client.offset_encoding)
-            vim.fn.setqflist({}, " ", {
-                title = cmd.title,
-                items = quickfix_items,
-                context = {
-                    command = cmd,
-                    bufnr = ctx.bufnr
-                }
-            })
-            vim.lsp.show_document({
-                uri = file_uri,
-                range = {
-                    start = position,
-                    ["end"] = position
-                }
-            }, client.offset_encoding)
-            vim.cmd("botright copen")
-        end
-    },
-    on_attach = function(client, bufnr)
-        command("LspTypescriptSourceAction", function()
-            local source_actions = vim.tbl_filter(function(action)
-                return vim.startswith(action, "source.")
-            end, client.server_capabilities.codeActionProvider.codeActionKinds)
-            vim.lsp.buf.code_actions({
-                context = {
-                    only = source_actions
-                }
-            })
-        end, { bufnr = bufnr })
-    end
-}
-
 vim.lsp.enable({
     "basedpyright",
     "clangd",
+    "cssls",
     "dprint",
     "golangci_lint_ls",
     "gopls",
+    "html",
     "groovyls",
     "harper_ls",
+    "jsonls",
     "lua_ls",
     "markdown_oxide",
     "nil_ls",
     "nixd",
-    "nu",
+    "nushell",
     "rust_analyzer",
     "taplo",
     "tinymist",
@@ -1260,10 +859,10 @@ require("lze").load({
             }
             autocommand("BufWritePost", {
                 pattern = {
-                    "cpp",
-                    "groovy",
-                    "javascript",
-                    "typescript",
+                    "*.c",
+                    "*.groovy",
+                    "*.javascript",
+                    "*.typescript",
                 },
                 callback = function()
                     require("lint").try_lint()
