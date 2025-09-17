@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   environment.systemPackages = [
     pkgs.ascii-image-converter
     pkgs.bat
@@ -9,7 +6,6 @@
     pkgs.curl
     pkgs.direnv
     pkgs.fd
-    pkgs.fish
     pkgs.git
     pkgs.git-credential-manager
     pkgs.jujutsu
