@@ -4,13 +4,8 @@
 ---@field [2] string|function
 ---@field mode? string|string[]
 
----@param configs MapConfig|MapConfig[]
+---@param configs MapConfig[]
 local map = function(configs)
-    if configs[1] == nil or type(configs[1]) ~= "table" then
-        configs = { configs }
-    end
-    ---@cast configs MapConfig[]
-
     for _, config in ipairs(configs) do
         local lhs = config[1]
         config[1] = nil
@@ -50,7 +45,6 @@ vim.o.infercase = true
 vim.o.jumpoptions = "stack,view"
 vim.o.linebreak = true
 vim.o.list = true
-vim.o.listchars = "tab:> ,extends:…,precedes:…,nbsp:␣"
 vim.o.mouse = ""
 vim.o.number = true
 vim.o.relativenumber = true
@@ -74,6 +68,8 @@ vim.o.winblend = 30
 vim.o.winborder = "rounded"
 vim.o.wrap = false
 vim.o.writebackup = false
+vim.opt.formatoptions:append { o = false, r = false }
+vim.opt.listchars:append { tab = "> ", extends = "…", precedes = "…", nbsp = "␣", trail = "·" }
 vim.opt.shortmess:append("I")
 
 vim.diagnostic.config({
@@ -88,7 +84,7 @@ vim.diagnostic.config({
 -- autocommands
 local buf_easy_close = function(buf)
     vim.bo[buf].buflisted = false
-    map({ "q", "<Cmd>close<cr>", buffer = buf })
+    map({ { "q", "<Cmd>close<cr>", buffer = buf } })
 end
 
 autocommand("FileType", {
@@ -116,6 +112,7 @@ autocommand("FileType", {
         "css",
         "html",
         "javascript",
+        "json",
         "nix",
         "nu",
         "typescript",
@@ -167,6 +164,7 @@ map({
     { "<C-a>",      "ggVG",                                                        mode = { "n", "x" },          desc = "Select all" },
     { "<C-j>",      "<C-d>zz",                                                     mode = { "n", "x" },          desc = "Page down" },
     { "<C-k>",      "<C-u>zz",                                                     mode = { "n", "x" },          desc = "Page up" },
+    { "<leader>k",  vim.diagnostic.open_float,                                     desc = "Show diagnostic" },
     { "<leader>w",  "<Cmd>setlocal wrap!<cr>",                                     desc = "Toggle wrap" },
     { "P",          "<Cmd>pu<cr>",                                                 desc = "Paste in new line" },
     { "g/",         "<Esc>/\\%V",                                                  mode = "x",                   desc = "Search inside visual selection" },
@@ -193,19 +191,15 @@ vim.lsp.config["groovyls"] = {
     root_markers = { "Jenkinsfile", ".git" },
 }
 
-vim.lsp.config["lua_ls"] = {
-    cmd = { "lua-language-server" },
-    filetypes = { "lua" },
-    root_markers = {
-        ".luarc.json",
-        ".luarc.jsonc",
-        ".luacheckrc",
-        ".stylua.toml",
-        "stylua.toml",
-        "selene.toml",
-        "selene.yml",
-        ".git"
-    },
+vim.lsp.config("harper_ls", {
+    filetypes = {
+        "gitcommit",
+        "markdown",
+        "typst",
+    }
+})
+
+vim.lsp.config("lua_ls", {
     on_init = function(client)
         local workspace = client.workspace_folders[1].name
         local luarc_exists = vim.fn.glob(workspace .. "/.luarc.json") ~= "" or
@@ -237,24 +231,25 @@ vim.lsp.config["lua_ls"] = {
             hint = { enable = true }
         }
     }
-}
+})
 
 vim.lsp.enable({
-    "basedpyright",
     "clangd",
     "cssls",
     "dprint",
     "golangci_lint_ls",
     "gopls",
-    "html",
     "groovyls",
     "harper_ls",
+    "html",
     "jsonls",
     "lua_ls",
     "markdown_oxide",
     "nil_ls",
     "nixd",
     "nushell",
+    "pyrefly",
+    "ruff",
     "rust_analyzer",
     "taplo",
     "tinymist",
@@ -285,20 +280,18 @@ local center_text = function(text)
     return padded
 end
 
-local startup = function()
+---@param buffer? integer
+function StartupScreen(buffer)
     if vim.fn.argc() ~= 0 then
         return
     end
-    vim.cmd("enew")
-    vim.bo.bufhidden = "wipe"
-    vim.bo.buflisted = false
-    vim.bo.buftype = "nofile"
-    vim.bo.swapfile = false
+    buffer = buffer or vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_set_current_buf(buffer)
     vim.opt_local.number = false
     vim.opt_local.relativenumber = false
     vim.opt_local.signcolumn = "no"
     vim.opt_local.colorcolumn = ""
-    local text = {
+    local ascii = {
         "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
         "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
         "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠛⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
@@ -333,10 +326,10 @@ local startup = function()
         "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
         "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
     }
-    vim.api.nvim_buf_set_lines(0, 0, -1, false, center_text(text))
+    vim.api.nvim_buf_set_lines(buffer, 0, -1, false, center_text(ascii))
 end
 
-vim.api.nvim_create_autocmd("VimEnter", { callback = startup })
+autocommand("VimEnter", { callback = function() StartupScreen() end })
 
 ---@type lze.PluginSpec[]
 require("lze").load({
@@ -364,7 +357,7 @@ require("lze").load({
     },
     {
         "blink.cmp",
-        event = { "InsertEnter", "CmdlineEnter" },
+        event = "InsertEnter",
         after = function()
             require("blink.cmp").setup({
                 snippets = { preset = "mini_snippets" },
@@ -428,7 +421,6 @@ require("lze").load({
     {
         "conform",
         event = { "BufEnter" },
-        cmd = { "ConformInfo" },
         keys = {
             {
                 "<leader>lf",
@@ -444,11 +436,6 @@ require("lze").load({
             ---@type conform.setupOpts
             local conform_config = {
                 formatters = {
-                    dprint = {
-                        command = "dprint",
-                        args = { "fmt", "--stdin", "$FILENAME" },
-                        stdin = true
-                    },
                     ["npm-groovy-lint"] = {
                         command = "npm-groovy-lint",
                         args = { "--fix", "$FILENAME" },
@@ -463,7 +450,7 @@ require("lze").load({
                     json = { "dprint" },
                     jsonc = { "dprint" },
                     nix = { "alejandra", lsp_format = "never" },
-                    python = { "ruff" },
+                    python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
                     rust = { "rustfmt" },
                     typescript = { "dprint", "prettierd" },
                 },
@@ -537,7 +524,6 @@ require("lze").load({
                     { mode = "n", keys = "<Leader>f", desc = "+Picker" },
                     { mode = "n", keys = "<Leader>l", desc = "+LSP" },
                     { mode = "n", keys = "<Leader>g", desc = "+Git" },
-                    { mode = "n", keys = "<Leader>d", desc = "+Dap" },
                     miniclue.gen_clues.builtin_completion(),
                     miniclue.gen_clues.g(),
                     miniclue.gen_clues.marks(),
@@ -741,105 +727,6 @@ require("lze").load({
                     minitrailspace.trim_last_lines()
                 end
             })
-        end
-    },
-    {
-        "nvim-dap",
-        cmd = {
-            "DapClearBreakpoints",
-            "DapContinue",
-            "DapDisconnect",
-            "DapEval",
-            "DapNew",
-            "DapPause",
-            "DapRestartFrame",
-            "DapSetLogLevel",
-            "DapShowLog",
-            "DapStepInto",
-            "DapStepOut",
-            "DapStepOver",
-            "DapTerminate",
-            "DapToggleBreakpoint",
-            "DapToggleRepl",
-            "DapViewToggle",
-        },
-        keys = {
-            { "<leader>db", "<Cmd>DapToggleBreakpoint<cr>", silent = true, desc = "Toggle breakpoint" },
-            { "<leader>dc", "<Cmd>DapContinue<cr>",         silent = true, desc = "Run / Continue" },
-            { "<leader>ds", "<Cmd>DapPause<cr>",            silent = true, desc = "Pause" },
-            { "<leader>dt", "<Cmd>DapTerminate<cr>",        silent = true, desc = "Terminate" },
-            { "<leader>di", "<Cmd>DapStepInto<cr>",         silent = true, desc = "Step into" },
-            { "<leader>do", "<Cmd>DapStepOut<cr>",          silent = true, desc = "Step out" },
-            { "<leader>dO", "<Cmd>DapStepOver<cr>",         silent = true, desc = "Step over" },
-            { "<leader>dv", "<Cmd>DapViewToggle<cr>",       silent = true, desc = "Toggle view" },
-        },
-        after = function()
-            local dap = require("dap")
-            dap.adapters.delve = function(callback, config)
-                if config.mode == "remote" and config.request == "attach" then
-                    callback({
-                        type = "server",
-                        host = config.host or "127.0.0.1",
-                        port = config.port or "38697"
-                    })
-                else
-                    callback({
-                        type = "server",
-                        port = "${port}",
-                        executable = {
-                            command = "dlv",
-                            args = { "dap", "-l", "127.0.0.1:${port}", "--log", "--log-output=dap" },
-                            env = {
-                                CGO_CFLAGS = "-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"
-                            },
-                            detached = vim.fn.has("win32") == 0
-                        }
-                    })
-                end
-            end
-            dap.configurations.go = {
-                {
-                    type = "delve",
-                    name = "Debug",
-                    request = "launch",
-                    program = "${file}"
-                },
-                {
-                    type = "delve",
-                    name = "Debug test",
-                    request = "launch",
-                    mode = "test",
-                    program = "${file}"
-                },
-                {
-                    type = "delve",
-                    name = "Debug (go.mod)",
-                    request = "launch",
-                    program = "./${relativeFileDirname}"
-                },
-                {
-                    type = "delve",
-                    name = "Debug with args (go.mod)",
-                    request = "launch",
-                    program = "./${relativeFileDirname}",
-                    args = function()
-                        local input = vim.fn.input("Executable args: ", "", "file")
-                        if input and input ~= "" then
-                            return vim.split(input, "%s+")
-                        end
-                        return {}
-                    end
-                }
-            }
-        end
-    },
-    {
-        "nvim-dap-view",
-        dep_of = "dap",
-        after = function()
-            ---@type dapview.Config
-            local dap_view_config = {}
-            require("dap-view").setup(dap_view_config)
         end
     },
     {

@@ -78,8 +78,6 @@
     pkgs.vimPlugins.mini-statusline
     pkgs.vimPlugins.mini-surround
     pkgs.vimPlugins.mini-trailspace
-    pkgs.vimPlugins.nvim-dap
-    pkgs.vimPlugins.nvim-dap-view
     pkgs.vimPlugins.nvim-lint
     pkgs.vimPlugins.nvim-lspconfig
     pkgs.vimPlugins.nvim-treesitter
