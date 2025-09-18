@@ -537,7 +537,6 @@ require("lze").load({
                     { mode = "n", keys = "<Leader>f", desc = "+Picker" },
                     { mode = "n", keys = "<Leader>l", desc = "+LSP" },
                     { mode = "n", keys = "<Leader>g", desc = "+Git" },
-                    { mode = "n", keys = "<Leader>d", desc = "+Dap" },
                     miniclue.gen_clues.builtin_completion(),
                     miniclue.gen_clues.g(),
                     miniclue.gen_clues.marks(),
@@ -741,105 +740,6 @@ require("lze").load({
                     minitrailspace.trim_last_lines()
                 end
             })
-        end
-    },
-    {
-        "nvim-dap",
-        cmd = {
-            "DapClearBreakpoints",
-            "DapContinue",
-            "DapDisconnect",
-            "DapEval",
-            "DapNew",
-            "DapPause",
-            "DapRestartFrame",
-            "DapSetLogLevel",
-            "DapShowLog",
-            "DapStepInto",
-            "DapStepOut",
-            "DapStepOver",
-            "DapTerminate",
-            "DapToggleBreakpoint",
-            "DapToggleRepl",
-            "DapViewToggle",
-        },
-        keys = {
-            { "<leader>db", "<Cmd>DapToggleBreakpoint<cr>", silent = true, desc = "Toggle breakpoint" },
-            { "<leader>dc", "<Cmd>DapContinue<cr>",         silent = true, desc = "Run / Continue" },
-            { "<leader>ds", "<Cmd>DapPause<cr>",            silent = true, desc = "Pause" },
-            { "<leader>dt", "<Cmd>DapTerminate<cr>",        silent = true, desc = "Terminate" },
-            { "<leader>di", "<Cmd>DapStepInto<cr>",         silent = true, desc = "Step into" },
-            { "<leader>do", "<Cmd>DapStepOut<cr>",          silent = true, desc = "Step out" },
-            { "<leader>dO", "<Cmd>DapStepOver<cr>",         silent = true, desc = "Step over" },
-            { "<leader>dv", "<Cmd>DapViewToggle<cr>",       silent = true, desc = "Toggle view" },
-        },
-        after = function()
-            local dap = require("dap")
-            dap.adapters.delve = function(callback, config)
-                if config.mode == "remote" and config.request == "attach" then
-                    callback({
-                        type = "server",
-                        host = config.host or "127.0.0.1",
-                        port = config.port or "38697"
-                    })
-                else
-                    callback({
-                        type = "server",
-                        port = "${port}",
-                        executable = {
-                            command = "dlv",
-                            args = { "dap", "-l", "127.0.0.1:${port}", "--log", "--log-output=dap" },
-                            env = {
-                                CGO_CFLAGS = "-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"
-                            },
-                            detached = vim.fn.has("win32") == 0
-                        }
-                    })
-                end
-            end
-            dap.configurations.go = {
-                {
-                    type = "delve",
-                    name = "Debug",
-                    request = "launch",
-                    program = "${file}"
-                },
-                {
-                    type = "delve",
-                    name = "Debug test",
-                    request = "launch",
-                    mode = "test",
-                    program = "${file}"
-                },
-                {
-                    type = "delve",
-                    name = "Debug (go.mod)",
-                    request = "launch",
-                    program = "./${relativeFileDirname}"
-                },
-                {
-                    type = "delve",
-                    name = "Debug with args (go.mod)",
-                    request = "launch",
-                    program = "./${relativeFileDirname}",
-                    args = function()
-                        local input = vim.fn.input("Executable args: ", "", "file")
-                        if input and input ~= "" then
-                            return vim.split(input, "%s+")
-                        end
-                        return {}
-                    end
-                }
-            }
-        end
-    },
-    {
-        "nvim-dap-view",
-        dep_of = "dap",
-        after = function()
-            ---@type dapview.Config
-            local dap_view_config = {}
-            require("dap-view").setup(dap_view_config)
         end
     },
     {
