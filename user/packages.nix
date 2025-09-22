@@ -5,6 +5,8 @@
     pkgs.bottom
     pkgs.curl
     pkgs.direnv
+    pkgs.docker
+    pkgs.docker-compose
     pkgs.fd
     pkgs.git
     pkgs.git-credential-manager
