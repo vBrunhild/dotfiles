@@ -1,0 +1,21 @@
+layout {
+    default_tab_template {
+        children
+        pane size=1 borderless=true {
+            plugin location="file:/run/current-system/sw/share/zellij-plugins/zjstatus.wasm" {
+                hide_frame_for_single_pane "true"
+
+                format_left "#[bg=black,fg=magenta,bold]{session} {tabs}"
+                format_right "{datetime}"
+                format_space "#[bg=black]"
+
+                tab_normal "#[fg=white,bg=black] {index}"
+                tab_active "#[fg=green,bold,bg=black] {index}"
+
+                datetime "#[fg=magenta,bg=black] {format} "
+                datetime_format "%d/%m/%Y %T"
+                datetime_timezone "America/Campo_Grande"
+            }
+        }
+    }
+}
