@@ -47,17 +47,8 @@ module prompt_utils {
     | color blue
   }
 
-  export def left_prompt []: nothing -> string {
-    let user: string = $env.USER | color red
-
-    let pwd: string = $env.PWD
-    | str replace -r $"^($env.HOME)" "~"
-    | path split
-    | if ($in | length) > 4 { $in | last 3 | prepend "..." } else { $in }
-    | path join
-    | color yellow
-
-    let memory: string = sys mem
+  export def memory []: nothing -> string {
+    sys mem
     | select used total
     | items { |k, v| {$k: ($v | into string | parse "{size} {unit}" | into record)} }
     | into record
@@ -70,31 +61,42 @@ module prompt_utils {
       $"($used)/($in.total.size)($in.total.unit)"
     }
     | color green
-
-    let git: string = git_display
-
-    $"($user) ($pwd) ($memory)"
-    | if $git == "" { $in } else { $"($in) ($git)" }
-    | color blue
   }
 
-  export def right_prompt []: nothing -> string {
-    let duration: string = {
+  export def pwd []: nothing -> string {
+    $env.PWD
+    | str replace -r $"^($env.HOME)" "~"
+    | path split
+    | if ($in | length) > 4 { $in | last 3 | prepend "..." } else { $in }
+    | path join
+    | color yellow
+  }
+
+  export def duration []: nothing -> string {
+    {
       seconds: (($env.CMD_DURATION_MS | into int) // 1000)
       ms: (($env.CMD_DURATION_MS | into int) mod 1000)
     }
     | $"($in.seconds)s($in.ms)ms"
     | color $env.config.color_config.hints 
+  }
 
-    let datetime: string = date now | format date "%d/%m/%Y %H:%M:%S" | color purple
+  export def left_prompt []: nothing -> string {
+    let user: string = $env.USER | color red
+    let pwd: string = pwd
+    let memory: string = memory
+    let duration: string = duration
+    let git: string = git_display
 
-    $"($duration) ($datetime)"
+    $"($user) ($pwd) ($memory) ($duration)"
+    | if $git == "" { $in } else { $"($in) ($git)" }
+    | color blue
   }
 }
 
 use prompt_utils
 $env.PROMPT_COMMAND = { prompt_utils left_prompt }
-$env.PROMPT_COMMAND_RIGHT = { prompt_utils right_prompt }
+$env.PROMPT_COMMAND_RIGHT = null
 $env.PROMPT_INDICATOR = { "\n:" | prompt_utils color cyan }
 $env.PROMPT_INDICATOR_VI_INSERT = { "\n: " | prompt_utils color cyan }
 $env.PROMPT_INDICATOR_VI_NORMAL = { "\n> " | prompt_utils color cyan }

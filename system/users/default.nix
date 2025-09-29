@@ -15,6 +15,7 @@
         hashedPasswordFile = "/persist/secrets/brunhild";
         extraGroups = [
           "audio"
+          "docker"
           "input"
           "lp"
           "networkmanager"

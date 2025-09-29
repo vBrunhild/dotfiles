@@ -28,6 +28,7 @@ rec {
       programs.direnv.enable = true;
       programs.ssh.startAgent = true;
       programs.zoxide.enable = true;
+      virtualisation.docker = {enable = true;};
     };
 
     imports = [
