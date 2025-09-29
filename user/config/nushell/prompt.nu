@@ -96,7 +96,7 @@ module prompt_utils {
 
 use prompt_utils
 $env.PROMPT_COMMAND = { prompt_utils left_prompt }
-$env.PROMPT_COMMAND_RIGHT = null
+$env.PROMPT_COMMAND_RIGHT = { "" }
 $env.PROMPT_INDICATOR = { "\n:" | prompt_utils color cyan }
 $env.PROMPT_INDICATOR_VI_INSERT = { "\n: " | prompt_utils color cyan }
 $env.PROMPT_INDICATOR_VI_NORMAL = { "\n> " | prompt_utils color cyan }
