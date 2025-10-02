@@ -59,6 +59,7 @@
     pkgs.vimPlugins.conform-nvim
     pkgs.vimPlugins.friendly-snippets
     pkgs.vimPlugins.lze
+    pkgs.vimPlugins.markview-nvim
     pkgs.vimPlugins.mini-align
     pkgs.vimPlugins.mini-bufremove
     pkgs.vimPlugins.mini-clue
