@@ -24,6 +24,7 @@
       pkgs.vimPlugins.nvim-treesitter-parsers.haskell
       pkgs.vimPlugins.nvim-treesitter-parsers.html
       pkgs.vimPlugins.nvim-treesitter-parsers.java
+      pkgs.vimPlugins.nvim-treesitter-parsers.javadoc
       pkgs.vimPlugins.nvim-treesitter-parsers.javascript
       pkgs.vimPlugins.nvim-treesitter-parsers.jsdoc
       pkgs.vimPlugins.nvim-treesitter-parsers.json
@@ -38,11 +39,15 @@
       pkgs.vimPlugins.nvim-treesitter-parsers.nix
       pkgs.vimPlugins.nvim-treesitter-parsers.nu
       pkgs.vimPlugins.nvim-treesitter-parsers.ocaml
+      pkgs.vimPlugins.nvim-treesitter-parsers.php
+      pkgs.vimPlugins.nvim-treesitter-parsers.php_only
+      pkgs.vimPlugins.nvim-treesitter-parsers.phpdoc
       pkgs.vimPlugins.nvim-treesitter-parsers.python
       pkgs.vimPlugins.nvim-treesitter-parsers.regex
       pkgs.vimPlugins.nvim-treesitter-parsers.rust
       pkgs.vimPlugins.nvim-treesitter-parsers.scheme
       pkgs.vimPlugins.nvim-treesitter-parsers.toml
+      pkgs.vimPlugins.nvim-treesitter-parsers.tsx
       pkgs.vimPlugins.nvim-treesitter-parsers.typescript
       pkgs.vimPlugins.nvim-treesitter-parsers.typst
       pkgs.vimPlugins.nvim-treesitter-parsers.vim

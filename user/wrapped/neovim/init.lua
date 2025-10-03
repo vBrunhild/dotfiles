@@ -247,6 +247,8 @@ vim.lsp.enable({
     "nil_ls",
     "nixd",
     "nushell",
+    "phpactor",
+    "psalm",
     "pyrefly",
     "ruff",
     "rust_analyzer",
