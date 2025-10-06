@@ -54,7 +54,6 @@ vim.o.shiftwidth = 4
 vim.o.showmode = false
 vim.o.signcolumn = "yes"
 vim.o.smartcase = true
-vim.o.smartindent = true
 vim.o.softtabstop = 4
 vim.o.splitbelow = true
 vim.o.splitkeep = "screen"
@@ -248,6 +247,8 @@ vim.lsp.enable({
     "nil_ls",
     "nixd",
     "nushell",
+    "phpactor",
+    "psalm",
     "pyrefly",
     "ruff",
     "rust_analyzer",
@@ -465,6 +466,15 @@ require("lze").load({
     {
         "friendly-snippets",
         dep_of = "blink.cmp"
+    },
+    {
+        "markview.nvim",
+        lazy = false,
+        after = function()
+            require("markview").setup({
+                preview = { icon_provider = "mini" }
+            })
+        end
     },
     {
         "mini.align",
