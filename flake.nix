@@ -6,11 +6,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   };
 
-  outputs = inputs @ {
-    nixpkgs,
-    self,
-    ...
-  }: let
+  outputs = inputs @ {nixpkgs, ...}: let
     user = import ./user;
 
     forAllSystems = nixpkgs.lib.genAttrs [
@@ -50,30 +46,10 @@
       {
         system = import ./system;
         user = user.module;
+        determinate = inputs.derterminate.nixosModules.default;
       }
       // import ./modules;
 
-    nixosConfigurations.wsl = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-
-      modules =
-        [
-          inputs.derterminate.nixosModules.default
-          inputs.nixos-wsl.nixosModules.default
-          {
-            wsl = {
-              enable = true;
-              wslConf.automount.root = "/mnt";
-              defaultUser = "brunhild";
-            };
-          }
-        ]
-        ++ builtins.attrValues self.nixosModules;
-
-      specialArgs = {
-        inherit inputs;
-        flake = self;
-      };
-    };
+    nixosConfigurations = import ./hosts inputs;
   };
 }
