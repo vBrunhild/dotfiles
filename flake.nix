@@ -1,8 +1,9 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
+    derterminate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   };
 
   outputs = inputs @ {
@@ -57,6 +58,7 @@
 
       modules =
         [
+          inputs.derterminate.nixosModules.default
           inputs.nixos-wsl.nixosModules.default
           {
             wsl = {
