@@ -80,6 +80,8 @@ vim.diagnostic.config({
     virtual_text = true,
 })
 
+vim.cmd("packadd nvim.undotree")
+
 -- autocommands
 local buf_easy_close = function(buf)
     vim.bo[buf].buflisted = false
@@ -167,10 +169,6 @@ map({
     { "<leader>w",  "<Cmd>setlocal wrap!<cr>",                                     desc = "Toggle wrap" },
     { "P",          "<Cmd>pu<cr>",                                                 desc = "Paste in new line" },
     { "g/",         "<Esc>/\\%V",                                                  mode = "x",                   desc = "Search inside visual selection" },
-    { "gO",         "<Cmd>call append(line('.') - 1, repeat([''], v:count1))<Cr>", desc = "Put empty line above" },
-    { "go",         "<Cmd>call append(line('.'), repeat([''], v:count1))<Cr>",     desc = "Put empty line below" },
-    { "gp",         '"+P',                                                         mode = "x",                   desc = "Paste from clipboard" },
-    { "gp",         '"+p',                                                         desc = "Paste from clipboard" },
     { "gy",         '"+y',                                                         mode = { "n", "x" },          desc = "Yank to clipboard" },
     -- lsp stuff
     { "<leader>la", vim.lsp.buf.code_action,                                       mode = { "n", "x" },          desc = "LSP code action" },
@@ -288,6 +286,10 @@ function StartupScreen(buffer)
     end
     buffer = buffer or vim.api.nvim_create_buf(false, true)
     vim.api.nvim_set_current_buf(buffer)
+    vim.bo.bufhidden = "wipe"
+    vim.bo.buflisted = false
+    vim.bo.buftype = "nofile"
+    vim.bo.swapfile = false
     vim.opt_local.number = false
     vim.opt_local.relativenumber = false
     vim.opt_local.signcolumn = "no"
@@ -358,7 +360,7 @@ require("lze").load({
     },
     {
         "blink.cmp",
-        event = "InsertEnter",
+        event = { "CmdlineEnter", "InsertEnter" },
         after = function()
             require("blink.cmp").setup({
                 snippets = { preset = "mini_snippets" },
@@ -662,12 +664,15 @@ require("lze").load({
     {
         "mini.pick",
         keys = {
-            { "<leader> ",  "<Cmd>lua MiniPick.builtin.files({ tool = 'rg' })<cr>",            desc = "Find files" },
-            { "<leader>fb", "<Cmd>lua MiniExtra.pickers.buf_lines(nil, { tool = 'rg' })<cr>",  desc = "Find in buffers" },
-            { "<leader>fd", "<Cmd>lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })<cr>", desc = "Find diagnostics" },
-            { "<leader>fg", "<Cmd>lua MiniPick.builtin.grep_live({ tool = 'rg' })<cr>",        desc = "Find grep" },
-            { "<leader>fh", "<Cmd>lua MiniExtra.pickers.git_hunks(nil, { tool = 'rg' })<cr>",  desc = "Find hunks" },
-            { "<leader>fv", "<Cmd>lua MiniPick.builtin.help({ tool = 'rg' })<cr>",             desc = "Find vim help" },
+            { "<leader> ",   "<Cmd>lua MiniPick.builtin.files({ tool = 'rg' })<cr>",               desc = "Find files" },
+            { "<leader>fb",  "<Cmd>lua MiniExtra.pickers.buf_lines(nil, { tool = 'rg' })<cr>",     desc = "Find in buffers" },
+            { "<leader>fd",  "<Cmd>lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })<cr>",    desc = "Find diagnostics" },
+            { "<leader>fg",  "<Cmd>lua MiniPick.builtin.grep_live({ tool = 'rg' })<cr>",           desc = "Find grep" },
+            { "<leader>fh",  "<Cmd>lua MiniExtra.pickers.git_hunks(nil, { tool = 'rg' })<cr>",     desc = "Find hunks" },
+            { "<leader>flr", "<Cmd>lua MiniExtra.pickers.lsp({ scope = 'references' })<cr>",       desc = "Find LSP references" },
+            { "<leader>fld", "<Cmd>lua MiniExtra.pickers.lsp({ scope = 'document_symbol' })<cr>",  desc = "Find LSP document symbols" },
+            { "<leader>flw", "<Cmd>lua MiniExtra.pickers.lsp({ scope = 'workspace_symbol' })<cr>", desc = "Find LSP workspace symbols" },
+            { "<leader>fv",  "<Cmd>lua MiniPick.builtin.help({ tool = 'rg' })<cr>",                desc = "Find vim help" },
         },
         after = function() require("mini.pick").setup() end,
     },
