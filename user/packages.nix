@@ -7,6 +7,8 @@
     pkgs.direnv
     pkgs.docker
     pkgs.docker-compose
+    pkgs.dust
+    pkgs.eza
     pkgs.fd
     pkgs.git
     pkgs.git-credential-manager
@@ -16,6 +18,7 @@
     pkgs.openssh
     pkgs.pandoc
     pkgs.ripgrep
+    pkgs.sd
     pkgs.tabiew
     pkgs.tealdeer
     pkgs.tinymist
