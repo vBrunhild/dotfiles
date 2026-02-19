@@ -29,6 +29,11 @@ rec {
       programs.direnv.enable = true;
       programs.ssh.startAgent = true;
       programs.zoxide.enable = true;
+      programs.gnupg.agent = {
+        enable = true;
+        pinentryPackage = pkgs.pinentry-curses;
+      };
+
       virtualisation.docker = {enable = true;};
     };
 
