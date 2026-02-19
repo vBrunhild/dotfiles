@@ -13,7 +13,7 @@
             networking.hostName = name;
             nixpkgs.hostPlatform = system;
           }
-          ./${name}.nix
+          ./${name}
         ]
         ++ builtins.attrValues self.nixosModules;
 
@@ -23,5 +23,6 @@
       };
     };
 in {
-  proteus = mkHost "proteus" "x86_64-linux";
+  etzel = mkHost "etzel" "x86_64-linux";
+  siegfried = mkHost "siegfried" "x86_64-linux";
 }
