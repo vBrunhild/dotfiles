@@ -21,6 +21,7 @@ rec {
         variables = {
           EDITOR = "nvim";
           VISUAL = "nvim";
+          RIPGREP_CONFIG_PATH = "/home/brunhild/.config/ripgrep/.ripgreprc";
         };
       };
 
