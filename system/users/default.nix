@@ -6,13 +6,11 @@
   users = {
     mutableUsers = false;
     users = {
-      root.hashedPasswordFile = "/persist/secrets/root";
       brunhild = {
         isNormalUser = true;
         homix = true;
         shell = pkgs.nushell;
 
-        hashedPasswordFile = "/persist/secrets/brunhild";
         extraGroups = [
           "audio"
           "docker"
