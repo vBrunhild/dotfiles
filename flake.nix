@@ -36,11 +36,11 @@
       in (pkgs.alejandra)
     );
 
-    devShells = forAllSystems (
-      system: let
-        pkgs = allPkgs.${system};
-      in {default = user.shell pkgs;}
-    );
+    # devShells = forAllSystems (
+    #   system: let
+    #     pkgs = allPkgs.${system};
+    #   in {default = user.shell pkgs;}
+    # );
 
     nixosModules =
       {
