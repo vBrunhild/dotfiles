@@ -26,7 +26,6 @@
     pkgs.tinymist
     pkgs.typst
     pkgs.uutils-coreutils-noprefix
-    pkgs.wezterm
     pkgs.zellij
     pkgs.zoxide
   ];
