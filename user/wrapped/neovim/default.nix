@@ -1,4 +1,8 @@
-{inputs, pkgs, ...}: let
+{
+  inputs,
+  pkgs,
+  ...
+}: let
   nvim-treesitter-parsers = pkgs.symlinkJoin {
     name = "nvim-treesitter-parsers";
     paths = [
@@ -29,7 +33,6 @@
       pkgs.vimPlugins.nvim-treesitter-parsers.jsdoc
       pkgs.vimPlugins.nvim-treesitter-parsers.json
       pkgs.vimPlugins.nvim-treesitter-parsers.json5
-      pkgs.vimPlugins.nvim-treesitter-parsers.jsonc
       pkgs.vimPlugins.nvim-treesitter-parsers.kdl
       pkgs.vimPlugins.nvim-treesitter-parsers.lua
       pkgs.vimPlugins.nvim-treesitter-parsers.luadoc
@@ -99,12 +102,13 @@
     inherit plugins;
   };
 
-  neovim = pkgs.wrapNeovimUnstable inputs.neovim-nightly-overlay.packages.${pkgs.system}.default neovimConfig;
+  neovim-nightly = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  neovim-wrapped = pkgs.wrapNeovimUnstable neovim-nightly neovimConfig;
 in
   pkgs.symlinkJoin {
     name = "neovim-wrapped";
     paths = [
-      neovim
+      neovim-wrapped
       pkgs.alejandra
       pkgs.dprint
       pkgs.dprint-plugins.dprint-plugin-json

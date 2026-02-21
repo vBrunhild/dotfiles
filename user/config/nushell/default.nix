@@ -3,18 +3,13 @@
     ".config/nushell/config.nu".text =
       # nu
       ''
-        use ${./op.nu} *  
+        use ${./op.nu} *
 
         plugin add ${pkgs.nushellPlugins.polars}/bin/nu_plugin_polars
         plugin add ${pkgs.nushellPlugins.query}/bin/nu_plugin_query
 
         source ${./prompt.nu}
         source ${./theme.nu}
-        source ${./completions/cargo.nu}
-        source ${./completions/git.nu}
-        source ${./completions/jj.nu}
-        source ${./completions/zellij.nu}
-        source ${./completions/zoxide.nu}
 
         $env.config.hooks = {
           env_change: {
@@ -32,9 +27,13 @@
         $env.config.completions.algorithm = "fuzzy"
       '';
 
-  ".config/nushell/env.nu".text =
-    # nu
-    ''
-    '';
+    ".config/nushell/env.nu".text =
+      # nu
+      ''
+        source ${./completions/git.nu}
+        source ${./completions/jj.nu}
+        source ${./completions/zoxide.nu}
+        $env.ZELLIJ_SOCKET_DIR = "/tmp/zellij"
+      '';
   };
 }

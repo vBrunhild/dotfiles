@@ -80,8 +80,6 @@ vim.diagnostic.config({
     virtual_text = true,
 })
 
-vim.cmd("packadd nvim.undotree")
-
 -- autocommands
 local buf_easy_close = function(buf)
     vim.bo[buf].buflisted = false
@@ -182,12 +180,6 @@ map({
 })
 
 -- lsp
-vim.lsp.config["groovyls"] = {
-    cmd = { "groovy-language-server" },
-    filetypes = { "groovy" },
-    root_markers = { "Jenkinsfile", ".git" },
-}
-
 vim.lsp.config("harper_ls", {
     filetypes = {
         "gitcommit",
@@ -231,6 +223,7 @@ vim.lsp.config("lua_ls", {
 })
 
 vim.lsp.enable({
+    "basedpyright",
     "clangd",
     "cssls",
     "dprint",
@@ -284,12 +277,15 @@ function StartupScreen(buffer)
     if vim.fn.argc() ~= 0 then
         return
     end
-    buffer = buffer or vim.api.nvim_create_buf(false, true)
+    -- use provided buffer or get empty one
+    buffer = buffer or vim.api.nvim_get_current_buf()
     vim.api.nvim_set_current_buf(buffer)
-    vim.bo.bufhidden = "wipe"
-    vim.bo.buflisted = false
-    vim.bo.buftype = "nofile"
-    vim.bo.swapfile = false
+    -- make buffer into a scratch buffer
+    vim.bo[buffer].bufhidden = "wipe"
+    vim.bo[buffer].buflisted = false
+    vim.bo[buffer].buftype = "nofile"
+    vim.bo[buffer].swapfile = false
+    -- clean local window
     vim.opt_local.number = false
     vim.opt_local.relativenumber = false
     vim.opt_local.signcolumn = "no"
@@ -334,28 +330,22 @@ end
 
 autocommand("VimEnter", { callback = function() StartupScreen() end })
 
+require("onedarkpro").setup({
+    options = {
+        transparency = true,
+        highlight_inactive_windows = true,
+    }
+})
+
+vim.cmd("colorscheme onedark")
+
 ---@type lze.PluginSpec[]
 require("lze").load({
     {
         "nvim-treesitter",
-        lazy = vim.fn.argc(-1) == 0,
-        event = "BufEnter",
-        before = function()
-            require("nvim-treesitter.query_predicates")
-        end,
+        lazy = false,
         after = function()
-            ---@type TSConfig
-            ---@diagnostic disable-next-line: missing-fields
-            local treesitter_config = {
-                highlight = {
-                    enable = true,
-                    additional_vim_regex_highlighting = false,
-                },
-                indent = {
-                    enable = true
-                }
-            }
-            require("nvim-treesitter.configs").setup(treesitter_config)
+            require("nvim-treesitter").setup()
         end
     },
     {
@@ -474,7 +464,8 @@ require("lze").load({
         lazy = false,
         after = function()
             require("markview").setup({
-                preview = { icon_provider = "mini" }
+                preview = { icon_provider = "mini" },
+                typst = { enable = false },
             })
         end
     },
@@ -773,18 +764,6 @@ require("lze").load({
         end
     },
     {
-        "onedarkpro.nvim",
-        colorscheme = "onedark",
-        after = function()
-            require("onedarkpro").setup({
-                options = {
-                    transparency = true,
-                    highlight_inactive_windows = true
-                }
-            })
-        end
-    },
-    {
         "typst-preview.nvim",
         ft = "typst",
         after = function()
@@ -792,5 +771,3 @@ require("lze").load({
         end
     }
 })
-
-vim.cmd("colorscheme onedark")

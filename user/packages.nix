@@ -1,13 +1,16 @@
 {pkgs, ...}: {
   environment.systemPackages = [
-    pkgs.ascii-image-converter
     pkgs.bat
     pkgs.bottom
+    pkgs.cloudflared
     pkgs.curl
     pkgs.direnv
     pkgs.docker
     pkgs.docker-compose
+    pkgs.dust
+    pkgs.eza
     pkgs.fd
+    pkgs.ffmpeg
     pkgs.git
     pkgs.git-credential-manager
     pkgs.jujutsu
@@ -16,13 +19,14 @@
     pkgs.openssh
     pkgs.pandoc
     pkgs.ripgrep
+    pkgs.rsync
+    pkgs.sd
     pkgs.tabiew
     pkgs.tealdeer
     pkgs.tinymist
     pkgs.typst
     pkgs.uutils-coreutils-noprefix
     pkgs.wezterm
-    pkgs.wikiman
     pkgs.zellij
     pkgs.zoxide
   ];
