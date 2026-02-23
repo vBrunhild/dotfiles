@@ -2,78 +2,33 @@ input {
     mod-key "Super"
 
     keyboard {
-        xkb {
-            // You can set rules, model, layout, variant and options.
-            // For more information, see xkeyboard-config(7).
-
-            // For example:
-            // layout "us,ru"
-            // options "grp:win_space_toggle,compose:ralt,ctrl:nocaps"
-
-            // If this section is empty, niri will fetch xkb settings
-            // from org.freedesktop.locale1. You can control these using
-            // localectl set-x11-keymap.
-        }
-
         repeat-delay 200
         repeat-rate 40
     }
 
     touchpad {
-        // off
         tap
-        // dwt
-        // dwtp
-        // drag false
-        // drag-lock
         natural-scroll
-        // accel-speed 0.2
-        // accel-profile "flat"
-        // scroll-method "two-finger"
-        // disabled-on-external-mouse
     }
 
     mouse {
-        // off
-        // natural-scroll
-        // accel-speed 0.2
-        // accel-profile "flat"
-        // scroll-method "no-scroll"
     }
 
     trackpoint {
-        // off
-        // natural-scroll
-        // accel-speed 0.2
-        // accel-profile "flat"
-        // scroll-method "on-button-down"
-        // scroll-button 273
-        // scroll-button-lock
-        // middle-emulation
     }
 }
 
 output "eDP-1" {
-    // off
-
-    // Run `niri msg outputs`
     mode "1366x768@60.004"
     scale 1
     transform "normal"
 }
 
 layout {
-    gaps 5
-
-    // When to center a column when changing focus, options are:
-    // - "never", default behavior, focusing an off-screen column will keep at the left
-    //   or right edge of the screen.
-    // - "always", the focused column will always be centered.
-    // - "on-overflow", focusing a column will center it if it doesn't fit
-    //   together with the previously focused column.
+    gaps 10
     center-focused-column "never"
+    background-color "#1e2127"
 
-    // Mod+R toggles between.
     preset-column-widths {
         proportion 0.33333
         proportion 0.5
@@ -81,70 +36,85 @@ layout {
         proportion 1.0
     }
 
-    // Mod+Shift+R toggles between.
     preset-window-heights {
         proportion 0.5
         proportion 1.0
     }
 
-    default-column-width { proportion 0.5; }
+    default-column-width {
+        proportion 0.5;
+    }
 
     focus-ring {
-        // off
-        width 1
-        active-color "#98c379"
-        inactive-color "#282c34"
+        width 1.3
+        active-color   "#98c379"
+        inactive-color "#1e2127"
+        urgent-color   "#e06c75"
+    }
+
+    tab-indicator {
+        width 1.3
+        active-color   "#98c379"
+        inactive-color "#1e2127"
+        urgent-color   "#e06c75"
+    }
+
+    insert-hint {
+        color "#98c379"
     }
 }
 
-spawn-at-startup "waybar"
+recent-windows {
+    highlight {
+        active-color "#98c379"
+        urgent-color "#e06c75"
+    }
+}
 
 hotkey-overlay {
     skip-at-startup
 }
 
-// Uncomment this line to ask the clients to omit their client-side decorations if possible.
-// If the client will specifically ask for CSD, the request will be honored.
-// Additionally, clients will be informed that they are tiled, removing some client-side rounded corners.
-// This option will also fix border/focus ring drawing behind some semitransparent windows.
-// After enabling or disabling this, you need to restart the apps for this to take effect.
 prefer-no-csd
 
 screenshot-path "~/Pictures/Screenshots/%Y-%m-%dT%H-%M-%S.png"
 
-animations {
-    // off
-    // slowdown 3.0
+debug {
+  honor-xdg-activation-with-invalid-serial
 }
 
 window-rule {
-    match app-id="wezterm"
-    open-fullscreen true
+  geometry-corner-radius 15
+  clip-to-geometry true
+}
+
+window-rule {
+    match app-id="^$" title="^$"
+    open-floating true
+}
+
+spawn-at-startup "noctalia-shell"
+spawn-at-startup "foot"
+
+gestures {
+    hot-corners {
+        off
+    }
 }
 
 binds {
-    Mod+Shift+Slash { show-hotkey-overlay; }
+    Mod+Shift+1 { show-hotkey-overlay; }
 
-    // Suggested binds for running programs: terminal, app launcher, screen locker.
-    Mod+T hotkey-overlay-title="Open Terminal" { spawn "wezterm"; }
-    Mod+E hotkey-overlay-title="Fuzzy Finder" { spawn "fuzzel"; }
-    Super+Shift+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
+    Mod+T hotkey-overlay-title="Open Terminal" { spawn "foot"; }
+    Mod+E hotkey-overlay-title="Launcher" { spawn-sh "noctalia-shell ipc call launcher toggle"; }
+    Mod+P hotkey-overlay-title="Lock screen" { spawn-sh "noctalia-shell ipc call sessionMenu lock"; }
+    Mod+Shift+S hotkey-overlay-title="Print" { spawn-sh "flameshot gui"; }
 
-    // Example volume keys mappings for PipeWire & WirePlumber.
-    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
-    XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
-    XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
-
-    // Example media keys mapping using playerctl.
-    XF86AudioPlay        allow-when-locked=true { spawn-sh "playerctl play-pause"; }
-    XF86AudioStop        allow-when-locked=true { spawn-sh "playerctl stop"; }
-    XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl previous"; }
-    XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
-
-    // Example brightness key mappings for brightnessctl.
-    XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
+    XF86AudioRaiseVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "increase"; }
+    XF86AudioLowerVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "decrease"; }
+    XF86AudioMute { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "muteOutput"; }
+    XF86MonBrightnessUp { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "increase"; }
+    XF86MonBrightnessDown { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
 
     Mod+O repeat=false { toggle-overview; }
     Mod+Q repeat=false { close-window; }
@@ -216,7 +186,6 @@ binds {
     Mod+Shift+Minus { set-window-height "-10%"; }
     Mod+Shift+Equal { set-window-height "+10%"; }
 
-    // Move the focused window between the floating and the tiling layout.
     Mod+V       { toggle-window-floating; }
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
 
