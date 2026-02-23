@@ -1,9 +1,12 @@
 {pkgs, ...}: {
-  services.desktopManager.plasma6.enable = true;
-  services.devmon.enable = true;
-  services.displayManager.sddm.enable = true;
-  services.gnome.gcr-ssh-agent.enable = false;
-  services.pulseaudio.enable = false;
+  services = {
+    desktopManager.plasma6.enable = true;
+    devmon.enable = true;
+    displayManager.sddm.enable = true;
+    gnome.gcr-ssh-agent.enable = false;
+    pulseaudio.enable = false;
+    upower.enable = true;
+  };
 
   services.xserver = {
     enable = true;
