@@ -1,14 +1,9 @@
-{
-  pkgs,
-  ...
-}:
-{
+{pkgs, ...}: {
   users = {
-    mutableUsers = false;
     users = {
       brunhild = {
+        uid = 1000;
         isNormalUser = true;
-        homix = true;
         shell = pkgs.nushell;
 
         extraGroups = [
@@ -20,12 +15,12 @@
           "nix"
           "plugdev"
           "power"
+          "scanner"
           "systemd-journal"
           "vboxusers"
           "video"
           "wheel"
         ];
-        uid = 1000;
       };
     };
   };
@@ -36,21 +31,21 @@
       extraRules = [
         {
           commands =
-            builtins.map
-              (command: {
-                command = "/run/current-system/sw/bin/${command}";
-                options = [ "NOPASSWD" ];
-              })
-              [
-                "bandwhich"
-                "nix-env"
-                "nixos-rebuild"
-                "poweroff"
-                "reboot"
-                "systemctl"
-              ];
+            map (command: {
+              command = "/run/current-system/sw/bin/${command}";
+              options = ["NOPASSWD"];
+            })
+            [
+              "bandwhich"
+              "nh"
+              "nix-env"
+              "nixos-rebuild"
+              "poweroff"
+              "reboot"
+              "systemctl"
+            ];
 
-          groups = [ "wheel" ];
+          groups = ["wheel"];
         }
       ];
     };
