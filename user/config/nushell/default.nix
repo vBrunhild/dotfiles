@@ -1,12 +1,10 @@
 {pkgs, ...}: {
-  homix = {
-    ".config/nushell/config.nu".text =
+  programs.nushell = {
+    enable = true;
+    configFile.text =
       # nu
       ''
         use ${./op.nu} *
-
-        plugin add ${pkgs.nushellPlugins.polars}/bin/nu_plugin_polars
-        plugin add ${pkgs.nushellPlugins.query}/bin/nu_plugin_query
 
         source ${./prompt.nu}
         source ${./theme.nu}
@@ -22,18 +20,35 @@
           }
         }
 
+        def start_zellij [] {
+          if 'ZELLIJ' not-in ($env | columns) {
+            zellij
+            if 'ZELLIJ_AUTO_EXIT' in ($env | columns) and $env.ZELLIJ_AUTO_EXIT == 'true' {
+              exit
+            }
+          }
+        }
+
+        start_zellij
+
         $env.config.show_banner = false
         $env.config.edit_mode = "vi"
         $env.config.completions.algorithm = "fuzzy"
       '';
 
-    ".config/nushell/env.nu".text =
+    envFile.text =
       # nu
       ''
         source ${./completions/git.nu}
         source ${./completions/jj.nu}
         source ${./completions/zoxide.nu}
+
         $env.ZELLIJ_SOCKET_DIR = "/tmp/zellij"
       '';
+
+    plugins = [
+      pkgs.nushellPlugins.polars
+      pkgs.nushellPlugins.query
+    ];
   };
 }
