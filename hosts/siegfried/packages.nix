@@ -39,33 +39,35 @@
       };
 
       url = {
-        label-letters = "sadfjlewcmpgh";
         launch = "xdg-open \${url}";
         osc8-underline = "url-mode";
       };
 
       colors = {
-        foreground="CDD4E1";
-        background="1E2127";
-        regular0="1E2127";
-        regular1="E06C75";
-        regular2="61AFEF";
-        regular3="CCC67F";
-        regular4="98C379";
-        regular5="C678DD";
-        regular6="61AFEF";
-        regular7="CDD4E1";
-        bright0="282C34";
-        bright1="FF949D";
-        bright2="AFF2C0";
-        bright3="F2EDAF";
-        bright4="C3E9A8";
-        bright5="EAA4FF";
-        bright6="81C6FF";
-        bright7="FFFFFF";
-        selection-foreground="1E2127";
-        selection-background="CDD4E1";
-        cursor="1E2127 98C379";
+        foreground = "b6bdca";
+        background = "282c34";
+
+        regular0 = "282c34";
+        regular1 = "e06c75";
+        regular2 = "98c379";
+        regular3 = "e5c07b";
+        regular4 = "61afef";
+        regular5 = "c678dd";
+        regular6 = "56b6c2";
+        regular7 = "b6bdca";
+
+        bright0 = "565c64";
+        bright1 = "e06c75";
+        bright2 = "98c379";
+        bright3 = "e5c07b";
+        bright4 = "61afef";
+        bright5 = "c678dd";
+        bright6 = "56b6c2";
+        bright7 = "fffefe";
+
+        selection-foreground = "282c34";
+        selection-background = "b6bdca";
+        cursor = "1E2127 98C379";
       };
     };
   };
