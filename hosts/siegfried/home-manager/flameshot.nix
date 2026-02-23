@@ -1,8 +1,11 @@
 {...}: {
-  services.flameshot.settings = {
-    General = {
-      showStartupLaunchMessage = false;
-      useGrimAdapter = true;
+  services.flameshot = {
+    enable = true;
+    settings = {
+      General = {
+        showStartupLaunchMessage = false;
+        useGrimAdapter = true;
+      };
     };
   };
 }
