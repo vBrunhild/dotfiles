@@ -1,3 +1,0 @@
-{
-    homix = import ./homix.nix;
-}

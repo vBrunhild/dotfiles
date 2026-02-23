@@ -52,14 +52,12 @@
     #   in {default = user.shell pkgs;}
     # );
 
-    nixosModules =
-      {
-        system = import ./system;
-        user = user.module;
-        determinate = inputs.derterminate.nixosModules.default;
-        home-manager = inputs.home-manager.nixosModules.home-manager;
-      }
-      // import ./modules;
+    nixosModules = {
+      system = import ./system;
+      user = user.module;
+      determinate = inputs.derterminate.nixosModules.default;
+      home-manager = inputs.home-manager.nixosModules.home-manager;
+    };
 
     nixosConfigurations = import ./hosts inputs;
   };
