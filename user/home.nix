@@ -30,6 +30,10 @@
     };
   };
 
+  services = {
+    cliphist.enable = true;
+  };
+
   xdg.configFile = {
     "bat/config".source = ./config/bat/config.rc;
     "bottom/bottom.toml".source = ./config/bottom/config.toml;
