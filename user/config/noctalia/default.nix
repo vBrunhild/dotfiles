@@ -211,6 +211,9 @@ in {
               id = "Brightness";
               textColor = "none";
             }
+            {
+              id = "plugin:clipper";
+            }
           ];
         };
       };
@@ -614,6 +617,14 @@ in {
           {
             enabled = true;
             id = "niri";
+          }
+          {
+            enabled = true;
+            id = "gtk";
+          }
+          {
+            enabled = true;
+            id = "qt";
           }
         ];
         enableUserTheming = false;
