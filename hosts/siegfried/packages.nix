@@ -38,9 +38,8 @@
         multiplier = 3.0;
       };
 
-      url = {
-        launch = "xdg-open \${url}";
-        osc8-underline = "url-mode";
+      mouse = {
+        hide-when-typing = "yes";
       };
 
       colors = {
