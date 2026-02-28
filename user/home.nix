@@ -20,12 +20,14 @@
     ];
   };
 
-  services.flameshot = {
+  programs.satty = {
     enable = true;
     settings = {
-      General = {
-        showStartupLaunchMessage = false;
-        useGrimAdapter = true;
+      general = {
+        fullscreen = false;
+        copy-command = "wl-copy";
+        output-filename = "/tmp/screenshot-%Y-%m-%dT%H-%M-%S.png";
+        disable-notifications = true;
       };
     };
   };

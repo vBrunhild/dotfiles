@@ -105,6 +105,12 @@ window-rule {
     open-floating true
 }
 
+window-rule {
+    match app-id="com.gabm.satty" title="satty"
+    open-floating true
+    open-focused true
+}
+
 spawn-at-startup "noctalia-shell"
 spawn-at-startup "foot"
 
@@ -120,7 +126,7 @@ binds {
     Mod+T hotkey-overlay-title="Open Terminal" { spawn "foot"; }
     Mod+E hotkey-overlay-title="Launcher" { spawn-sh "noctalia-shell ipc call launcher toggle"; }
     Mod+P hotkey-overlay-title="Lock screen" { spawn-sh "noctalia-shell ipc call sessionMenu lock"; }
-    Mod+Shift+S hotkey-overlay-title="Print" { spawn-sh "flameshot gui"; }
+    Mod+Shift+S hotkey-overlay-title="Print" { spawn-sh r#"grim -g "$(slurp)" - | satty -f -"#; }
 
     XF86AudioRaiseVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "increase"; }
     XF86AudioLowerVolume { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "volume" "decrease"; }
