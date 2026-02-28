@@ -21,7 +21,6 @@ rec {
         variables = {
           EDITOR = "nvim";
           VISUAL = "nvim";
-          RIPGREP_CONFIG_PATH = "/home/brunhild/.config/ripgrep/.ripgreprc";
         };
       };
 
@@ -35,6 +34,12 @@ rec {
       };
 
       virtualisation.docker = {enable = true;};
+
+      home-manager = {
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        users.brunhild = ./home.nix;
+      };
     };
 
     imports = [

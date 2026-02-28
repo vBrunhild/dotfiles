@@ -4,6 +4,16 @@
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {nixpkgs, ...}: let
@@ -42,13 +52,12 @@
     #   in {default = user.shell pkgs;}
     # );
 
-    nixosModules =
-      {
-        system = import ./system;
-        user = user.module;
-        determinate = inputs.derterminate.nixosModules.default;
-      }
-      // import ./modules;
+    nixosModules = {
+      system = import ./system;
+      user = user.module;
+      determinate = inputs.derterminate.nixosModules.default;
+      home-manager = inputs.home-manager.nixosModules.home-manager;
+    };
 
     nixosConfigurations = import ./hosts inputs;
   };
