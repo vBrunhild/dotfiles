@@ -7,17 +7,20 @@
   };
 
   sourceList = builtins.attrValues (builtins.mapAttrs (key: src: {
-    enabled = true;
-    inherit (src) name url;
-  }) sources);
+      enabled = true;
+      inherit (src) name url;
+    })
+    sources);
 in {
+  xdg.configFile."noctalia/colorschemes/One/One.json".source = ./colorschemes/One/One.json;
+
   programs.noctalia-shell = {
     enable = true;
 
     plugins = {
       sources = sourceList;
       states = {
-        color-scheme-creator = {
+        clipper = {
           enabled = true;
           sourceUrl = sources.official.url;
         };
@@ -239,7 +242,7 @@ in {
         manualSunrise = "06:30";
         manualSunset = "18:30";
         monitorForColors = "";
-        predefinedScheme = "OneDark";
+        predefinedScheme = "One";
         schedulingMode = "off";
         useWallpaperColors = false;
       };

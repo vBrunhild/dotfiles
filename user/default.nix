@@ -38,6 +38,7 @@ rec {
       home-manager = {
         useGlobalPkgs = true;
         useUserPackages = true;
+        extraSpecialArgs = { inherit inputs; };
         users.brunhild = ./home.nix;
       };
     };
