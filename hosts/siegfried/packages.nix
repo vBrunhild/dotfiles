@@ -67,7 +67,7 @@
 
         selection-foreground = "282c34";
         selection-background = "b6bdca";
-        cursor = "1E2127 98C379";
+        cursor = "1e2127 98c379";
       };
     };
   };
