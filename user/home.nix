@@ -20,14 +20,20 @@
     ];
   };
 
-  services.flameshot = {
+  programs.satty = {
     enable = true;
     settings = {
-      General = {
-        showStartupLaunchMessage = false;
-        useGrimAdapter = true;
+      general = {
+        fullscreen = false;
+        copy-command = "wl-copy";
+        output-filename = "/tmp/screenshot-%Y-%m-%dT%H-%M-%S.png";
+        disable-notifications = true;
       };
     };
+  };
+
+  services = {
+    cliphist.enable = true;
   };
 
   xdg.configFile = {
@@ -37,6 +43,7 @@
     "niri/config.kdl".source = ./config/niri/config.kdl;
     "spotify-player/app.toml".source = ./config/spotify_player/app.toml;
     "zellij/config.kdl".source = ./config/zellij/config.kdl;
+    "zellij/layouts/default.kdl".source = ./config/zellij/layouts/default.kdl;
   };
 
   imports = [

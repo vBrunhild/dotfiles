@@ -7,10 +7,10 @@
     inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
     pkgs.dbeaver-bin
     pkgs.discord
-    pkgs.flameshot
     pkgs.google-chrome
     pkgs.grim
     pkgs.obs-studio
+    pkgs.slurp
     pkgs.spotify-player
     pkgs.udevil
     pkgs.vlc
@@ -38,9 +38,8 @@
         multiplier = 3.0;
       };
 
-      url = {
-        launch = "xdg-open \${url}";
-        osc8-underline = "url-mode";
+      mouse = {
+        hide-when-typing = "yes";
       };
 
       colors = {
