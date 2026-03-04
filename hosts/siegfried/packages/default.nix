@@ -30,15 +30,14 @@ in {
 
   environment.systemPackages = [
     pkgs.dbeaver-bin
-    pkgs.discord
     pkgs.dragon-drop
     pkgs.google-chrome
     pkgs.grim
     pkgs.obs-studio
-    pkgs.opentofu
     pkgs.slurp
     pkgs.spotify-player
     pkgs.udevil
+    pkgs.vesktop
     pkgs.vlc
     pkgs.wl-clipboard
     pkgs.xwayland-satellite

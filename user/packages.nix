@@ -1,10 +1,5 @@
-{config, pkgs, inputs, ...}: let
-  copilot-cli = (pkgs.github-copilot-cli.overrideAttrs (oldAttrs: {
-    postInstall = "";
-  }));
-in {
+{pkgs, inputs, ...}: {
   environment.systemPackages = [
-    copilot-cli
     inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
     pkgs.bat
     pkgs.bottom
@@ -17,8 +12,11 @@ in {
     pkgs.eza
     pkgs.fd
     pkgs.ffmpeg
+    pkgs.fzf
     pkgs.git-credential-manager
     pkgs.gitFull
+    pkgs.github-copilot-cli
+    pkgs.jq
     pkgs.jujutsu
     pkgs.just
     pkgs.nh
@@ -27,11 +25,13 @@ in {
     pkgs.opentofu
     pkgs.ouch
     pkgs.pandoc
+    pkgs.resvg
     pkgs.ripgrep
     pkgs.rsync
     pkgs.sd
     pkgs.tabiew
     pkgs.tealdeer
+    pkgs.terragrunt
     pkgs.tinymist
     pkgs.typst
     pkgs.uutils-coreutils-noprefix
