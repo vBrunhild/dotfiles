@@ -8,9 +8,11 @@ include "dms/windowrules.kdl"
 include "dms/wpblur.kdl"
 
 environment {
-    XDG_CURRENT_DESKTOP "niri"
-    QT_QPA_PLATFORM "wayland"
     ELECTRON_OZONE_PLATFORM_HINT "auto"
+    QT_QPA_PLATFORM "wayland"
+    QT_QPA_PLATFORMTHEME "gtk3"
+    XDG_CURRENT_DESKTOP "niri"
+    XDG_SESSION_TYPE "wayland"
 }
 
 input {
@@ -111,6 +113,12 @@ window-rule {
 
 window-rule {
     match app-id="com.gabm.satty" title="satty"
+    open-floating true
+    open-focused true
+}
+
+window-rule {
+    match app-id="foot" title="filepicker"
     open-floating true
     open-focused true
 }
