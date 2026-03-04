@@ -1,4 +1,6 @@
-{home, ...}: {
+{config, ...}: let
+  homeDir = config.home.homeDirectory;
+in {
   age = {
     identityPaths = [
       "~/.ssh/id_ed25519"
