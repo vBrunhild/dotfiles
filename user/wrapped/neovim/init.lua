@@ -36,6 +36,8 @@ end
 local autocommand = vim.api.nvim_create_autocmd
 
 -- configs
+local border = "rounded"
+
 vim.g.clipboard = "osc52"
 vim.o.backup = false
 vim.o.breakindent = true
@@ -55,6 +57,8 @@ vim.o.linebreak = true
 vim.o.list = true
 vim.o.mouse = ""
 vim.o.number = true
+vim.o.pumblend = 50
+vim.o.pumborder = border
 vim.o.relativenumber = true
 vim.o.ruler = false
 vim.o.scrolloff = 10
@@ -71,8 +75,11 @@ vim.o.tabstop = 4
 vim.o.termguicolors = true
 vim.o.undofile = true
 vim.o.virtualedit = "block"
-vim.o.winblend = 30
-vim.o.winborder = "rounded"
+vim.o.wildmenu = true
+vim.o.wildmode = "noselect,full"
+vim.o.wildoptions = "pum,fuzzy"
+vim.o.winblend = 50
+vim.o.winborder = border
 vim.o.wrap = false
 vim.o.writebackup = false
 vim.opt.formatoptions:append { o = false, r = false }
@@ -82,6 +89,7 @@ vim.opt.shortmess:append("I")
 vim.diagnostic.config({
     float = { source = true },
     severity_sort = true,
+    signs = true,
     underline = false,
     update_in_insert = false,
     virtual_lines = false,
@@ -108,9 +116,7 @@ autocommand("FileType", {
 
 autocommand("TextYankPost", {
     desc = "Highlight on yank",
-    callback = function()
-        vim.hl.on_yank()
-    end
+    callback = function() vim.hl.on_yank() end
 })
 
 autocommand("FileType", {
@@ -136,22 +142,17 @@ autocommand("FileType", {
     end
 })
 
--- autocommand("FileType", {
---     desc = "Enable treesitter",
---     pattern = { "*" },
---     callback = function()
---         vim.treesitter.start()
---         vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
---         vim.wo[0][0].foldmethod = "expr"
---         vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
---     end,
--- })
+autocommand('FileType', {
+    callback = function(args) pcall(vim.treesitter.start, args.buf) end
+})
 
-autocommand("VimLeave", { command = "silent !zellij action switch-mode normal" })
+autocommand("VimLeave", {
+    command = "silent !zellij action switch-mode normal"
+})
 
 -- commands
 command({
-    { "ZellijPaneNew", function() vim.cmd("silent !zellij action new-pane --cwd " .. vim.fn.getcwd()) end },
+    { "ZellijPaneNew", function() vim.cmd("silent !zellij action new-pane") end },
     { "ZellijTabNew",  function() vim.cmd("silent !zellij action new-tab --cwd " .. vim.fn.getcwd()) end },
 })
 
@@ -202,6 +203,8 @@ map({
     { "<leader>la", vim.lsp.buf.code_action,                     mode = { "n", "x" },                 desc = "LSP code action" },
     { "<leader>ld", vim.lsp.buf.definition,                      mode = { "n", "x" },                 desc = "LSP goto definition" },
     { "<leader>lr", vim.lsp.buf.rename,                          mode = { "n", "x" },                 desc = "LSP rename" },
+    { "<leader>lt", vim.lsp.buf.type_definition,                 mode = { "n", "x" },                 desc = "LSP goto type definition" },
+    { "<leader>lw", vim.lsp.buf.workspace_diagnostics,           mode = { "n", "x" },                 desc = "LSP workspace diagnostics" },
     -- zellij
     { "<A-h>",      function() nav("h", true) end,               desc = "Navigate left",              silent = true },
     { "<A-j>",      function() nav("j") end,                     desc = "Navigate down",              silent = true },
@@ -244,7 +247,6 @@ vim.lsp.config("lua_ls", {
                 checkThirdParty = false,
                 library = {
                     vim.env.VIMRUNTIME,
-                    vim.api.nvim_get_runtime_file("*/myNeovimPackages/start", false)[1]
                 }
             }
         })
@@ -259,7 +261,6 @@ vim.lsp.config("lua_ls", {
 vim.lsp.enable({
     "clangd",
     "cssls",
-    "docker_compose_language_service",
     "docker_language_server",
     "dprint",
     "golangci_lint_ls",
@@ -292,162 +293,23 @@ if vim.env.NVIM_MINIMAL then
     return
 end
 
--- start screen
----@param text string[]
----@return string[]
-local center_text = function(text)
-    local pad_top = math.floor((vim.api.nvim_win_get_height(0) - #text) / 2)
-    local pad_left = math.floor((vim.api.nvim_win_get_width(0) - vim.fn.strdisplaywidth(text[1])) / 2)
-    local padded = {}
-    for _ = 1, pad_top do
-        table.insert(padded, "")
-    end
-    for _, line in ipairs(text) do
-        line = string.rep(" ", pad_left) .. line
-        table.insert(padded, line)
-    end
-    return padded
-end
-
----@param buffer? integer
-function StartupScreen(buffer)
-    if vim.fn.argc() ~= 0 then
-        return
-    end
-    -- use provided buffer or get empty one
-    buffer = buffer or vim.api.nvim_get_current_buf()
-    vim.api.nvim_set_current_buf(buffer)
-    -- make buffer into a scratch buffer
-    vim.bo[buffer].bufhidden = "wipe"
-    vim.bo[buffer].buflisted = false
-    vim.bo[buffer].buftype = "nofile"
-    vim.bo[buffer].swapfile = false
-    -- clean local window
-    vim.opt_local.number = false
-    vim.opt_local.relativenumber = false
-    vim.opt_local.signcolumn = "no"
-    vim.opt_local.colorcolumn = ""
-    local ascii = {
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠛⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠉⠀⠀⠀⠀⠀⠀⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣿⣿⣿⣿⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⢀⠞⠛⣿⣿⣿⣿⣿⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⣠⣿⣀⣴⣿⣿⢿⣿⣿⠟⠹⣟⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠰⣿⣿⣿⣿⡿⢃⣼⣿⠟⠀⠀⠈⠿⣩⣷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠈⠙⣷⣶⠟⠛⠉⠀⠀⠀⠀⠀⠀⠹⣏⣥⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣤⣤⣤⣾⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣹⣿⣿⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣷⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣯⡴⠖⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⠿⢻⡟⢻⣟⣩⣤⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⠟⣽⠏⣸⡏⠀⣼⡇⣾⢹⣿⡶⣚⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⡟⠘⣿⡴⠞⢁⣴⡟⠁⣰⡿⢠⣿⢸⡏⡏⣿⣫⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢳⡀⠘⣿⣶⠛⢋⣠⣴⠟⢁⣾⠇⣼⠇⡇⣿⢹⣿⣴⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡄⠸⣌⣿⣟⣉⣠⣴⡿⢋⣼⡟⣸⣇⡿⣿⣹⣟⣣⡄⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣻⣾⣟⡽⠙⢿⣉⣡⣴⠿⢋⣰⣟⣼⣿⣏⡟⣹⡿⢧⡄⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠿⣿⣿⡇⢀⣀⢙⣿⣤⣶⣿⣯⣾⣿⣿⡾⢁⡟⢿⣿⡇⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⢻⠰⣿⣿⣿⣽⢝⣿⣿⡿⠿⠿⣋⣤⠟⢀⣸⣿⣧⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⢣⡏⡏⠈⢿⡙⡟⣿⣎⡌⢻⣆⠀⠚⠉⠀⠀⠀⢹⣿⡟⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡏⣸⢇⠇⠀⠘⣧⠸⡈⢿⣷⡀⠻⣧⠀⠀⠀⠀⠀⢾⣿⣿⠃⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡇⣿⣼⠀⠀⠀⠘⢧⣧⠀⢻⣷⣤⣽⣷⣄⡀⠀⠀⢼⣿⣿⡄⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣷⣿⠄⠀⠀⠀⠀⠈⢻⣧⠀⢻⣿⣿⣿⣿⣿⣷⣤⣾⣿⣿⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡏⠉⠉⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⡿⠀⠀⠀⠀⢀⣀⣀⣹⣧⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢷⡄⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⢠⠀⠀⠀⠀⢠⣤⡼⠿⠋⢁⣀⠘⠋⠉⠉⠋⠉⠉⢿⣿⣿⣿⣿⣿⠟⠁⠀⢸⡟⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣸⣿⡆⠀⠀⠀⢹⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠛⠻⠿⠿⠿⠶⣶⣾⣿⣿⡋⠉⠀⠀⠀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣴⣶⣿⣿⣿⣿⠇⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⢻⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⣠⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠤⢤⣤⣤⣶⣶⣶⣿⣿⣿⣿⡿⠿⠿⠿⠛⠛⠁⠀⠀⠀⣠⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠙⢦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠲⠲⠦⠤⣤⣤⣤⣤⣤⣤⣤⣤⢤⡤⠦⠴⠖⠛⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣠⣤⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-        "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-    }
-    vim.api.nvim_buf_set_lines(buffer, 0, -1, false, center_text(ascii))
-end
-
-autocommand("VimEnter", { callback = function() StartupScreen() end })
+vim.opt.rtp:append("/home/brunhild/repositories/simple-start-screen")
+require("sss").setup()
 
 require("onedarkpro").setup({
     options = {
         transparency = true,
         highlight_inactive_windows = true,
+    },
+    highlights = {
+        -- Pmenu = { bg = "bg", fg = "fg" },
+        -- PmenuBorder = { bg = "bg", fg = "fg" },
     }
 })
 
 vim.cmd("colorscheme onedark")
 
----@type lze.PluginSpec[]
 require("lze").load({
-    {
-        "nvim-treesitter",
-        lazy = false,
-        after = function()
-            require("nvim-treesitter").setup()
-        end
-    },
-    {
-        "blink.cmp",
-        event = { "CmdlineEnter", "InsertEnter" },
-        after = function()
-            require("blink.cmp").setup({
-                snippets = { preset = "mini_snippets" },
-                signature = { enabled = true },
-                keymap = { preset = "super-tab" },
-                cmdline = {
-                    keymap = {
-                        ["<CR>"] = { "accept_and_enter", "fallback" },
-                        ["<Left>"] = false,
-                        ["<Right>"] = false,
-                    }
-                },
-                completion = {
-                    accept = { auto_brackets = { enabled = false } },
-                    menu = {
-                        scrollbar = false,
-                        draw = {
-                            components = {
-                                kind_icon = {
-                                    text = function(ctx)
-                                        local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
-                                        return kind_icon
-                                    end,
-                                    highlight = function(ctx)
-                                        local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
-                                        return hl
-                                    end
-                                },
-                                kind = {
-                                    highlight = function(ctx)
-                                        local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
-                                        return hl
-                                    end
-                                }
-                            },
-                            columns = {
-                                { "kind_icon" },
-                                { "label",      "label_description", gap = 1 },
-                                { "kind" },
-                                { "source_name" }
-                            }
-                        }
-                    },
-                    documentation = {
-                        window = { scrollbar = false, },
-                        auto_show = true,
-                    },
-                    list = {
-                        selection = {
-                            preselect = false,
-                            auto_insert = true
-                        }
-                    }
-                },
-                fuzzy = {
-                    sorts = { "exact", "score", "sort_text" }
-                }
-            })
-        end
-    },
     {
         "conform",
         event = { "BufEnter" },
@@ -465,14 +327,6 @@ require("lze").load({
         after = function()
             ---@type conform.setupOpts
             local conform_config = {
-                formatters = {
-                    ["npm-groovy-lint"] = {
-                        command = "npm-groovy-lint",
-                        args = { "--fix", "$FILENAME" },
-                        stdin = false,
-                        exit_codes = { 0, 1 },
-                    },
-                },
                 formatters_by_ft = {
                     cpp = { "clang-format" },
                     groovy = { "npm-groovy-lint" },
@@ -490,20 +344,6 @@ require("lze").load({
                 }
             }
             require("conform").setup(conform_config)
-        end
-    },
-    {
-        "friendly-snippets",
-        dep_of = "blink.cmp"
-    },
-    {
-        "markview.nvim",
-        lazy = false,
-        after = function()
-            require("markview").setup({
-                preview = { icon_provider = "mini" },
-                typst = { enable = false },
-            })
         end
     },
     {
@@ -567,10 +407,11 @@ require("lze").load({
                     miniclue.gen_clues.registers(),
                     miniclue.gen_clues.windows(),
                     miniclue.gen_clues.z(),
-                    { mode = "n", keys = "<leader>f", desc = "+Picker" },
-                    { mode = "n", keys = "<leader>g", desc = "+Git" },
-                    { mode = "n", keys = "<leader>l", desc = "+LSP" },
-                    { mode = "n", keys = "<leader>t", desc = "+Terminal" },
+                    { mode = "n", keys = "<leader>f",  desc = "+Picker" },
+                    { mode = "n", keys = "<leader>fl", desc = "+Lsp Pickers" },
+                    { mode = "n", keys = "<leader>g",  desc = "+Git" },
+                    { mode = "n", keys = "<leader>l",  desc = "+LSP" },
+                    { mode = "n", keys = "<leader>t",  desc = "+Terminal" },
                 },
                 window = {
                     delay = 1000,
@@ -582,9 +423,28 @@ require("lze").load({
         end
     },
     {
+        "mini.cmdline",
+        event = "DeferredUIEnter",
+        after = function()
+            require("mini.cmdline").setup({
+                autopeek = {
+                    enabled = true,
+                    n_context = 5,
+                }
+            })
+        end
+    },
+    {
         "mini.comment",
         keys = { "gc", desc = "Comment" },
         after = function() require("mini.comment").setup() end
+    },
+    {
+        "mini.completion",
+        event = "DeferredUIEnter",
+        after = function()
+            require("mini.completion").setup()
+        end
     },
     {
         "mini.diff",
@@ -676,13 +536,44 @@ require("lze").load({
     },
     {
         "mini.icons",
-        dep_of = { "blink.cmp", "mini.files", "mini.pick", "mini.statusline" },
-        after = function() require("mini.icons").setup() end
+        dep_of = {
+            "mini.completion",
+            "mini.files",
+            "mini.pick",
+            "mini.statusline",
+            "mini.tabline",
+        },
+        after = function()
+            require("mini.icons").setup()
+            MiniIcons.tweak_lsp_kind()
+        end,
     },
     {
         "mini.indentscope",
         event = "DeferredUIEnter",
         after = function() require("mini.indentscope").setup() end
+    },
+    {
+        "mini.keymap",
+        event = "DeferredUIEnter",
+        after = function()
+            local mini_keymap = require("mini.keymap")
+            local map_multistep = mini_keymap.map_multistep
+
+            local tab_steps = { 'minisnippets_next', 'minisnippets_expand', 'pmenu_next' }
+            map_multistep('i', '<Tab>', tab_steps)
+
+            local shifttab_steps = { 'minisnippets_prev', 'pmenu_prev' }
+            map_multistep('i', '<S-Tab>', shifttab_steps)
+
+            local enter_steps = { 'pmenu_accept' }
+            map_multistep('i', '<CR>', enter_steps)
+        end
+    },
+    {
+        "mini.notify",
+        event = "DeferredUIEnter",
+        after = function() require("mini.notify").setup() end
     },
     {
         "mini.operators",
@@ -693,29 +584,34 @@ require("lze").load({
         "mini.pick",
         keys = {
             { "<leader> ",   "<Cmd>lua MiniPick.builtin.files({ tool = 'rg' })<cr>",               desc = "Find files" },
+            { "<leader>b",   "<Cmd>lua MiniPick.builtin.buffers({ tool = 'rg' })<cr>",             desc = "Find buffers" },
             { "<leader>fb",  "<Cmd>lua MiniExtra.pickers.buf_lines(nil, { tool = 'rg' })<cr>",     desc = "Find in buffers" },
             { "<leader>fd",  "<Cmd>lua MiniExtra.pickers.diagnostic(nil, { tool = 'rg' })<cr>",    desc = "Find diagnostics" },
             { "<leader>fg",  "<Cmd>lua MiniPick.builtin.grep_live({ tool = 'rg' })<cr>",           desc = "Find grep" },
             { "<leader>fh",  "<Cmd>lua MiniExtra.pickers.git_hunks(nil, { tool = 'rg' })<cr>",     desc = "Find hunks" },
-            { "<leader>flr", "<Cmd>lua MiniExtra.pickers.lsp({ scope = 'references' })<cr>",       desc = "Find LSP references" },
             { "<leader>fld", "<Cmd>lua MiniExtra.pickers.lsp({ scope = 'document_symbol' })<cr>",  desc = "Find LSP document symbols" },
+            { "<leader>flr", "<Cmd>lua MiniExtra.pickers.lsp({ scope = 'references' })<cr>",       desc = "Find LSP references" },
             { "<leader>flw", "<Cmd>lua MiniExtra.pickers.lsp({ scope = 'workspace_symbol' })<cr>", desc = "Find LSP workspace symbols" },
+            { "<leader>fm",  "<Cmd>lua MiniExtra.pickers.marks(nil, { tool = 'rg' })<cr>",         desc = "Find markers" },
             { "<leader>fv",  "<Cmd>lua MiniPick.builtin.help({ tool = 'rg' })<cr>",                desc = "Find vim help" },
         },
         after = function() require("mini.pick").setup() end,
     },
     {
         "mini.snippets",
-        dep_of = "blink.cmp",
+        dep_of = "mini.completion",
         after = function()
             local minisnippets = require("mini.snippets")
             minisnippets.setup({
                 snippets = {
-                    minisnippets.gen_loader.from_lang()
+                    minisnippets.gen_loader.from_lang(),
                 },
                 expand = {
-                    match = function(snips)
-                        return minisnippets.default_match(snips, { pattern_fuzzy = "%S+" })
+                    match = function(snippets)
+                        return minisnippets.default_match(
+                            snippets,
+                            { pattern_fuzzy = "%S+" }
+                        )
                     end
                 }
             })
@@ -768,34 +664,6 @@ require("lze").load({
             autocommand("BufWritePre", {
                 callback = function()
                     minitrailspace.trim_last_lines()
-                end
-            })
-        end
-    },
-    {
-        "nvim-lint",
-        ft = {
-            "cpp",
-            "groovy",
-            "javascript",
-            "typescript",
-        },
-        after = function()
-            require("lint").linters_by_ft = {
-                cpp = { "clang-tidy", "cppcheck" },
-                groovy = { "npm-groovy-lint" },
-                javascript = { "eslint_d" },
-                typescript = { "eslint_d" },
-            }
-            autocommand("BufWritePost", {
-                pattern = {
-                    "*.c",
-                    "*.groovy",
-                    "*.javascript",
-                    "*.typescript",
-                },
-                callback = function()
-                    require("lint").try_lint()
                 end
             })
         end
