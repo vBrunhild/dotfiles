@@ -51,6 +51,7 @@
     ./config/noctalia
     ./config/nushell
     ./secrets
+    inputs.agenix.homeManagerModules.default
     inputs.noctalia.homeModules.default
   ];
 }

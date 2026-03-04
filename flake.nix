@@ -62,7 +62,6 @@
       system = import ./system;
       user = user.module;
 
-      agenix = inputs.agenix.homeManagerModules.default;
       determinate = inputs.determinate.nixosModules.default;
       home-manager = inputs.home-manager.nixosModules.home-manager;
     };
