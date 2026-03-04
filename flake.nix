@@ -1,6 +1,8 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+    nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
 
     agenix = {
       url = "github:ryantm/agenix";
@@ -12,14 +14,25 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/quickshell/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
-    nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell/stable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    danksearch = {
+      url = "github:AvengeMedia/danksearch";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {nixpkgs, ...}: let
@@ -52,11 +65,11 @@
       in (pkgs.alejandra)
     );
 
-    # devShells = forAllSystems (
-    #   system: let
-    #     pkgs = allPkgs.${system};
-    #   in {default = user.shell pkgs;}
-    # );
+    devShells = forAllSystems (
+      system: let
+        pkgs = allPkgs.${system};
+      in {default = user.shell pkgs;}
+    );
 
     nixosModules = {
       system = import ./system;
