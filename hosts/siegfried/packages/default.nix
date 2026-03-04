@@ -25,7 +25,6 @@ in {
       ./dsearch.nix
       ./satty.nix
       ./spotifyd.nix
-      ./yazi.nix
     ];
   };
 
