@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{...}: {
   nix = {
     gc.automatic = false;
 
@@ -7,8 +6,8 @@
       flake-registry = "/etc/nix/registry.json";
       auto-optimise-store = true;
       builders-use-substitutes = true;
-      allowed-users = [ "@wheel" ];
-      trusted-users = [ "@wheel" ];
+      allowed-users = ["@wheel"];
+      trusted-users = ["@wheel"];
       commit-lockfile-summary = "chore: Update flake.lock";
       accept-flake-config = true;
       keep-derivations = true;
@@ -22,20 +21,8 @@
         "flakes"
         "nix-command"
       ];
-      substituters = [ "https://cache.nixos.org" ];
+      substituters = ["https://cache.nixos.org"];
     };
-  };
-
-  programs.nix-ld = {
-    enable = true;
-    libraries = [
-      pkgs.stdenv.cc.cc.lib
-    ];
-  };
-
-  programs.nh = {
-    enable = true;
-    flake = "/home/brunhild/dotfiles";
   };
 
   systemd.services.nix-daemon = {

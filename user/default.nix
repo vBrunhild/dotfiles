@@ -1,4 +1,4 @@
-rec {
+let
   packages = {
     inputs,
     pkgs,
@@ -8,6 +8,8 @@ rec {
     neovim = callPackage ./wrapped/neovim {inherit inputs;};
     zellijPlugins = callPackage ./wrapped/zellij-plugins.nix {};
   };
+in {
+  inherit packages;
 
   module = {
     inputs,
@@ -24,21 +26,11 @@ rec {
         };
       };
 
-      programs.bat.enable = true;
-      programs.direnv.enable = true;
-      programs.ssh.startAgent = true;
-      programs.zoxide.enable = true;
-      programs.gnupg.agent = {
-        enable = true;
-        pinentryPackage = pkgs.pinentry-curses;
-      };
-
       virtualisation.docker = {enable = true;};
 
       home-manager = {
         useGlobalPkgs = true;
         useUserPackages = true;
-        extraSpecialArgs = { inherit inputs; };
         extraSpecialArgs = {inherit inputs;};
         users.brunhild = ./home.nix;
       };
