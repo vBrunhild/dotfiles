@@ -1,12 +1,9 @@
 {
   inputs = {
-    derterminate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
+    agenix = {
+      url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -14,6 +11,15 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+    nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = inputs @ {nixpkgs, ...}: let
@@ -55,7 +61,9 @@
     nixosModules = {
       system = import ./system;
       user = user.module;
-      determinate = inputs.derterminate.nixosModules.default;
+
+      agenix = inputs.agenix.homeManagerModules.default;
+      determinate = inputs.determinate.nixosModules.default;
       home-manager = inputs.home-manager.nixosModules.home-manager;
     };
 

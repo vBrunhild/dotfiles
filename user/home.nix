@@ -7,6 +7,7 @@
 
   programs = {
     home-manager.enable = true;
+    awscli.enable = true;
   };
 
   programs.ripgrep = {
@@ -49,6 +50,7 @@
   imports = [
     ./config/noctalia
     ./config/nushell
+    ./secrets
     inputs.noctalia.homeModules.default
   ];
 }
