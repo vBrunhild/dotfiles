@@ -33,6 +33,7 @@
       pkgs.vimPlugins.nvim-treesitter-parsers.jsdoc
       pkgs.vimPlugins.nvim-treesitter-parsers.json
       pkgs.vimPlugins.nvim-treesitter-parsers.json5
+      pkgs.vimPlugins.nvim-treesitter-parsers.just
       pkgs.vimPlugins.nvim-treesitter-parsers.kdl
       pkgs.vimPlugins.nvim-treesitter-parsers.lua
       pkgs.vimPlugins.nvim-treesitter-parsers.luadoc
@@ -49,6 +50,8 @@
       pkgs.vimPlugins.nvim-treesitter-parsers.regex
       pkgs.vimPlugins.nvim-treesitter-parsers.rust
       pkgs.vimPlugins.nvim-treesitter-parsers.scheme
+      pkgs.vimPlugins.nvim-treesitter-parsers.sql
+      pkgs.vimPlugins.nvim-treesitter-parsers.terraform
       pkgs.vimPlugins.nvim-treesitter-parsers.toml
       pkgs.vimPlugins.nvim-treesitter-parsers.tsx
       pkgs.vimPlugins.nvim-treesitter-parsers.typescript
@@ -106,10 +109,13 @@
   neovim-wrapped = pkgs.wrapNeovimUnstable neovim-nightly neovimConfig;
 in
   pkgs.symlinkJoin {
-    name = "neovim-wrapped";
+    pname = "neovim-wrapped";
+    version = neovim-nightly.version;
     paths = [
       neovim-wrapped
       pkgs.alejandra
+      pkgs.docker-compose-language-service
+      pkgs.docker-language-server
       pkgs.dprint
       pkgs.dprint-plugins.dprint-plugin-json
       pkgs.dprint-plugins.dprint-plugin-markdown
@@ -119,7 +125,11 @@ in
       pkgs.markdown-oxide
       pkgs.nil
       pkgs.nixd
+      pkgs.just-lsp
+      pkgs.pyrefly
+      pkgs.ruff
       pkgs.taplo
+      pkgs.tofu-ls
       pkgs.vscode-langservers-extracted
     ];
   }

@@ -1,4 +1,5 @@
 -- functions
+
 ---@class MapConfig : vim.keymap.set.Opts
 ---@field [1] string
 ---@field [2] string|function
@@ -17,12 +18,19 @@ local map = function(configs)
     end
 end
 
----@param name string
----@param command string|fun(args: vim.api.keyset.create_user_command.command_args)
----@param opts? vim.api.keyset.user_command
-local command = function(name, command, opts)
-    opts = opts or {}
-    vim.api.nvim_create_user_command(name, command, opts)
+---@class CommandOpts : vim.api.keyset.user_command
+---@field [1] string
+---@field [2] string|fun(args: vim.api.keyset.create_user_command.command_args)
+
+---@param optsTable CommandOpts[]
+local command = function(optsTable)
+    for _, opts in ipairs(optsTable) do
+        local name = opts[1]
+        opts[1] = nil
+        local command = opts[2]
+        opts[2] = nil
+        vim.api.nvim_create_user_command(name, command, opts)
+    end
 end
 
 local autocommand = vim.api.nvim_create_autocmd
@@ -113,9 +121,13 @@ autocommand("FileType", {
         "javascript",
         "json",
         "nix",
+        "opentofu",
+        "opentofu-vars",
         "nu",
         "typescript",
         "typst",
+        "terraform",
+        "hcl",
     },
     callback = function()
         vim.bo.shiftwidth = 2
@@ -124,11 +136,24 @@ autocommand("FileType", {
     end
 })
 
+-- autocommand("FileType", {
+--     desc = "Enable treesitter",
+--     pattern = { "*" },
+--     callback = function()
+--         vim.treesitter.start()
+--         vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+--         vim.wo[0][0].foldmethod = "expr"
+--         vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+--     end,
+-- })
+
 autocommand("VimLeave", { command = "silent !zellij action switch-mode normal" })
 
 -- commands
-command("ZellijPaneNew", "silent !zellij action new-pane")
-command("ZellijTabNew", "silent !zellij action new-tab")
+command({
+    { "ZellijPaneNew", function() vim.cmd("silent !zellij action new-pane --cwd " .. vim.fn.getcwd()) end },
+    { "ZellijTabNew",  function() vim.cmd("silent !zellij action new-tab --cwd " .. vim.fn.getcwd()) end },
+})
 
 -- keymaps
 vim.g.mapleader = " "
@@ -158,25 +183,34 @@ local nav = function(direction, move_tab)
     end
 end
 
+---@param file string
+local dragon = function(file)
+    vim.fn.jobstart({ "dragon-drop", "--and-exit", file })
+end
+
 map({
     -- general stuff
-    { "<C-a>",      "ggVG",                                                        mode = { "n", "x" },          desc = "Select all" },
-    { "<C-j>",      "<C-d>zz",                                                     mode = { "n", "x" },          desc = "Page down" },
-    { "<C-k>",      "<C-u>zz",                                                     mode = { "n", "x" },          desc = "Page up" },
-    { "<leader>k",  vim.diagnostic.open_float,                                     desc = "Show diagnostic" },
-    { "<leader>w",  "<Cmd>setlocal wrap!<cr>",                                     desc = "Toggle wrap" },
-    { "P",          "<Cmd>pu<cr>",                                                 desc = "Paste in new line" },
-    { "g/",         "<Esc>/\\%V",                                                  mode = "x",                   desc = "Search inside visual selection" },
-    { "gy",         '"+y',                                                         mode = { "n", "x" },          desc = "Yank to clipboard" },
+    { "<C-a>",      "ggVG",                                      mode = { "n", "x" },                 desc = "Select all" },
+    { "<C-j>",      "<C-d>zz",                                   mode = { "n", "x" },                 desc = "Page down" },
+    { "<C-k>",      "<C-u>zz",                                   mode = { "n", "x" },                 desc = "Page up" },
+    { "<leader>k",  vim.diagnostic.open_float,                   desc = "Show diagnostic" },
+    { "<leader>w",  "<Cmd>setlocal wrap!<cr>",                   desc = "Toggle wrap" },
+    { "P",          "<Cmd>pu<cr>",                               desc = "Paste in new line" },
+    { "g/",         "<Esc>/\\%V",                                mode = "x",                          desc = "Search inside visual selection" },
+    { "gy",         '"+y',                                       mode = { "n", "x" },                 desc = "Yank to clipboard" },
     -- lsp stuff
-    { "<leader>la", vim.lsp.buf.code_action,                                       mode = { "n", "x" },          desc = "LSP code action" },
-    { "<leader>ld", vim.lsp.buf.definition,                                        mode = { "n", "x" },          desc = "LSP goto definition" },
-    { "<leader>lr", vim.lsp.buf.rename,                                            mode = { "n", "x" },          desc = "LSP rename" },
+    { "<leader>la", vim.lsp.buf.code_action,                     mode = { "n", "x" },                 desc = "LSP code action" },
+    { "<leader>ld", vim.lsp.buf.definition,                      mode = { "n", "x" },                 desc = "LSP goto definition" },
+    { "<leader>lr", vim.lsp.buf.rename,                          mode = { "n", "x" },                 desc = "LSP rename" },
     -- zellij
-    { "<A-h>",      function() nav("h", true) end,                                 desc = "Navigate left",       silent = true },
-    { "<A-j>",      function() nav("j") end,                                       desc = "Navigate down",       silent = true },
-    { "<A-k>",      function() nav("k") end,                                       desc = "Navigate up",         silent = true },
-    { "<A-l>",      function() nav("l", true) end,                                 desc = "Navigate right",      silent = true },
+    { "<A-h>",      function() nav("h", true) end,               desc = "Navigate left",              silent = true },
+    { "<A-j>",      function() nav("j") end,                     desc = "Navigate down",              silent = true },
+    { "<A-k>",      function() nav("k") end,                     desc = "Navigate up",                silent = true },
+    { "<A-l>",      function() nav("l", true) end,               desc = "Navigate right",             silent = true },
+    { "<leader>tp", "<Cmd>ZellijPaneNew<cr>",                    desc = "Open new pane",              silent = true },
+    { "<leader>tt", "<Cmd>ZellijTabNew<cr>",                     desc = "Open new tab",               silent = true },
+    -- tools
+    { "<leader>d",  function() dragon(vim.fn.expand("%:p")) end, desc = "Open current file on dragon" },
 })
 
 -- lsp
@@ -223,9 +257,10 @@ vim.lsp.config("lua_ls", {
 })
 
 vim.lsp.enable({
-    "basedpyright",
     "clangd",
     "cssls",
+    "docker_compose_language_service",
+    "docker_language_server",
     "dprint",
     "golangci_lint_ls",
     "gopls",
@@ -233,6 +268,7 @@ vim.lsp.enable({
     "harper_ls",
     "html",
     "jsonls",
+    "just",
     "lua_ls",
     "markdown_oxide",
     "nil_ls",
@@ -245,6 +281,7 @@ vim.lsp.enable({
     "rust_analyzer",
     "taplo",
     "tinymist",
+    "tofu_ls",
     "ts_ls",
 })
 
@@ -524,15 +561,16 @@ require("lze").load({
                     { mode = "x", keys = "s" },
                 },
                 clues = {
-                    { mode = "n", keys = "<Leader>f", desc = "+Picker" },
-                    { mode = "n", keys = "<Leader>l", desc = "+LSP" },
-                    { mode = "n", keys = "<Leader>g", desc = "+Git" },
                     miniclue.gen_clues.builtin_completion(),
                     miniclue.gen_clues.g(),
                     miniclue.gen_clues.marks(),
                     miniclue.gen_clues.registers(),
                     miniclue.gen_clues.windows(),
                     miniclue.gen_clues.z(),
+                    { mode = "n", keys = "<leader>f", desc = "+Picker" },
+                    { mode = "n", keys = "<leader>g", desc = "+Git" },
+                    { mode = "n", keys = "<leader>l", desc = "+LSP" },
+                    { mode = "n", keys = "<leader>t", desc = "+Terminal" },
                 },
                 window = {
                     delay = 1000,
@@ -634,7 +672,6 @@ require("lze").load({
                     hex_color = minihipatterns.gen_highlighter.hex_color()
                 }
             })
-            command("TogglePatterns", minihipatterns.toggle)
         end
     },
     {
