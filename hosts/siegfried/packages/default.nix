@@ -6,22 +6,28 @@
   system = pkgs.stdenv.hostPlatform.system;
   quickshell = inputs.quickshell.packages.${system}.quickshell;
 in {
+  _module.args.quickshell = quickshell;
+
   imports = [
     ./avahi.nix
     ./foot.nix
-    ./greeter.nix quickshell
+    ./greeter.nix
     ./pipewire.nix
     ./printing.nix
     ./xserver.nix
     ./zerotierone.nix
   ];
 
-  home-manager.users.brunhild.imports = [
-    ./dank-material-shell.nix quickshell
-    ./dsearch.nix
-    ./satty.nix
-    ./spotifyd.nix
-  ];
+  home-manager.users.brunhild = {
+    _module.args.quickshell = quickshell;
+    imports = [
+      ./dank-material-shell.nix
+      ./dsearch.nix
+      ./satty.nix
+      ./spotifyd.nix
+      ./yazi.nix
+    ];
+  };
 
   environment.systemPackages = [
     pkgs.dbeaver-bin

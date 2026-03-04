@@ -38,127 +38,18 @@ in {
       package = pkgs.gnome-themes-extra;
     };
 
-    gtk3.extraCss = ''
-      * {
-        background-color: ${colors.bg};
-        color: ${colors.fg};
-        border-color: ${colors.border};
-      }
-
-      window {
-        background-color: ${colors.bg};
-      }
-
-      headerbar {
-        background-color: ${colors.bg-alt};
-        color: ${colors.fg};
-        border-bottom: 1px solid ${colors.border};
-      }
-
-      button {
-        background-color: ${colors.bg-alt};
-        color: ${colors.fg};
-        border: 1px solid ${colors.border};
-        border-radius: 4px;
-        padding: 6px 12px;
-      }
-
-      button:hover {
-        background-color: ${colors.secondary};
-        color: ${colors.bg};
-      }
-
-      button:active {
-        background-color: ${colors.primary};
-      }
-
-      entry {
-        background-color: ${colors.bg-alt};
-        color: ${colors.fg};
-        border: 1px solid ${colors.border};
-        border-radius: 4px;
-      }
-
-      entry:focus {
-        border-color: ${colors.primary};
-      }
-
-      scrollbar {
-        background-color: ${colors.bg};
-      }
-
-      scrollbar slider {
-        background-color: ${colors.border};
-        border-radius: 4px;
-      }
-
-      scrollbar slider:hover {
-        background-color: ${colors.primary};
-      }
-
-      menu {
-        background-color: ${colors.bg-alt};
-        border: 1px solid ${colors.border};
-      }
-
-      menuitem {
-        color: ${colors.fg};
-      }
-
-      menuitem:hover {
-        background-color: ${colors.secondary};
-        color: ${colors.bg};
-      }
-    '';
-
-    gtk4.extraCss = ''
-      /* OneDark theme customization for GTK4 */
-      window {
-        background-color: ${colors.bg};
-        color: ${colors.fg};
-      }
-
-      headerbar {
-        background-color: ${colors.bg-alt};
-        color: ${colors.fg};
-      }
-
-      button {
-        background-color: ${colors.bg-alt};
-        color: ${colors.fg};
-        border: 1px solid ${colors.border};
-      }
-
-      button:hover {
-        background-color: ${colors.secondary};
-        color: ${colors.bg};
-      }
-
-      entry {
-        background-color: ${colors.bg-alt};
-        color: ${colors.fg};
-        border: 1px solid ${colors.border};
-      }
-
-      entry:focus {
-        border-color: ${colors.primary};
-      }
-    '';
   };
 
   qt = {
     enable = true;
     platformTheme.name = "qtct";
-    style = {
-      name = "kvantum";
-      package = pkgs.kvantum;
-    };
+    style.name = "kvantum";
   };
 
-  xdg.configFile."Kvantum/OneDark/OneDark.kvconfig".text = ''
+  xdg.configFile."Kvantum/Custom/Custom.kvconfig".text = ''
     [General]
     author=Auto-generated
-    comment=OneDark theme matching Noctalia colors
+    comment=OneDark theme
     x11drag=menubar_and_primary_toolbar
     alt_mnemonic=true
     left_tabs=true
@@ -259,6 +150,6 @@ in {
 
   xdg.configFile."Kvantum/kvantum.kvconfig".text = ''
     [General]
-    theme=OneDark
+    theme=Custom
   '';
 }
