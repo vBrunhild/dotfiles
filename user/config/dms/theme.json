@@ -1,0 +1,21 @@
+{
+  "name": "Custom",
+  "primary": "#98c379",
+  "primaryText": "#1e2127",
+  "primaryContainer": "#282c34",
+  "secondary": "#c678dd",
+  "surface": "#1e2127",
+  "surfaceText": "#cdd4e1",
+  "surfaceVariant": "#282c34",
+  "surfaceVariantText": "#98c379",
+  "surfaceTint": "#98c379",
+  "background": "#181a1f",
+  "backgroundText": "#c678dd",
+  "outline": "#8b8e96",
+  "surfaceContainer": "#21252b",
+  "surfaceContainerHigh": "#2c313a",
+  "error": "#e06c75",
+  "warning": "#e5c07b",
+  "info": "#61afef",
+  "matugen_type": "scheme-neutral"
+}

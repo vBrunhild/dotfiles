@@ -1,17 +1,36 @@
 {
   inputs = {
-    derterminate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+    nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
 
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
+    agenix = {
+      url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     home-manager = {
       url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/quickshell/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell/stable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    danksearch = {
+      url = "github:AvengeMedia/danksearch";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -46,16 +65,17 @@
       in (pkgs.alejandra)
     );
 
-    # devShells = forAllSystems (
-    #   system: let
-    #     pkgs = allPkgs.${system};
-    #   in {default = user.shell pkgs;}
-    # );
+    devShells = forAllSystems (
+      system: let
+        pkgs = allPkgs.${system};
+      in {default = user.shell pkgs;}
+    );
 
     nixosModules = {
       system = import ./system;
       user = user.module;
-      determinate = inputs.derterminate.nixosModules.default;
+
+      determinate = inputs.determinate.nixosModules.default;
       home-manager = inputs.home-manager.nixosModules.home-manager;
     };
 

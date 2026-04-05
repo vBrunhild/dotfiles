@@ -1,4 +1,6 @@
-{inputs, ...}: {
+{config, inputs, ...}: let
+  dotfilesPath = "${config.home.homeDirectory}/dotfiles/user/config";
+in {
   home = rec {
     username = "brunhild";
     homeDirectory = "/home/${username}";
@@ -7,6 +9,7 @@
 
   programs = {
     home-manager.enable = true;
+    awscli.enable = true;
   };
 
   programs.ripgrep = {
@@ -20,22 +23,6 @@
     ];
   };
 
-  programs.satty = {
-    enable = true;
-    settings = {
-      general = {
-        fullscreen = false;
-        copy-command = "wl-copy";
-        output-filename = "/tmp/screenshot-%Y-%m-%dT%H-%M-%S.png";
-        disable-notifications = true;
-      };
-    };
-  };
-
-  services = {
-    cliphist.enable = true;
-  };
-
   xdg.configFile = {
     "bat/config".source = ./config/bat/config.rc;
     "bottom/bottom.toml".source = ./config/bottom/config.toml;
@@ -47,8 +34,8 @@
   };
 
   imports = [
-    ./config/noctalia
     ./config/nushell
-    inputs.noctalia.homeModules.default
+    ./secrets
+    inputs.agenix.homeManagerModules.default
   ];
 }

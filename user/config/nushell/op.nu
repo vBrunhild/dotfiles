@@ -8,17 +8,24 @@ export def sum [
   }
 }
 
-export def read-dot-env [
-  --file (-f): path
-] {
-  let $env_file = if $file == null {
+export def read-env [] {
+  let $env_file = if $in == null {
     pwd | path join '.env'
   } else {
-    $file
+    $in
   }
 
   open $env_file
   | lines
+  | where {|line| $line != "" and not ($line | str starts-with "#") }
   | parse '{key}={value}'
+  | update value {|row|
+    $row.value
+    | split row "#"
+    | first
+    | str trim
+    | str trim -c '"'
+    | str trim -c "'"
+  }
   | transpose -r -d
 }

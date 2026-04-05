@@ -2,7 +2,8 @@
   imports = [
     ./configuration.nix
     ./hardware-configuration.nix
-    ./packages.nix
-    ./services.nix
+    ./packages
   ];
+
+  home-manager.users.brunhild.imports = [./theme.nix];
 }
