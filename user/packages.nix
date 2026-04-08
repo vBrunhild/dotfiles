@@ -9,6 +9,7 @@
     pkgs.bottom
     pkgs.cloudflared
     pkgs.curl
+    pkgs.deploy-rs
     pkgs.direnv
     pkgs.docker
     pkgs.docker-compose

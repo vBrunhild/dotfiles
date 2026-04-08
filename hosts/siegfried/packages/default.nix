@@ -31,6 +31,7 @@ in {
   environment.systemPackages = [
     pkgs.dbeaver-bin
     pkgs.dragon-drop
+    pkgs.easyeffects
     pkgs.google-chrome
     pkgs.grim
     pkgs.obs-studio
