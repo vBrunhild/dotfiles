@@ -5,6 +5,7 @@
 }: {
   environment.systemPackages = [
     inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
+    pkgs.atlas
     pkgs.bat
     pkgs.bottom
     pkgs.cloudflared
@@ -36,7 +37,6 @@
     pkgs.sd
     pkgs.tabiew
     pkgs.tealdeer
-    pkgs.terragrunt
     pkgs.tinymist
     pkgs.typst
     pkgs.uutils-coreutils-noprefix

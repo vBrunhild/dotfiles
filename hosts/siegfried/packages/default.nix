@@ -29,6 +29,7 @@ in {
   };
 
   environment.systemPackages = [
+    pkgs.brave
     pkgs.dbeaver-bin
     pkgs.dragon-drop
     pkgs.easyeffects
@@ -37,6 +38,7 @@ in {
     pkgs.obs-studio
     pkgs.slurp
     pkgs.spotify-player
+    pkgs.thunar
     pkgs.udevil
     pkgs.vesktop
     pkgs.vlc

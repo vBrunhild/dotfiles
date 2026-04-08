@@ -33,6 +33,9 @@
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    sss-nvim.url = "github:vBrunhild/simple-start-screen.nvim";
+    # zjstatus.url = "github:dj95/zjstatus";
   };
 
   outputs = inputs @ {nixpkgs, ...}: let
@@ -48,7 +51,10 @@
     mkPkgs = system:
       import nixpkgs {
         inherit system;
-        overlays = [inputs.neovim-nightly-overlay.overlays.default];
+        overlays = [
+          inputs.neovim-nightly-overlay.overlays.default
+          # (final: prev: {zjstatus = inputs.zjstatus.packages.${prev.system}.default;})
+        ];
       };
 
     allPkgs = forAllSystems mkPkgs;

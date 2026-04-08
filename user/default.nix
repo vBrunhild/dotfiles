@@ -6,6 +6,7 @@ let
     inherit (pkgs) callPackage;
   in {
     neovim = callPackage ./wrapped/neovim {inherit inputs;};
+    usql = callPackage ./wrapped/usql {};
     zellijPlugins = callPackage ./wrapped/zellij-plugins.nix {};
   };
 in {

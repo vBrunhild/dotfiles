@@ -4,142 +4,8 @@
   lib,
   ...
 }: let
-  mkGrammar = {
-    owner ? "tree-sitter-grammars",
-    language,
-    rev,
-    hash,
-  }:
-    pkgs.tree-sitter.buildGrammar {
-      inherit language;
-      version = "rev-${rev}";
-      src = pkgs.fetchFromGitHub {
-        inherit owner rev hash;
-        repo = "tree-sitter-${language}";
-      };
-    };
-
-  treesitter-parsers = pkgs.symlinkJoin {
-    name = "treesitter-parsers";
-    paths =
-      map
-      (grammar: let
-        grammarName = lib.pipe grammar.pname [
-          (lib.removePrefix "tree-sitter-")
-          (builtins.replaceStrings ["-"] ["_"])
-        ];
-      in
-        pkgs.runCommand "${grammar.name}-parser" {} ''
-          mkdir -p $out/parser
-          ln -s ${grammar}/parser \
-            $out/parser/${grammarName}.so
-        '')
-      [
-        pkgs.tree-sitter-grammars.tree-sitter-bash
-        pkgs.tree-sitter-grammars.tree-sitter-c
-        pkgs.tree-sitter-grammars.tree-sitter-c-sharp
-        pkgs.tree-sitter-grammars.tree-sitter-cmake
-        pkgs.tree-sitter-grammars.tree-sitter-cpp
-        pkgs.tree-sitter-grammars.tree-sitter-css
-        pkgs.tree-sitter-grammars.tree-sitter-csv
-        pkgs.tree-sitter-grammars.tree-sitter-diff
-        pkgs.tree-sitter-grammars.tree-sitter-dockerfile
-        pkgs.tree-sitter-grammars.tree-sitter-elixir
-        pkgs.tree-sitter-grammars.tree-sitter-git-config
-        pkgs.tree-sitter-grammars.tree-sitter-git-rebase
-        pkgs.tree-sitter-grammars.tree-sitter-gitattributes
-        pkgs.tree-sitter-grammars.tree-sitter-gitcommit
-        pkgs.tree-sitter-grammars.tree-sitter-gitignore
-        pkgs.tree-sitter-grammars.tree-sitter-go
-        pkgs.tree-sitter-grammars.tree-sitter-gomod
-        pkgs.tree-sitter-grammars.tree-sitter-groovy
-        pkgs.tree-sitter-grammars.tree-sitter-haskell
-        pkgs.tree-sitter-grammars.tree-sitter-html
-        pkgs.tree-sitter-grammars.tree-sitter-ini
-        pkgs.tree-sitter-grammars.tree-sitter-java
-        pkgs.tree-sitter-grammars.tree-sitter-javascript
-        pkgs.tree-sitter-grammars.tree-sitter-jjdescription
-        pkgs.tree-sitter-grammars.tree-sitter-jq
-        pkgs.tree-sitter-grammars.tree-sitter-jsdoc
-        pkgs.tree-sitter-grammars.tree-sitter-json
-        pkgs.tree-sitter-grammars.tree-sitter-json5
-        pkgs.tree-sitter-grammars.tree-sitter-just
-        pkgs.tree-sitter-grammars.tree-sitter-kdl
-        pkgs.tree-sitter-grammars.tree-sitter-make
-        pkgs.tree-sitter-grammars.tree-sitter-markdown
-        pkgs.tree-sitter-grammars.tree-sitter-markdown-inline
-        pkgs.tree-sitter-grammars.tree-sitter-mermaid
-        pkgs.tree-sitter-grammars.tree-sitter-nginx
-        pkgs.tree-sitter-grammars.tree-sitter-nix
-        pkgs.tree-sitter-grammars.tree-sitter-nu
-        pkgs.tree-sitter-grammars.tree-sitter-ocaml
-        pkgs.tree-sitter-grammars.tree-sitter-php
-        pkgs.tree-sitter-grammars.tree-sitter-php-only
-        pkgs.tree-sitter-grammars.tree-sitter-phpdoc
-        pkgs.tree-sitter-grammars.tree-sitter-python
-        pkgs.tree-sitter-grammars.tree-sitter-query
-        pkgs.tree-sitter-grammars.tree-sitter-regex
-        pkgs.tree-sitter-grammars.tree-sitter-rust
-        pkgs.tree-sitter-grammars.tree-sitter-scheme
-        pkgs.tree-sitter-grammars.tree-sitter-sql
-        pkgs.tree-sitter-grammars.tree-sitter-toml
-        pkgs.tree-sitter-grammars.tree-sitter-tsx
-        pkgs.tree-sitter-grammars.tree-sitter-typescript
-        pkgs.tree-sitter-grammars.tree-sitter-typst
-        pkgs.tree-sitter-grammars.tree-sitter-xml
-        pkgs.tree-sitter-grammars.tree-sitter-yaml
-        pkgs.tree-sitter-grammars.tree-sitter-zig
-
-        (mkGrammar {
-          language = "lua";
-          rev = "10fe0054734eec83049514ea2e718b2a56acd0c9";
-          hash = "sha256-VzaaN5pj7jMAb/u1fyyH6XmLI+yJpsTlkwpLReTlFNY=";
-        })
-
-        (mkGrammar {
-          language = "luadoc";
-          rev = "873612aadd3f684dd4e631bdf42ea8990c57634e";
-          hash = "sha256-8ZHgMoeirXlwUlfrphKNFWVX/k2+uEIYCh3MJ9r7YOk=";
-        })
-
-        (mkGrammar {
-          owner = "uben0";
-          language = "typst";
-          rev = "46cf4ded12ee974a70bf8457263b67ad7ee0379d";
-          hash = "sha256-s/9R3DKA6dix6BkU4mGXaVggE4bnzOyu20T1wuqHQxk=";
-        })
-
-        (mkGrammar {
-          language = "vim";
-          rev = "3092fcd99eb87bbd0fc434aa03650ba58bd5b43b";
-          hash = "sha256-MnLBFuJCJbetcS07fG5fkCwHtf/EcNP+Syf0Gn0K39c=";
-        })
-      ];
-  };
-
-  treesitter-queries = pkgs.symlinkJoin {
-    name = "treesitter-queries";
-    paths = [
-      (pkgs.linkFarm "custom-ts-queries" [
-        {
-          name = "queries";
-          path = ./queries;
-        }
-      ])
-    ];
-  };
-
-  simple-start-screen = pkgs.vimUtils.buildVimPlugin {
-    name = "simple-start-screen";
-    src = pkgs.fetchFromGitHub {
-      owner = "vBrunhild";
-      repo = "simple-start-screen.nvim";
-      rev = "d32075ad7906a0fc53f88225d24bc9b4de240ceb";
-      hash = "sha256-g1FDs7rdsygWUfuRuV7XqRQb8dbrQcYcyzakvCKgKJU=";
-    };
-  };
-
-  neovim-nightly = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  system = pkgs.stdenv.hostPlatform.system;
+  neovim-nightly = inputs.neovim-nightly-overlay.packages.${system}.default;
   neovim-wrapped = pkgs.wrapNeovimUnstable neovim-nightly {
     withPython3 = false;
     withRuby = false;
@@ -173,11 +39,9 @@
       pkgs.vimPlugins.mini-surround
       pkgs.vimPlugins.mini-trailspace
       pkgs.vimPlugins.nvim-lspconfig
+      pkgs.vimPlugins.nvim-treesitter.withAllGrammars
       pkgs.vimPlugins.onedarkpro-nvim
       pkgs.vimPlugins.typst-preview-nvim
-      simple-start-screen
-      treesitter-parsers
-      treesitter-queries
     ];
   };
 in
