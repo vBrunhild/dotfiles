@@ -1,5 +1,3 @@
--- functions
-
 ---@class MapConfig : vim.keymap.set.Opts
 ---@field [1] string
 ---@field [2] string|function
@@ -83,8 +81,15 @@ vim.o.winborder = border
 vim.o.wrap = false
 vim.o.writebackup = false
 vim.opt.formatoptions:append { o = false, r = false }
-vim.opt.listchars:append { tab = "> ", extends = "…", precedes = "…", nbsp = "␣", trail = "·" }
 vim.opt.shortmess:append("I")
+
+vim.opt.listchars:append {
+    tab = "> ",
+    extends = "…",
+    precedes = "…",
+    nbsp = "␣",
+    trail = "·"
+}
 
 vim.diagnostic.config({
     float = { source = true },
@@ -194,7 +199,6 @@ map({
     { "<C-a>",      "ggVG",                                      mode = { "n", "x" },                 desc = "Select all" },
     { "<C-j>",      "<C-d>zz",                                   mode = { "n", "x" },                 desc = "Page down" },
     { "<C-k>",      "<C-u>zz",                                   mode = { "n", "x" },                 desc = "Page up" },
-    { "<leader>k",  vim.diagnostic.open_float,                   desc = "Show diagnostic" },
     { "<leader>w",  "<Cmd>setlocal wrap!<cr>",                   desc = "Toggle wrap" },
     { "P",          "<Cmd>pu<cr>",                               desc = "Paste in new line" },
     { "g/",         "<Esc>/\\%V",                                mode = "x",                          desc = "Search inside visual selection" },
@@ -247,6 +251,7 @@ vim.lsp.config("lua_ls", {
                 checkThirdParty = false,
                 library = {
                     vim.env.VIMRUNTIME,
+                    vim.api.nvim_get_runtime_file("*/myNeovimPackages/start", false)[1],
                 }
             }
         })
@@ -287,23 +292,398 @@ vim.lsp.enable({
 })
 
 vim.lsp.inlay_hint.enable(true)
+vim.lsp.codelens.enable(true)
 
 -- plugins
 if vim.env.NVIM_MINIMAL then
     return
 end
 
-vim.opt.rtp:append("/home/brunhild/repositories/simple-start-screen")
-require("sss").setup()
+require("sss").setup({
+    arts = {
+        {
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠛⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠉⠀⠀⠀⠀⠀⠀⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣿⣿⣿⣿⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⢀⠞⠛⣿⣿⣿⣿⣿⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⣠⣿⣀⣴⣿⣿⢿⣿⣿⠟⠹⣟⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠰⣿⣿⣿⣿⡿⢃⣼⣿⠟⠀⠀⠈⠿⣩⣷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠈⠙⣷⣶⠟⠛⠉⠀⠀⠀⠀⠀⠀⠹⣏⣥⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣤⣤⣤⣾⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣹⣿⣿⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⣿⣿⣿⣿⣷⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣯⡴⠖⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⠿⢻⡟⢻⣟⣩⣤⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⠟⣽⠏⣸⡏⠀⣼⡇⣾⢹⣿⡶⣚⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⡟⠘⣿⡴⠞⢁⣴⡟⠁⣰⡿⢠⣿⢸⡏⡏⣿⣫⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢳⡀⠘⣿⣶⠛⢋⣠⣴⠟⢁⣾⠇⣼⠇⡇⣿⢹⣿⣴⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡄⠸⣌⣿⣟⣉⣠⣴⡿⢋⣼⡟⣸⣇⡿⣿⣹⣟⣣⡄⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣻⣾⣟⡽⠙⢿⣉⣡⣴⠿⢋⣰⣟⣼⣿⣏⡟⣹⡿⢧⡄⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠿⣿⣿⡇⢀⣀⢙⣿⣤⣶⣿⣯⣾⣿⣿⡾⢁⡟⢿⣿⡇⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⢻⠰⣿⣿⣿⣽⢝⣿⣿⡿⠿⠿⣋⣤⠟⢀⣸⣿⣧⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⢣⡏⡏⠈⢿⡙⡟⣿⣎⡌⢻⣆⠀⠚⠉⠀⠀⠀⢹⣿⡟⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡏⣸⢇⠇⠀⠘⣧⠸⡈⢿⣷⡀⠻⣧⠀⠀⠀⠀⠀⢾⣿⣿⠃⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡇⣿⣼⠀⠀⠀⠘⢧⣧⠀⢻⣷⣤⣽⣷⣄⡀⠀⠀⢼⣿⣿⡄⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣷⣿⠄⠀⠀⠀⠀⠈⢻⣧⠀⢻⣿⣿⣿⣿⣿⣷⣤⣾⣿⣿⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡏⠉⠉⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⡿⠀⠀⠀⠀⢀⣀⣀⣹⣧⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢷⡄⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⢠⠀⠀⠀⠀⢠⣤⡼⠿⠋⢁⣀⠘⠋⠉⠉⠋⠉⠉⢿⣿⣿⣿⣿⣿⠟⠁⠀⢸⡟⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣸⣿⡆⠀⠀⠀⢹⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠛⠻⠿⠿⠿⠶⣶⣾⣿⣿⡋⠉⠀⠀⠀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣴⣶⣿⣿⣿⣿⠇⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⢻⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⣠⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠤⢤⣤⣤⣶⣶⣶⣿⣿⣿⣿⡿⠿⠿⠿⠛⠛⠁⠀⠀⠀⣠⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠙⢦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠲⠲⠦⠤⣤⣤⣤⣤⣤⣤⣤⣤⢤⡤⠦⠴⠖⠛⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣠⣤⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+        },
+        {
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⣀⢄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⢠⢊⡂⣃⠉⠒⠉⡢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⡰⠁⠁⠔⠔⠍⠑⠚⠄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⡔⠁⠀⠀⠀⡜⠁⠀⠀⠀⠀⠁⠢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⡸⠀⠀⠀⢀⢸⠀⠒⠢⡑⢁⠀⠀⠀⠈⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⢰⠁⠀⠀⠀⢰⢅⡺⠳⠦⡣⢸⠀⡣⠀⠀⠈⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⡇⠀⠀⠀⠠⡈⠐⠦⠝⠀⠈⠀⠁⠘⠄⢰⠀⡣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⢰⠁⠀⠀⠀⣸⠁⠀⠀⠀⠀⠀⠀⡠⠼⡧⠀⠀⣜⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⡸⠀⠀⠀⠀⢧⠀⠀⢀⢄⠀⠀⠀⠇⠞⠀⡔⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⣺⠀⠀⠀⠀⢵⠀⢤⡀⠘⠢⠀⠀⠀⣀⠎⠁⢰⠡⠀⠄⠠⠀⡤⠀⠂⠔⠄⡄",
+            "⠀⠀⡯⡇⠀⠀⠀⢨⢇⡸⢈⠓⠲⢔⠎⡏⠁⡆⢰⠑⠀⠀⠀⠀⠀⠎⠌⠂⢢⠎⠀",
+            "⠀⠀⣿⢽⡀⠀⠀⠀⠚⠳⣜⠄⠀⡇⢸⠀⠘⠀⠃⠀⠀⠀⡀⣄⠴⠀⠂⠑⠁⠀⠀",
+            "⠀⠀⣯⣗⡧⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⢀⢀⠤⠖⠓⠉⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠨⣗⣷⣻⠄⠀⠀⠀⠀⠀⠀⢔⠆⠂⠊⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠨⣗⡷⣯⢧⠀⠀⠀⠀⠀⠀⠈⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠨⣗⣯⢯⢿⡀⠀⠀⠀⠀⠀⠀⢢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⢸⢯⣞⣯⢯⡧⡀⠠⠀⠀⠀⠂⢐⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⣼⢟⣾⣺⢯⢿⠄⠀⠀⠀⠀⠀⠀⢅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⣿⢽⣺⡽⣯⢿⣝⠀⠀⠀⠀⠀⠀⢈⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠘⣿⢷⣯⣿⣽⣺⡅⣀⢀⣠⡠⠴⠮⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⢸⡿⣞⡷⣯⡯⣯⠈⢱⠀⠀⠰⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⢸⣟⣿⡯⣷⣻⡽⡆⢘⠄⢀⠅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⢸⣷⣻⣯⢿⣺⡯⣯⠢⡁⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⣿⣗⣯⣿⡯⣷⣻⡽⣷⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⣸⣿⣺⣗⣯⡿⣽⣞⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⣿⣳⣟⣾⣿⡽⣷⢯⡯⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠸⢿⣽⣾⡿⣿⡽⣯⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠈⠈⠀⠘⠛⠛⠟⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+        },
+        {
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⠟⠉⠉⠁⠈⠙⢿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⠋⠀⠀⠀⠀⠀⠀⠀⠻⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣼⣷⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡟⠛⠟⢿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⣴⣶⠾⠟⠛⠛⠛⠛⠛⠉⠉⠉⠙⠛⠶⣶⣄⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣷⣴⣾⣿⣿⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⡇⠀⢀⣀⣠⡴⠶⠛⠋⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⡆⠀⠀⠀",
+            "⠀⠀⢠⡴⠚⠉⠉⠉⠉⠉⠉⠉⠉⠉⠛⠛⠓⠶⠶⠤⣤⣄⣀⣀⡀⠀⠀⠀⠀⠈⠉⣿⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣼⣷⡾⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡧⠀⠀⠀",
+            "⠀⣴⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠉⠛⠛⠷⢦⣤⣠⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⡶⡿⠟⠉⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠃⠀⠀⠀",
+            "⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⠙⠛⠲⠶⣤⣄⣀⣤⡶⠟⠛⠁⠀⠀⠀⠀⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠃⠀⠀⠀⠀",
+            "⠀⢻⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⣀⣤⠿⠛⠛⠶⢤⣄⡀⠀⠀⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⠃⠀⠀⠀⠀⠀",
+            "⠀⠘⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⢀⣤⠾⠛⠁⠀⠀⠀⠀⠀⠈⠉⠓⢦⣄⡀⢿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠞⠁⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠈⢿⣆⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⡿⠋⢁⣠⣤⣤⣴⣶⣶⡶⣦⣤⣄⣀⠀⠈⠉⢻⣿⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⠟⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠹⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⡶⠛⢹⣿⡞⠋⠀⠉⣹⣾⡷⣯⠿⣹⣿⣻⣿⣿⣶⣄⣸⣿⠉⠛⢶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠘⢿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣰⠿⠛⢠⣾⣿⣿⠁⠀⠀⠈⠀⣉⠟⢫⢼⣿⣿⣿⢿⣿⣿⣿⣿⣿⠀⠀⠀⠈⠙⢶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣶⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠙⣷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⠛⠁⠀⣰⣟⣿⣿⣗⠀⠀⠄⠀⠊⠤⡎⢟⡩⠞⣯⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠉⠻⢦⣀⠀⠀⠀⠀⠀⣰⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠾⠋⠀⠀⠀⢀⣏⣼⢡⣿⣧⠀⠀⠀⠀⢀⠨⠂⡁⠔⣺⡗⣿⣹⣿⣿⣿⣽⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠙⠳⣤⡀⣠⣾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢦⣄⠀⠀⠀⢀⣠⠞⠁⠀⠀⠀⠀⠀⢸⣿⡇⣦⢻⣇⡀⠀⠀⠀⠀⠐⡀⠔⠺⣠⠄⢟⣽⣿⣽⣾⢽⣿⢿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣿⢿⣅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠳⣄⣴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⡎⣼⡿⠀⡀⡀⠀⠀⣠⣄⡈⢤⣆⠛⣼⣶⡟⣿⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⣠⣾⠟⠁⠀⠙⠷⣄⠀⠀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⠟⠛⢦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣧⢸⡇⠘⠽⡌⢐⣒⣭⢷⣳⣭⣜⣮⣈⢿⣿⣿⣽⣿⣿⣿⠁⠀⠀⠀⠀⢀⣴⣿⠛⠁⠀⠀⠀⠀⠀⢨⣿⠿⣿⣿⣷⣦⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⡟⠁⠀⠀⠀⠈⠻⣦⣀⠀⠀⠀⠀⠀⠀⠹⣞⢻⣷⣦⡹⡹⡬⢾⣯⣻⣧⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⢀⣴⡿⠛⠁⠀⠀⠀⠀⠀⠀⠀⢿⡀⠈⣩⡿⣽⣿⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣦⣀⠀⠀⠀⠀⠈⠹⣿⣿⣿⣷⣿⣯⣯⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⢸⡇⠀⣠⡾⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠻⠿⠿⠿⢿⣅⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⢶⣤⡀⠀⠀⣧⠈⠛⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠁⠀⠀⢸⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣧⡀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⣰⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠿⣶⣿⡀⠀⠀⠀⠀⠈⠉⠉⠉⠉⠁⠀⠀⠀⣠⣴⠞⢹⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢷⡄⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⢀⣼⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠿⢷⣦⣄⡀⠀⠀⠀⠀⠀⠀⣠⣤⠞⠋⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣄⠀⠀⠀",
+            "⠀⠀⠀⠀⣠⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⠀⠀⠀⠉⠛⠷⣶⣤⣤⣤⠞⠋⠀⠀⠀⠀⠀⣼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣄⠀⠀",
+            "⠀⠀⠀⢰⡿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⢀⣠⡶⠛⠋⠙⠻⠷⣦⣤⣄⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡆⠀",
+            "⠀⠀⠀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣇⣠⣴⠾⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠛⣿⢶⣦⣤⣄⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⡇⠀",
+            "⠀⠀⣼⡅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⡾⣿⣿⣷⡀⢀⣀⣤⣶⠾⣿⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡇⠀⠀⠀⠉⠉⠙⠛⠛⠲⠶⠶⣶⣶⣦⣤⣤⣄⣀⣀⣀⣀⣀⣀⣀⣀⣤⣴⠾⠁⠀",
+            "⠀⠀⠻⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠁⣀⢋⣽⣾⣿⠟⠛⠉⠀⠀⢻⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠉⠉⠉⠉⠉⠙⠛⠉⠀⠀⠀⠀",
+            "⠀⠀⠀⠘⠻⠦⣤⣄⣀⣀⣀⣀⣀⣀⣠⣤⣤⣶⠶⠿⠻⣿⣿⣿⣿⡿⠏⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠉⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⡀⠀⠀⠀⠀⠀⠀⢀⣾⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢷⣄⠀⠀⠀⠀⣀⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠛⠛⠛⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+        },
+        {
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⠞⠛⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⡴⣶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣶⠿⠟⠛⠛⠛⠐⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠶⣟⣹⣉⡉⢹⠂⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⣤⣀⣴⡋⠀⠠⢼⣿⡵⠅⠋⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣤⣤⣤⣤⣤⣤⣤⣤⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠑⡄⠙⣯⡉⢀⣴⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣦⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⢺⠀⢸⡇⠀⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⢀⠔⠀⣠⡴⢦⡟⠀⣼⠃⢠⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⡠⠁⣠⣞⡩⠔⢋⣤⡾⠁⡠⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⡔⢀⡼⠏⠵⣤⡶⠟⢃⡐⣊⣀⣀⣀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⣠⠞⠶⠪⣠⡶⠦⢼⠁⠈⠀⠈⠙⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⡰⠓⠄⣠⢊⡡⢱⠠⣾⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠛⠻⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⢠⠃⠀⣠⡞⠉⠀⠯⠚⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⠛⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⢸⠀⢰⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⡿⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⢸⠀⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⠟⠁⠀⢀⣀⣀⣀⠀⠉⢻⣿⣿⣿⣿⡟⠛⠻⠿⣿⣿⣿⣿⣿⣿⣶⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⣎⡺⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⠀⠀⢰⠋⢠⡄⠈⡇⠀⠈⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠉⠙⠛⠛⠛⠿⠿⠿⠶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠦⡅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣿⣿⣿⣿⣿⣄⠀⠘⠢⣄⣀⡴⠃⠀⢀⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠐⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡤⠶⠎⢉⣁⣀⣿⣿⣿⣿⣿⣿⣷⣤⣀⣀⣀⣀⣠⣴⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡖⠀⠀⠀⠀⣠⡖⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⡞⠁⠀⠀⠀⠀⠀⠀⠈⠈⠉⠉⠉⠙⠛⠛⠛⠻⠿⠿⠿⠿⠿⣿⣿⣿⣏⣉⣭⣗⣲⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣿⠀⠀⠀⢀⣠⡿⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⢻⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠀⠉⠀⠀⠀⠀⠙⠢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠁⢸⠇⠀⠀⣸⠻⣷⠀⣼⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⡴⠋⠈⠑⢤⠊⠐⢦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⠇⠀⠀⠀⣀⠀⠀⢀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⡇⠀⠀⠀⠀⠀⠀⠀⠀⢀⡏⠀⢀⡰⠃⣠⠏⢀⣀⡴⠁⢠⣧⡞⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⢸⠁⣀⠀⠀⠈⢿⡢⢈⠃⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠋⠁⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠈⠑⠲⠢⢄⣄⣀⡄⢀⡀⡀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣤⣦⣴⠿⣷⡀⠀⠀⠀⠀⠀⠀⠀⢸⣇⠀⡾⠂⢀⣏⣸⢇⠎⠀⢀⣾⡿⠀⣟⡉⠀⠻⠋⠁⠀⠀⠀⠀",
+            "⠘⠆⠈⠈⠐⠖⢀⡙⠚⠋⠀⠀⠀⠀⠀⠀⢀⣴⠏⠀⠀⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⣀⡠⠄⠀⠀⠈⠉⠉⠈⠃⠀⠐⣼⢾⠦⣀⠈⡗⢌⡃⣻⠿⠿⢿⠳⠟⠳⠀⠀⠀⠀⠀⠀⢰⠃⢻⢞⡇⠀⣿⡵⢠⠎⠀⢀⡼⣻⠁⢸⡟⠻⡾⠗⠒⠦⣤⣴⠤⠀",
+            "⠀⠀⠈⠳⠖⠤⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⢾⠥⠄⠀⠠⣄⣴⣶⠟⠋⣁⣤⣔⣢⣭⣴⣶⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠑⠃⠀⠈⠉⠀⠀⠀⠀⢀⣀⡼⠀⠀⠀⠀⣠⠞⠀⢸⡿⠇⡀⠘⠻⠋⠀⠀⣾⣶⡯⠀⢸⣷⣀⠤⠔⠒⠊⠁⠀⠀⠀",
+            "⠀⠀⠀⢴⠠⢀⠑⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣈⡽⢚⣿⣿⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⢀⣀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⣏⠀⠀⠀⠀⠀⢹⡆⠀⣾⠇⠀⠙⠊⠉⠢⠄⣐⠿⠟⠁⢀⣞⠭⠵⠒⠚⣲⠶⠒⠀⢀⠀",
+            "⠀⠀⠀⠀⣀⠉⠁⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠯⢺⣿⣿⣯⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠲⣿⣿⣷⣦⣤⣤⣄⣀⣀⣀⣀⣀⡀⠀⠀⠀⢀⣴⣿⣿⣿⣦⠀⠀⠀⠀⢸⡇⢀⡟⠀⠘⠀⠀⡰⠀⠀⠀⠉⠂⢀⣿⡄⢀⡴⠄⠚⠁⠀⠀⠀⠘⠂",
+            "⠀⠀⠀⠀⠈⣀⠙⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣟⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡙⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣿⣿⣏⢿⣿⡟⠀⠀⠀⠀⠸⡇⠈⢠⠀⠀⠀⡜⠁⠀⠀⠠⠁⠀⡼⠿⠓⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠽⠆⠦⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡝⣮⣻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡜⣿⣿⣦⠄⠀⠀⠘⢧⡀⠀⠀⠀⠜⠀⠀⠀⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠠⠆⠀⠀",
+            "⠀⠀⢠⠤⠀⠀⢤⡴⠦⠄⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣼⣛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣏⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣹⣿⣯⠀⠀⠀⣠⣾⣷⣦⣀⡀⠀⠀⠀⠀⠀⣴⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠓⠀⠀⠀",
+            "⠀⠀⠘⠄⣀⣀⠀⠀⣀⣠⡄⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣆⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣇⢀⣾⣿⣿⣿⣿⣿⣧⣶⣦⣶⣶⠾⠃⠀⠀⠀⠀⠀⠀⠀⠀⣠⣼⠿⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠙⠀⠀⠀⠀⠀⠀⠀⠀⠀⢘⠋⢿⣸⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡈⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣟⣿⣿⣿⣿⣿⣿⣿⣿⡿⣿⣿⣿⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢁⡟⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠋⡓⡄⠀⠀⠀⠀⣄⠀⠀⢱⣶⣌⠉⢾⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣆⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢟⣯⣿⣿⣿⣿⣿⣿⣿⣿⣿⢟⣼⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⣀⣀⠀⣠⠏⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠢⠭⠥⠤⠤⠶⣋⠤⠶⠄⠀⠉⠻⣿⣾⣿⣾⣛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⡹⣿⣿⣿⣿⡿⠿⠿⠿⠟⢛⣩⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⣡⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⢰⣥⣶⠿⠚⠁⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⡴⠛⠈⣀⡀⠀⠀⠀⠀⣴⣾⣿⣿⣿⣿⣿⣿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣬⣿⡿⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣴⣿⣿⣿⣿⣿⠇⡠⠐⠲⢎⠀⣽⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠬⠗⠃⢠⣄⡀⠀⠈⠛⠷⣮⣙⠿⣷⣌⢷⡙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣟⣹⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠿⠿⠟⣻⣾⣥⣌⣠⡦⣾⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⠥⠉⠠⠴⠃⠀⠀⠀⠙⠻⢿⣶⣽⣿⣦⡙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢻⠕⠊⢉⣀⣀⣀⣉⠙⢋⠚⡀⢏⠘⣶⠾⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠒⠊⢠⠚⠋⠠⢄⣀⠀⠀⡉⠀⠉⢿⣆⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠫⣉⣤⡶⠟⢉⣉⣉⡉⠙⠻⢤⣿⡧⠔⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠖⠡⠅⡀⢺⠁⢠⣴⠄⠙⠛⠂⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢿⡑⢻⡟⢁⡤⢊⣽⠧⠁⡼⠷⢦⡈⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠀⠣⠄⠀⠀⠀⠀⠀⠀⠙⠿⠿⠉⠻⣿⣿⣿⡿⣿⠟⣿⠟⣛⠵⠚⢀⣬⣭⠿⠞⠋⣁⠴⠊⠀⠀⠀⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+            "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠉⠓⠲⠒⡖⢤⣞⠛⠻⠟⠛⠛⠋⠉⡊⠅⢠⣎⣉⡀⠤⠔⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+        }
+    }
+})
+
+local color = require("onedarkpro.helpers")
+local colors = color.get_colors("onedark")
 
 require("onedarkpro").setup({
     options = {
-        transparency = true,
+        cursorline = true,
         highlight_inactive_windows = true,
+        lualine_transparency = true,
+        transparency = true,
+    },
+    colors = {
+        -- default
+        cursorline = color.lighten(colors.bg, 20),
+
+        -- custom
+        bg_edge    = color.darken(colors.bg, 5),
+        bg_edge2   = color.darken(colors.bg, 10),
+        bg_mid     = color.lighten(colors.bg, 5),
+        bg_mid2    = color.lighten(colors.bg, 10),
+
+        fg_edge    = color.darken(colors.fg, 5),
+        fg_edge2   = color.darken(colors.fg, 10),
+        fg_mid     = color.lighten(colors.fg, 5),
+        fg_mid2    = color.lighten(colors.fg, 10),
+
+        accent     = colors.purple,
     },
     highlights = {
-        -- Pmenu = { bg = "bg", fg = "fg" },
-        -- PmenuBorder = { bg = "bg", fg = "fg" },
+        -- default
+        ColorColumn                      = { fg = nil, bg = "${bg_mid2}" },
+        ComplMatchIns                    = { fg = nil, bg = nil },
+        Conceal                          = { fg = "${blue}", bg = nil },
+        CurSearch                        = { fg = "${bg}", bg = "${yellow}" },
+        Cursor                           = { fg = "${bg}", bg = "${fg}" },
+        CursorColumn                     = { fg = nil, bg = "${bg_mid}" },
+        CursorIM                         = { link = "Cursor" },
+        CursorLine                       = { fg = nil, bg = "${bg_mid}" },
+        CursorLineFold                   = { fg = "${bg_mid2}", bg = nil },
+        CursorLineNr                     = { fg = "${accent}", bg = nil, bold = true },
+        CursorLineSign                   = { fg = "${bg_mid2}", bg = nil },
+        DiagnosticDeprecated             = { fg = nil, bg = nil, sp = "${red}", strikethrough = true },
+        DiagnosticError                  = { fg = "${red}", bg = nil },
+        DiagnosticFloatingError          = { fg = "${red}", bg = nil },
+        DiagnosticFloatingHint           = { fg = "${cyan}", bg = nil },
+        DiagnosticFloatingInfo           = { fg = "${blue}", bg = nil },
+        DiagnosticFloatingOk             = { fg = "${green}", bg = nil },
+        DiagnosticFloatingWarn           = { fg = "${yellow}", bg = nil },
+        DiagnosticHint                   = { fg = "${cyan}", bg = nil },
+        DiagnosticInfo                   = { fg = "${blue}", bg = nil },
+        DiagnosticOk                     = { fg = "${green}", bg = nil },
+        DiagnosticSignError              = { link = "DiagnosticError" },
+        DiagnosticSignHint               = { link = "DiagnosticHint" },
+        DiagnosticSignInfo               = { link = "DiagnosticInfo" },
+        DiagnosticSignOk                 = { link = "DiagnosticOk" },
+        DiagnosticSignWarn               = { link = "DiagnosticWarn" },
+        DiagnosticUnderlineError         = { fg = nil, bg = nil, sp = "${red}", underline = true },
+        DiagnosticUnderlineHint          = { fg = nil, bg = nil, sp = "${cyan}", underline = true },
+        DiagnosticUnderlineInfo          = { fg = nil, bg = nil, sp = "${blue}", underline = true },
+        DiagnosticUnderlineOk            = { fg = nil, bg = nil, sp = "${green}", underline = true },
+        DiagnosticUnderlineWarn          = { fg = nil, bg = nil, sp = "${yellow}", underline = true },
+        DiagnosticUnnecessary            = { link = "Comment" },
+        DiagnosticVirtualTextError       = { link = "DiagnosticError" },
+        DiagnosticVirtualTextHint        = { link = "DiagnosticHint" },
+        DiagnosticVirtualTextInfo        = { link = "DiagnosticInfo" },
+        DiagnosticVirtualTextOk          = { link = "DiagnosticOk" },
+        DiagnosticVirtualTextWarn        = { link = "DiagnosticWarn" },
+        DiagnosticWarn                   = { fg = "${yellow}", bg = nil },
+        DiffAdd                          = { fg = nil, bg = "${green}" },
+        DiffChange                       = { fg = nil, bg = "${cyan}" },
+        DiffDelete                       = { fg = nil, bg = "${red}" },
+        DiffText                         = { fg = nil, bg = "${yellow}" },
+        DiffTextAdd                      = { link = "DiffAdd" },
+        Directory                        = { fg = "${blue}", bg = nil },
+        EndOfBuffer                      = { fg = "${bg_mid2}", bg = nil },
+        ErrorMsg                         = { fg = "${red}", bg = nil },
+        FloatBorder                      = { fg = "${fg}", bg = nil },
+        FloatTitle                       = { fg = "${green}", bg = nil, bold = true },
+        FoldColumn                       = { fg = "${bg_mid2}", bg = nil },
+        Folded                           = { fg = "${fg_mid2}", bg = "${bg_edge}" },
+        IncSearch                        = { fg = "${bg}", bg = "${yellow}" },
+        LineNr                           = { fg = "${bg_mid2}", bg = nil },
+        LineNrAbove                      = { link = "LineNr" },
+        LineNrBelow                      = { link = "LineNr" },
+        MatchParen                       = { fg = nil, bg = "${bg_mid2}", bold = true },
+        ModeMsg                          = { fg = "${green}", bg = nil },
+        MoreMsg                          = { fg = "${blue}", bg = nil },
+        MsgArea                          = { link = "Normal" },
+        MsgSeparator                     = { fg = "${accent}", bg = "${bg_mid}" },
+        NonText                          = { fg = "${bg_mid2}", bg = nil },
+        Normal                           = { fg = "${fg}", bg = nil },
+        NormalFloat                      = { fg = "${fg}", bg = nil },
+        NormalNC                         = { link = "Normal" },
+        OkMsg                            = { fg = "${green}", bg = nil },
+        Pmenu                            = { bg = nil, fg = "${fg}" },
+        PmenuBorder                      = { link = "Pmenu" },
+        PmenuExtra                       = { link = "Pmenu" },
+        PmenuExtraSel                    = { link = "PmenuSel" },
+        PmenuKind                        = { link = "Pmenu" },
+        PmenuKindSel                     = { link = "PmenuSel" },
+        PmenuMatch                       = { fg = nil, bg = nil, bold = true },
+        PmenuMatchSel                    = { fg = nil, bg = nil, bold = true, blend = 0, reverse = true },
+        PmenuSbar                        = { link = "Pmenu" },
+        PmenuSel                         = { fg = nil, bg = nil, blend = 0, reverse = true },
+        PmenuThumb                       = { fg = nil, bg = "${purple}" },
+        Question                         = { fg = "${blue}", bg = nil },
+        QuickFixLine                     = { fg = nil, bg = nil, bold = true },
+        Search                           = { fg = nil, bg = "${bg_mid2}" },
+        SignColumn                       = { fg = "${bg_mid2}", bg = nil },
+        SpecialKey                       = { fg = "${accent}", bg = nil },
+        SpellBad                         = { fg = nil, bg = nil, sp = "${red}", undercurl = true },
+        SpellCap                         = { fg = nil, bg = nil, sp = "${cyan}", undercurl = true },
+        SpellLocal                       = { fg = nil, bg = nil, sp = "${yellow}", undercurl = true },
+        SpellRare                        = { fg = nil, bg = nil, sp = "${blue}", undercurl = true },
+        StatusLine                       = { fg = "${fg}", bg = nil },
+        StatusLineNC                     = { link = "StatusLine" },
+        StderrMsg                        = { link = "ErrorMsg" },
+        StdoutMsg                        = { link = "MsgArea" },
+        Substitute                       = { fg = "${bg}", bg = "${fg}" },
+        TabLine                          = { fg = "${fg_mid}", bg = "${bg_edge}" },
+        TabLineFill                      = { link = "Tabline" },
+        TabLineSel                       = { fg = "${accent}", bg = "${bg_edge}" },
+        TermCursor                       = { fg = nil, bg = nil, reverse = true },
+        TermCursorNC                     = { fg = nil, bg = nil, reverse = true },
+        Title                            = { fg = "${green}", bg = nil },
+        VertSplit                        = { fg = "${accent}", bg = nil },
+        Visual                           = { fg = nil, bg = "${bg_mid2}" },
+        VisualNOS                        = { fg = nil, bg = "${bg_mid}" },
+        WarningMsg                       = { fg = "${yellow}", bg = nil },
+        Whitespace                       = { fg = "${bg_mid2}", bg = nil },
+        WildMenu                         = { link = "PmenuSel" },
+        WinBar                           = { link = "StatusLine" },
+        WinBarNC                         = { link = "StatusLineNC" },
+        WinSeparator                     = { fg = "${accent}", bg = "${accent}" },
+        lCursor                          = { fg = "${bg}", bg = "${fg}" },
+        --plugins
+        MiniClueBorder                   = { link = "FloatBorder" },
+        MiniClueDescGroup                = { link = "DiagnosticFloatingWarn" },
+        MiniClueDescSingle               = { link = "NormalFloat" },
+        MiniClueNextKey                  = { link = "DiagnosticFloatingHint" },
+        MiniClueNextKeyWithPostkeys      = { link = "DiagnosticFloatingError" },
+        MiniClueSeparator                = { link = "DiagnosticFloatingInfo" },
+        MiniClueTitle                    = { link = "FloatTitle" },
+        MiniCmdlinePeekBorder            = { link = "FloatBorder" },
+        MiniCmdlinePeekLineNr            = { link = "DiagnosticSignWarn" },
+        MiniCmdlinePeekNormal            = { link = "NormalFloat" },
+        MiniCmdlinePeekSep               = { link = "SignColumn" },
+        MiniCmdlinePeekSign              = { link = "DiagnosticSignHint" },
+        MiniCmdlinePeekTitle             = { link = "FloatTitle" },
+        MiniCompletionActiveParameter    = { link = "LspSignatureActiveParameter" },
+        MiniCompletionDeprecated         = { link = "DiagnosticDeprecated" },
+        MiniCompletionInfoBorderOutdated = { link = "DiagnosticFloatingWarn" },
+        MiniDepsChangeAdded              = { link = "diffAdded" },
+        MiniDepsChangeRemoved            = { link = "diffRemoved" },
+        MiniDepsHint                     = { link = "DiagnosticHint" },
+        MiniDepsInfo                     = { link = "DiagnosticInfo" },
+        MiniDepsMsgBreaking              = { link = "DiagnosticWarn" },
+        MiniDepsPlaceholder              = { link = "Comment" },
+        MiniDepsTitle                    = { link = "Title" },
+        MiniDepsTitleError               = { link = "DiffDelete" },
+        MiniDepsTitleSame                = { link = "DiffText" },
+        MiniDepsTitleUpdate              = { link = "DiffAdd" },
+        MiniDiffSignAdd                  = { link = "diffAdded" },
+        MiniDiffSignChange               = { link = "diffChanged" },
+        MiniDiffSignDelete               = { link = "diffRemoved" },
+        MiniDiffOverAdd                  = { link = "DiffAdd" },
+        MiniDiffOverChange               = { link = "DiffText" },
+        MiniDiffOverChangeBuf            = { link = "MiniDiffOverChange" },
+        MiniDiffOverContext              = { link = "DiffChange" },
+        MiniDiffOverContextBuf           = {},
+        MiniDiffOverDelete               = { link = "DiffDelete" },
+        MiniFilesBorder                  = { link = "FloatBorder" },
+        MiniFilesBorderModified          = { link = "DiagnosticFloatingWarn" },
+        MiniFilesCursorLine              = { link = "CursorLine" },
+        MiniFilesDirectory               = { link = "Directory" },
+        MiniFilesFile                    = { fg = "${fg}", bg = nil },
+        MiniFilesNormal                  = { link = "NormalFloat" },
+        MiniFilesTitle                   = { link = "FloatTitle" },
+        MiniFilesTitleFocused            = { fg = "${fg}", bg = nil, bold = true },
+        MiniHipatternsFixme              = { fg = "${bg}", bg = "${red}", bold = true },
+        MiniHipatternsHack               = { fg = "${bg}", bg = "${yellow}", bold = true },
+        MiniHipatternsNote               = { fg = "${bg}", bg = "${cyan}", bold = true },
+        MiniHipatternsTodo               = { fg = "${bg}", bg = "${blue}", bold = true },
+        MiniIconsAzure                   = { fg = "${blue}", bg = nil },
+        MiniIconsBlue                    = { fg = "${blue}", bg = nil },
+        MiniIconsCyan                    = { fg = "${cyan}", bg = nil },
+        MiniIconsGreen                   = { fg = "${green}", bg = nil },
+        MiniIconsGrey                    = { fg = "${fg_edge}", bg = nil },
+        MiniIconsOrange                  = { fg = "${orange}", bg = nil },
+        MiniIconsPurple                  = { fg = "${purple}", bg = nil },
+        MiniIconsRed                     = { fg = "${red}", bg = nil },
+        MiniIconsYellow                  = { fg = "${yellow}", bg = nil },
+        MiniIndentscopeSymbol            = { fg = "${accent}", bg = nil },
+        MiniIndentscopeSymbolOff         = { fg = "${red}", bg = nil },
+        MiniNotifyBorder                 = { link = "FloatBorder" },
+        MiniNotifyLspProgress            = { link = "MiniNotifyNormal" },
+        MiniNotifyNormal                 = { link = "NormalFloat" },
+        MiniNotifyTitle                  = { link = "FloatTitle" },
+        MiniOperatorsExchangeFrom        = { link = "IncSearch" },
+        MiniPickBorder                   = { link = "FloatBorder" },
+        MiniPickBorderBusy               = { link = "DiagnosticFloatingWarn" },
+        MiniPickBorderText               = { link = "FloatTitle" },
+        MiniPickCursor                   = { blend = 100, nocombine = true },
+        MiniPickIconDirectory            = { link = "Directory" },
+        MiniPickIconFile                 = { link = "MiniPickNormal" },
+        MiniPickHeader                   = { link = "DiagnosticFloatingHint" },
+        MiniPickMatchCurrent             = { link = "CursorLine" },
+        MiniPickMatchMarked              = { link = "Visual" },
+        MiniPickMatchRanges              = { link = "DiagnosticFloatingHint" },
+        MiniPickNormal                   = { link = "NormalFloat" },
+        MiniPickPreviewLine              = { link = "CursorLine" },
+        MiniPickPreviewRegion            = { link = "IncSearch" },
+        MiniPickPrompt                   = { link = "MiniPickMatchRanges" },
+        MiniPickPromptCaret              = { link = "DiagnosticFloatingInfo" },
+        MiniPickPromptPrefix             = { link = "DiagnosticFloatingInfo" },
+        MiniSnippetsCurrent              = { fg = nil, bg = nil, sp = "${yellow}", underdouble = true },
+        MiniSnippetsCurrentReplace       = { fg = nil, bg = nil, sp = "${red}", underdouble = true },
+        MiniSnippetsFinal                = { fg = nil, bg = nil, sp = "${green}", underdouble = true },
+        MiniSnippetsUnvisited            = { fg = nil, bg = nil, sp = "${cyan}", underdouble = true },
+        MiniSnippetsVisited              = { fg = nil, bg = nil, sp = "${blue}", underdouble = true },
+        MiniStatuslineDevinfo            = { fg = "${bg}", bg = "${fg}" },
+        MiniStatuslineFileinfo           = { fg = "${fg}", bg = nil },
+        MiniStatuslineFilename           = { fg = nil, bg = nil, blend = 0 },
+        MiniStatuslineInactive           = { link = "StatusLineNC" },
+        MiniStatuslineModeCommand        = { fg = "${bg}", bg = "${cyan}", bold = true },
+        MiniStatuslineModeInsert         = { fg = "${bg}", bg = "${purple}", bold = true },
+        MiniStatuslineModeNormal         = { fg = "${bg}", bg = "${fg}", bold = true },
+        MiniStatuslineModeOther          = { fg = "${bg}", bg = "${cyan}", bold = true },
+        MiniStatuslineModeReplace        = { fg = "${bg}", bg = "${red}", bold = true },
+        MiniStatuslineModeVisual         = { fg = "${bg}", bg = "${green}", bold = true },
+        MiniSurround                     = { link = "IncSearch" },
+        MiniTrailspace                   = { fg = nil, bg = "${red}" },
     }
 })
 
@@ -344,6 +724,24 @@ require("lze").load({
                 }
             }
             require("conform").setup(conform_config)
+        end
+    },
+    {
+        "live-command",
+        event = "DeferredUIEnter",
+        after = function()
+            require("live-command").setup({
+                enable_highlighting = true,
+                inline_highlighting = true,
+                hl_groups = {
+                    insertion = "DiffAdd",
+                    deletion = "DiffDelete",
+                    change = "DiffChange",
+                },
+                commands = {
+                    Norm = { cmd = "norm" }
+                }
+            })
         end
     },
     {
@@ -486,9 +884,10 @@ require("lze").load({
             require("mini.files").setup({
                 windows = {
                     max_number = 3,
+                    preview = true,
                     width_focus = 35,
                     width_nofocus = 35,
-                    widthpreview = 35
+                    width_preview = 35
                 }
             })
         end,
@@ -544,8 +943,9 @@ require("lze").load({
             "mini.tabline",
         },
         after = function()
-            require("mini.icons").setup()
-            MiniIcons.tweak_lsp_kind()
+            local mini_icons = require("mini.icons")
+            mini_icons.setup()
+            mini_icons.tweak_lsp_kind()
         end,
     },
     {
@@ -568,12 +968,36 @@ require("lze").load({
 
             local enter_steps = { 'pmenu_accept' }
             map_multistep('i', '<CR>', enter_steps)
+
+            local diagnostic_float_step = {
+                condition = function()
+                    local lnum = vim.fn.line(".") - 1
+                    return #vim.diagnostic.get(0, { lnum = lnum }) > 0
+                end,
+                action = function()
+                    vim.schedule(vim.diagnostic.open_float)
+                end
+            }
+
+            local lsp_hover_step = {
+                condition = function() return true end,
+                action = function()
+                    vim.schedule(vim.lsp.buf.hover)
+                end
+            }
+
+            local shiftk_steps = { diagnostic_float_step, lsp_hover_step }
+            map_multistep('n', 'K', shiftk_steps)
         end
     },
     {
         "mini.notify",
         event = "DeferredUIEnter",
-        after = function() require("mini.notify").setup() end
+        after = function()
+            require("mini.notify").setup({
+                lsp_progress = { enable = false }
+            })
+        end
     },
     {
         "mini.operators",
@@ -620,7 +1044,13 @@ require("lze").load({
     {
         "mini.splitjoin",
         keys = { "gS", desc = "Splitjoin operator", mode = { "n", "v", "x" } },
-        after = function() require("mini.splitjoin").setup() end,
+        after = function()
+            require("mini.splitjoin").setup({
+                detect = {
+                    separator = "[,;]",
+                }
+            })
+        end,
     },
     {
         "mini.statusline",
