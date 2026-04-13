@@ -1,10 +1,15 @@
-{pkgs, inputs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   environment.systemPackages = [
     inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
     pkgs.bat
     pkgs.bottom
     pkgs.cloudflared
     pkgs.curl
+    pkgs.deploy-rs
     pkgs.direnv
     pkgs.docker
     pkgs.docker-compose
@@ -37,6 +42,7 @@
     pkgs.uutils-coreutils-noprefix
     pkgs.uv
     pkgs.zellij
+    pkgs.zerotierone
     pkgs.zoxide
   ];
 
