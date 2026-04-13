@@ -572,7 +572,7 @@ require("onedarkpro").setup({
         StdoutMsg                        = { link = "MsgArea" },
         Substitute                       = { fg = "${bg}", bg = "${fg}" },
         TabLine                          = { fg = "${fg_mid}", bg = "${bg_edge}" },
-        TabLineFill                      = { link = "Tabline" },
+        TabLineFill                      = { link = "TabLine" },
         TabLineSel                       = { fg = "${accent}", bg = "${bg_edge}" },
         TermCursor                       = { fg = nil, bg = nil, reverse = true },
         TermCursorNC                     = { fg = nil, bg = nil, reverse = true },
