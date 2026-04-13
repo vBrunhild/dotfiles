@@ -5,17 +5,17 @@
   ...
 }: let
   mkGrammar = {
+    owner ? "tree-sitter-grammars",
     language,
-    version,
+    rev,
     hash,
   }:
     pkgs.tree-sitter.buildGrammar {
-      inherit language version;
+      inherit language;
+      version = "rev-${rev}";
       src = pkgs.fetchFromGitHub {
-        owner = "tree-sitter-grammars";
+        inherit owner rev hash;
         repo = "tree-sitter-${language}";
-        rev = "v${version}";
-        inherit hash;
       };
     };
 
@@ -65,7 +65,6 @@
         pkgs.tree-sitter-grammars.tree-sitter-json5
         pkgs.tree-sitter-grammars.tree-sitter-just
         pkgs.tree-sitter-grammars.tree-sitter-kdl
-        pkgs.tree-sitter-grammars.tree-sitter-lua
         pkgs.tree-sitter-grammars.tree-sitter-make
         pkgs.tree-sitter-grammars.tree-sitter-markdown
         pkgs.tree-sitter-grammars.tree-sitter-markdown-inline
@@ -78,6 +77,7 @@
         pkgs.tree-sitter-grammars.tree-sitter-php-only
         pkgs.tree-sitter-grammars.tree-sitter-phpdoc
         pkgs.tree-sitter-grammars.tree-sitter-python
+        pkgs.tree-sitter-grammars.tree-sitter-query
         pkgs.tree-sitter-grammars.tree-sitter-regex
         pkgs.tree-sitter-grammars.tree-sitter-rust
         pkgs.tree-sitter-grammars.tree-sitter-scheme
@@ -86,15 +86,33 @@
         pkgs.tree-sitter-grammars.tree-sitter-tsx
         pkgs.tree-sitter-grammars.tree-sitter-typescript
         pkgs.tree-sitter-grammars.tree-sitter-typst
-        pkgs.tree-sitter-grammars.tree-sitter-vim
         pkgs.tree-sitter-grammars.tree-sitter-xml
         pkgs.tree-sitter-grammars.tree-sitter-yaml
         pkgs.tree-sitter-grammars.tree-sitter-zig
 
         (mkGrammar {
+          language = "lua";
+          rev = "10fe0054734eec83049514ea2e718b2a56acd0c9";
+          hash = "sha256-VzaaN5pj7jMAb/u1fyyH6XmLI+yJpsTlkwpLReTlFNY=";
+        })
+
+        (mkGrammar {
           language = "luadoc";
-          version = "1.1.0";
+          rev = "873612aadd3f684dd4e631bdf42ea8990c57634e";
           hash = "sha256-8ZHgMoeirXlwUlfrphKNFWVX/k2+uEIYCh3MJ9r7YOk=";
+        })
+
+        (mkGrammar {
+          owner = "uben0";
+          language = "typst";
+          rev = "46cf4ded12ee974a70bf8457263b67ad7ee0379d";
+          hash = "sha256-s/9R3DKA6dix6BkU4mGXaVggE4bnzOyu20T1wuqHQxk=";
+        })
+
+        (mkGrammar {
+          language = "vim";
+          rev = "3092fcd99eb87bbd0fc434aa03650ba58bd5b43b";
+          hash = "sha256-MnLBFuJCJbetcS07fG5fkCwHtf/EcNP+Syf0Gn0K39c=";
         })
       ];
   };
@@ -111,6 +129,16 @@
     ];
   };
 
+  simple-start-screen = pkgs.vimUtils.buildVimPlugin {
+    name = "simple-start-screen";
+    src = pkgs.fetchFromGitHub {
+      owner = "vBrunhild";
+      repo = "simple-start-screen.nvim";
+      rev = "d32075ad7906a0fc53f88225d24bc9b4de240ceb";
+      hash = "sha256-g1FDs7rdsygWUfuRuV7XqRQb8dbrQcYcyzakvCKgKJU=";
+    };
+  };
+
   neovim-nightly = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
   neovim-wrapped = pkgs.wrapNeovimUnstable neovim-nightly {
     withPython3 = false;
@@ -118,10 +146,8 @@
     withNodeJs = false;
     luaRcContent = builtins.readFile ./init.lua;
     plugins = [
-      treesitter-queries
-      treesitter-parsers
-
       pkgs.vimPlugins.conform-nvim
+      pkgs.vimPlugins.live-command-nvim
       pkgs.vimPlugins.lze
       pkgs.vimPlugins.markview-nvim
       pkgs.vimPlugins.mini-align
@@ -149,6 +175,9 @@
       pkgs.vimPlugins.nvim-lspconfig
       pkgs.vimPlugins.onedarkpro-nvim
       pkgs.vimPlugins.typst-preview-nvim
+      simple-start-screen
+      treesitter-parsers
+      treesitter-queries
     ];
   };
 in

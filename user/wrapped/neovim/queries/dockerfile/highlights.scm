@@ -66,3 +66,29 @@
 
 (expose_instruction
   (expose_port) @number)
+
+(json_string) @string
+
+(unquoted_string) @string
+
+(image_spec) @type
+
+(path) @string.special.path
+
+(param) @parameter
+
+(env_pair
+  name: (unquoted_string) @variable.parameter
+  "=" @operator
+  value: [
+    (unquoted_string)
+    (single_quoted_string)
+    (double_quoted_string)
+  ] @string)
+
+(arg_instruction
+  name: (unquoted_string) @variable.parameter
+  "=" @operator
+  value: (unquoted_string)? @string)
+
+(mount_param) @variable.parameter
