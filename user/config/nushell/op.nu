@@ -30,6 +30,18 @@ export def read-env [] {
   | transpose -r -d
 }
 
+export def popup [...files: path] {
+  let files = $files | each {|file| glob $file } | flatten;
+
+  let args = if ($files | length) > 1 {
+    ["-A" ...$files]
+  } else {
+    $files
+  }
+
+  ^dragon-drop -x ...$args
+}
+
 export def with-tunnel [
   ssh_target: string,
   ports: string,
