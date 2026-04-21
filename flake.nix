@@ -27,12 +27,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    neovim-nightly-overlay = {
-      url = "github:nix-community/neovim-nightly-overlay";
+    neovim = {
+      url = "path:./flakes/neovim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    sss-nvim.url = "github:vBrunhild/simple-start-screen.nvim";
     # zjstatus.url = "github:dj95/zjstatus";
   };
 
@@ -46,21 +45,14 @@
       "x86_64-linux"
     ];
 
-    mkPkgs = system:
-      import nixpkgs {
-        inherit system;
-        overlays = [
-          inputs.neovim-nightly-overlay.overlays.default
-          # (final: prev: {zjstatus = inputs.zjstatus.packages.${prev.system}.default;})
-        ];
-      };
-
-    allPkgs = forAllSystems mkPkgs;
+    allPkgs = forAllSystems (system: nixpkgs.legacyPackages.${system});
   in {
     packages = forAllSystems (
       system: let
         pkgs = allPkgs.${system};
-      in (user.packages {inherit inputs pkgs;})
+        packages = user.packages {inherit pkgs;};
+      in
+        packages // {neovim = inputs.neovim.packages.${system}.default;}
     );
 
     formatter = forAllSystems (

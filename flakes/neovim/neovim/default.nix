@@ -1,10 +1,14 @@
 {
-  inputs,
   pkgs,
+  inputs,
+  flake,
   ...
 }: let
   system = pkgs.stdenv.hostPlatform.system;
+
   neovim-nightly = inputs.neovim-nightly-overlay.packages.${system}.default;
+  path-server = flake.packages.${system}.path-server;
+
   neovim-wrapped = pkgs.wrapNeovimUnstable neovim-nightly {
     withPython3 = false;
     withRuby = false;
@@ -44,11 +48,11 @@
   };
 in
   pkgs.symlinkJoin {
+    inherit (neovim-nightly) version meta;
     pname = "neovim-wrapped";
-    version = neovim-nightly.version;
-    meta.mainProgram = "nvim";
     paths = [
       neovim-wrapped
+      path-server
       pkgs.alejandra
       pkgs.docker-language-server
       pkgs.dprint
@@ -57,15 +61,12 @@ in
       pkgs.dprint-plugins.dprint-plugin-typescript
       pkgs.harper
       pkgs.just-lsp
+      pkgs.just-lsp
       pkgs.lua-language-server
       pkgs.markdown-oxide
       pkgs.nil
       pkgs.nixd
-      pkgs.just-lsp
-      pkgs.pyrefly
-      pkgs.ruff
       pkgs.taplo
-      pkgs.tofu-ls
       pkgs.vscode-langservers-extracted
     ];
   }

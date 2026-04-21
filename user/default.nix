@@ -1,11 +1,7 @@
 let
-  packages = {
-    inputs,
-    pkgs,
-  }: let
+  packages = {pkgs}: let
     inherit (pkgs) callPackage;
   in {
-    neovim = callPackage ./wrapped/neovim {inherit inputs;};
     usql = callPackage ./wrapped/usql {};
     zellijPlugins = callPackage ./wrapped/zellij-plugins.nix {};
   };
@@ -19,7 +15,7 @@ in {
   }: {
     config = {
       environment = {
-        systemPackages = builtins.attrValues (packages {inherit inputs pkgs;});
+        systemPackages = builtins.attrValues (packages {inherit pkgs;});
         pathsToLink = ["/share/zellij-plugins"];
         variables = {
           EDITOR = "nvim";
