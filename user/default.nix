@@ -47,8 +47,7 @@ in {
 
     imports = [
       ./config
-      ./git.nix
-      ./packages.nix
+      ./packages
     ];
   };
 }

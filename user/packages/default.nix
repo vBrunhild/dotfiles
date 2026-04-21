@@ -2,9 +2,16 @@
   pkgs,
   inputs,
   ...
-}: {
+}: let
+  system = pkgs.stdenv.hostPlatform.system;
+in {
+  imports = [
+    ./git.nix
+    ./ssh.nix
+  ];
+
   environment.systemPackages = [
-    inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.agenix.packages.${system}.default
     pkgs.atlas
     pkgs.bat
     pkgs.bottom
@@ -12,33 +19,28 @@
     pkgs.curl
     pkgs.deploy-rs
     pkgs.direnv
-    pkgs.docker
     pkgs.docker-compose
     pkgs.dust
     pkgs.eza
-    pkgs.fd
     pkgs.ffmpeg
-    pkgs.fzf
     pkgs.git-credential-manager
     pkgs.gitFull
     pkgs.github-copilot-cli
     pkgs.jq
     pkgs.jujutsu
     pkgs.just
+    pkgs.mutagen
     pkgs.nh
     pkgs.nushell
-    pkgs.nvd
     pkgs.opentofu
     pkgs.ouch
     pkgs.pandoc
-    pkgs.resvg
+    pkgs.rclone
     pkgs.ripgrep
     pkgs.rsync
     pkgs.sd
     pkgs.tabiew
     pkgs.tealdeer
-    pkgs.tinymist
-    pkgs.typst
     pkgs.uutils-coreutils-noprefix
     pkgs.uv
     pkgs.zellij
@@ -67,27 +69,5 @@
   programs.nh = {
     enable = true;
     flake = "/home/brunhild/dotfiles";
-  };
-
-  programs.ssh = {
-    startAgent = true;
-    extraConfig = ''
-      Host *
-        # Identity
-        IdentityFile ~/.ssh/id_ed25519
-        AddKeysToAgent yes
-
-        # Security
-        HashKnownHosts yes
-
-        # Connection
-        ServerAliveCountMax 5
-        ServerAliveInterval 60
-        TCPKeepAlive yes
-
-        # Control
-        ControlMaster auto
-        ControlPath ~/.ssh/master-%r@%h:%p
-    '';
   };
 }
