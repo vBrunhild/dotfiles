@@ -82,12 +82,14 @@
     extraPortals = [
       pkgs.xdg-desktop-portal-gnome
       pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-hyprland
     ];
 
     config = {
       niri = {
         "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
-        "org.freedesktop.impl.portal.Screencast" = ["gnome"];
+        "org.freedesktop.impl.portal.Screencast" = ["hyprland" "gnome"];
+        "org.freedesktop.impl.portal.Screenshot" = ["hyprland" "gnome"];
       };
     };
   };
