@@ -1,17 +1,11 @@
 {
   pkgs,
-  inputs,
   ...
-}: let
-  system = pkgs.stdenv.hostPlatform.system;
-  quickshell = inputs.quickshell.packages.${system}.quickshell;
-in {
-  _module.args.quickshell = quickshell;
-
+}: {
   imports = [
     ./avahi.nix
     ./foot.nix
-    ./greeter.nix
+    ./noctalia
     ./pipewire.nix
     ./printing.nix
     ./xserver.nix
@@ -19,11 +13,7 @@ in {
   ];
 
   home-manager.users.brunhild = {
-    _module.args.quickshell = quickshell;
     imports = [
-      ./dank-material-shell.nix
-      ./dsearch.nix
-      ./satty.nix
       ./spotifyd.nix
     ];
   };

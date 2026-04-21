@@ -14,18 +14,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    quickshell = {
-      url = "git+https://git.outfoxxed.me/quickshell/quickshell";
+    stylix = {
+      url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    dms = {
-      url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    danksearch = {
-      url = "github:AvengeMedia/danksearch";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -71,19 +69,17 @@
       in (pkgs.alejandra)
     );
 
-    devShells = forAllSystems (
-      system: let
-        pkgs = allPkgs.${system};
-      in {default = user.shell pkgs;}
-    );
+    nixosModules =
+      {
+        system = import ./system;
+        user = user.module;
 
-    nixosModules = {
-      system = import ./system;
-      user = user.module;
-
-      determinate = inputs.determinate.nixosModules.default;
-      home-manager = inputs.home-manager.nixosModules.home-manager;
-    };
+        determinate = inputs.determinate.nixosModules.default;
+        home-manager = inputs.home-manager.nixosModules.home-manager;
+        # niri = inputs.niri-flake.nixosModules.niri;
+        stylix = inputs.stylix.nixosModules.stylix;
+      }
+      // import ./modules;
 
     nixosConfigurations = import ./hosts inputs;
   };
