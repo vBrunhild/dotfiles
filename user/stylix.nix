@@ -1,23 +1,27 @@
-{config, pkgs, ...}: let
+{
+  config,
+  pkgs,
+  ...
+}: let
   palette = config.palette;
 in {
   palette = {
-    primary    = "#98c379";
-    secondary  = "#c678dd";
+    primary = "#98c379";
+    secondary = "#c678dd";
     background = "#282c34";
     foreground = "#b6bdca";
 
-    black      = "#1e2127";
-    dark-gray  = "#3e4451";
+    black = "#1e2127";
+    dark-gray = "#3e4451";
     light-gray = "#545862";
-    white      = "#cdd4e1";
+    white = "#cdd4e1";
 
-    blue   = "#61afef";
+    blue = "#61afef";
     orange = "#d19a66";
-    cyan   = "#56b6c2";
-    green  = "#98c379";
+    cyan = "#56b6c2";
+    green = "#98c379";
     purple = "#c678dd";
-    red    = "#e06c75";
+    red = "#e06c75";
     yellow = "#e5c07b";
   };
 

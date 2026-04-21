@@ -19,8 +19,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    };
-
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -70,7 +68,6 @@
 
         determinate = inputs.determinate.nixosModules.default;
         home-manager = inputs.home-manager.nixosModules.home-manager;
-        # niri = inputs.niri-flake.nixosModules.niri;
         stylix = inputs.stylix.nixosModules.stylix;
       }
       // import ./modules;
