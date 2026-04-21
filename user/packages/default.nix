@@ -11,6 +11,7 @@ in {
   ];
 
   home-manager.users.brunhild.imports = [
+    ./nushell
     ./zellij
   ];
 

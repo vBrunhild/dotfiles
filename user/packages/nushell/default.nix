@@ -68,4 +68,6 @@ in {
       pkgs.nushellPlugins.query
     ];
   };
+
+  stylix.targets.nushell.enable = false;
 }

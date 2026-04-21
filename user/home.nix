@@ -38,7 +38,6 @@ in {
   };
 
   imports = [
-    ./config/nushell
     ./secrets
     inputs.agenix.homeManagerModules.default
   ];
