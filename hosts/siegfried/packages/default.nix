@@ -5,6 +5,7 @@
   imports = [
     ./avahi.nix
     ./foot.nix
+    ./greetd.nix
     ./noctalia
     ./pipewire.nix
     ./printing.nix
