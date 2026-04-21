@@ -713,6 +713,22 @@
         "type": "github"
       }
     },
+    "nu-scripts": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778670466,
+        "narHash": "sha256-JUsFHsacED+7eTLAlfBnF9vasIHWIL/POJMCPbC9Baw=",
+        "owner": "nushell",
+        "repo": "nu_scripts",
+        "rev": "018fe3c3134d49504be652a7ace5512291545317",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nushell",
+        "repo": "nu_scripts",
+        "type": "github"
+      }
+    },
     "nur": {
       "inputs": {
         "flake-parts": [
@@ -763,6 +779,7 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_4",
         "noctalia": "noctalia",
+        "nu-scripts": "nu-scripts",
         "stylix": "stylix",
         "zellij-plugins": "zellij-plugins"
       }
