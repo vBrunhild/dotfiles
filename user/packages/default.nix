@@ -40,7 +40,7 @@ in {
     pkgs.nh
     pkgs.nushell
     pkgs.opentofu
-    pkgs.ouch
+    pkgs.ouch-rar
     pkgs.pandoc
     pkgs.rclone
     pkgs.ripgrep

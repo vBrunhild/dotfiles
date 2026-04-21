@@ -7,6 +7,7 @@
     ./noctalia
     ./pipewire.nix
     ./printing.nix
+    ./sioyek.nix
     ./xserver.nix
     ./zerotierone.nix
   ];
