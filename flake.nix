@@ -19,7 +19,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     noctalia = {
@@ -32,7 +31,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # zjstatus.url = "github:dj95/zjstatus";
+    zellij-plugins = {
+      url = "path:./flakes/zellij-plugins";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {nixpkgs, ...}: let

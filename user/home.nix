@@ -1,4 +1,3 @@
-{config, inputs, ...}: let
 {
   config,
   inputs,
@@ -33,8 +32,6 @@ in {
     "bottom/bottom.toml".source = ./config/bottom/config.toml;
     "jj/config.toml".source = ./config/jj/config.toml;
     "niri/config.kdl".source = ./config/niri/config.kdl;
-    "zellij/config.kdl".source = ./config/zellij/config.kdl;
-    "zellij/layouts/default.kdl".source = ./config/zellij/layouts/default.kdl;
 
     "boring/.boring.toml".source =
       config.lib.file.mkOutOfStoreSymlink
