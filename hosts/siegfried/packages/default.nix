@@ -1,11 +1,9 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     ./avahi.nix
     ./foot.nix
     ./greetd.nix
+    ./niri
     ./noctalia
     ./pipewire.nix
     ./printing.nix
@@ -36,7 +34,6 @@
   ];
 
   programs = {
-    niri.enable = true;
     steam.enable = true;
     thunar.enable = true;
   };

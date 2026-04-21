@@ -31,7 +31,6 @@ in {
     "bat/config".source = ./config/bat/config.rc;
     "bottom/bottom.toml".source = ./config/bottom/config.toml;
     "jj/config.toml".source = ./config/jj/config.toml;
-    "niri/config.kdl".source = ./config/niri/config.kdl;
 
     "boring/.boring.toml".source =
       config.lib.file.mkOutOfStoreSymlink
