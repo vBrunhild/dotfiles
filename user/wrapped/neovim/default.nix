@@ -1,7 +1,6 @@
 {
   inputs,
   pkgs,
-  lib,
   ...
 }: let
   system = pkgs.stdenv.hostPlatform.system;
@@ -15,7 +14,6 @@
       pkgs.vimPlugins.conform-nvim
       pkgs.vimPlugins.live-command-nvim
       pkgs.vimPlugins.lze
-      pkgs.vimPlugins.markview-nvim
       pkgs.vimPlugins.mini-align
       pkgs.vimPlugins.mini-bufremove
       pkgs.vimPlugins.mini-clue
