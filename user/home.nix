@@ -1,4 +1,9 @@
 {config, inputs, ...}: let
+{
+  config,
+  inputs,
+  ...
+}: let
   dotfilesPath = "${config.home.homeDirectory}/dotfiles/user/config";
 in {
   home = rec {
@@ -31,6 +36,10 @@ in {
     "spotify-player/app.toml".source = ./config/spotify_player/app.toml;
     "zellij/config.kdl".source = ./config/zellij/config.kdl;
     "zellij/layouts/default.kdl".source = ./config/zellij/layouts/default.kdl;
+
+    "boring/.boring.toml".source =
+      config.lib.file.mkOutOfStoreSymlink
+      "${dotfilesPath}/boring/boring.toml";
   };
 
   imports = [

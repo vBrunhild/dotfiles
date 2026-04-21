@@ -14,6 +14,7 @@ in {
     inputs.agenix.packages.${system}.default
     pkgs.atlas
     pkgs.bat
+    pkgs.boring
     pkgs.bottom
     pkgs.cloudflared
     pkgs.curl
