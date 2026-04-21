@@ -48,6 +48,7 @@ in {
     imports = [
       ./config
       ./packages
+      ./stylix.nix
     ];
   };
 }

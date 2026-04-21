@@ -1,4 +1,6 @@
-{
+{config, ...}: let
+  palette = config.palette;
+in {
   programs.foot = {
     enable = true;
 
@@ -18,30 +20,24 @@
       };
 
       colors-dark = {
-        foreground = "b6bdca";
-        background = "282c34";
-
-        regular0 = "282c34";
-        regular1 = "e06c75";
-        regular2 = "98c379";
-        regular3 = "e5c07b";
-        regular4 = "61afef";
-        regular5 = "c678dd";
-        regular6 = "56b6c2";
-        regular7 = "b6bdca";
-
-        bright0 = "565c64";
-        bright1 = "e06c75";
-        bright2 = "98c379";
-        bright3 = "e5c07b";
-        bright4 = "61afef";
-        bright5 = "c678dd";
-        bright6 = "56b6c2";
-        bright7 = "fffefe";
-
-        selection-foreground = "282c34";
-        selection-background = "b6bdca";
-        cursor = "1e2127 98c379";
+        foreground = palette.foreground;
+        background = palette.background;
+        regular0 = palette.black;
+        regular1 = palette.red;
+        regular2 = palette.green;
+        regular3 = palette.yellow;
+        regular4 = palette.blue;
+        regular5 = palette.purple;
+        regular6 = palette.cyan;
+        regular7 = palette.white;
+        bright0 = palette.light-gray;
+        bright1 = palette.red;
+        bright2 = palette.green;
+        bright3 = palette.yellow;
+        bright4 = palette.blue;
+        bright5 = palette.purple;
+        bright6 = palette.cyan;
+        bright7 = palette.dark-gray;
       };
     };
   };
