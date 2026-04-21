@@ -24,6 +24,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nu-scripts = {
+      url = "github:nushell/nu_scripts";
+      flake = false;
+    };
+
     neovim = {
       url = "path:./flakes/neovim";
       inputs.nixpkgs.follows = "nixpkgs";
