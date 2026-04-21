@@ -27,8 +27,6 @@
     pkgs.grim
     pkgs.obs-studio
     pkgs.slurp
-    pkgs.spotify-player
-    pkgs.thunar
     pkgs.udevil
     pkgs.vesktop
     pkgs.vlc
@@ -39,12 +37,15 @@
   programs = {
     niri.enable = true;
     steam.enable = true;
+    thunar.enable = true;
   };
 
   services = {
     devmon.enable = true;
     gnome.gcr-ssh-agent.enable = false;
+    power-profiles-daemon.enable = true;
     pulseaudio.enable = false;
+    tumbler.enable = true;
     upower.enable = true;
   };
 }
