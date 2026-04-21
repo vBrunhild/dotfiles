@@ -1,8 +1,19 @@
 {pkgs, ...}: {
-  system.stateVersion = "25.11";
+  system.stateVersion = "26.05";
   console.keyMap = "br-abnt2";
-  hardware.bluetooth.enable = true;
   security.rtkit.enable = true;
+
+  hardware = {
+    bluetooth.enable = true;
+    enableAllFirmware = true;
+  };
+
+  hardware.graphics = {
+    enable = true;
+    extraPackages = [pkgs.intel-media-driver];
+  };
+  environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
+  boot.kernelParams = ["i915.enable_guc=2"];
 
   boot.loader = {
     systemd-boot.enable = true;
@@ -70,16 +81,12 @@
     enable = true;
     extraPortals = [
       pkgs.xdg-desktop-portal-gnome
-      pkgs.xdg-desktop-portal-termfilechooser
+      pkgs.xdg-desktop-portal-gtk
     ];
 
     config = {
-      common = {
-        "org.freedesktop.impl.portal.FileChooser" = ["termfilechooser"];
-      };
-
       niri = {
-        "org.freedesktop.impl.portal.FileChooser" = ["termfilechooser"];
+        "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
         "org.freedesktop.impl.portal.Screencast" = ["gnome"];
       };
     };
