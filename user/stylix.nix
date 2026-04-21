@@ -82,8 +82,4 @@ in {
       base0F = "#be5046";
     };
   };
-
-  targets = {
-    nushell.enable = false;
-  };
 }
