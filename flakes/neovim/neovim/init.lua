@@ -263,6 +263,11 @@ vim.lsp.config("lua_ls", {
     }
 })
 
+vim.lsp.config("path_server", {
+    cmd = { 'path-server' },
+    root_markers = { '.git' },
+})
+
 vim.lsp.config("phpantom_lsp", {
     cmd = { 'phpantom_lsp' },
     filetypes = { 'php' },
@@ -286,6 +291,7 @@ vim.lsp.enable({
     "nil_ls",
     "nixd",
     "nushell",
+    "path_server",
     "phpactor",
     "phpantom_lsp",
     "pyrefly",

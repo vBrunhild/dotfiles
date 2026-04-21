@@ -12,6 +12,7 @@ in {
 
   environment.systemPackages = [
     inputs.agenix.packages.${system}.default
+    inputs.neovim.packages.${system}.default
     pkgs.atlas
     pkgs.bat
     pkgs.boring
