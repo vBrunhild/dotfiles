@@ -3,7 +3,6 @@ let
     inherit (pkgs) callPackage;
   in {
     usql = callPackage ./wrapped/usql {};
-    zellijPlugins = callPackage ./wrapped/zellij-plugins.nix {};
   };
 in {
   inherit packages;

@@ -10,6 +10,10 @@ in {
     ./ssh.nix
   ];
 
+  home-manager.users.brunhild.imports = [
+    ./zellij
+  ];
+
   environment.systemPackages = [
     inputs.agenix.packages.${system}.default
     inputs.neovim.packages.${system}.default
@@ -45,7 +49,6 @@ in {
     pkgs.tealdeer
     pkgs.uutils-coreutils-noprefix
     pkgs.uv
-    pkgs.zellij
     pkgs.zerotierone
     pkgs.zoxide
   ];

@@ -201,40 +201,9 @@ keybinds clear-defaults=true {
     }
 }
 
-plugins {
-    about location="zellij:about"
-    compact-bar location="zellij:compact-bar" {
-        tooltip "F1"
-    }
-    configuration location="zellij:configuration"
-    filepicker location="zellij:strider" {
-        cwd "/"
-    }
-    plugin-manager location="zellij:plugin-manager"
-    session-manager location="zellij:session-manager"
-    // status-bar location="zellij:status-bar"
-    strider location="zellij:strider"
-    tab-bar location="zellij:tab-bar"
-    welcome-screen location="zellij:session-manager" {
-        welcome_screen true
-    }
-    autolock location="file:/run/current-system/sw/share/zellij-plugins/zellij-autolock.wasm" {
-        is_enable true
-        triggers "nvim"
-        reaction_seconds "0.3"
-        print_to_log false
-    }
-    zjstatus location="file:/run/current-system/sw/share/zellij-plugins/zjstatus.wasm"
-}
-
-load_plugins {
-    autolock
-    zjstatus
-}
-
 default_mode "normal"
 mouse_mode false
 pane_frames false
 show_startup_tips false
 support_kitty_keyboard_protocol true
-theme "onedark"
+theme "default"
