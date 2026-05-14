@@ -1,17 +1,12 @@
 {
   pkgs,
-  inputs,
   ...
-}: let
-  system = pkgs.stdenv.hostPlatform.system;
-  quickshell = inputs.quickshell.packages.${system}.quickshell;
-in {
-  _module.args.quickshell = quickshell;
-
+}: {
   imports = [
     ./avahi.nix
     ./foot.nix
-    ./greeter.nix
+    ./greetd.nix
+    ./noctalia
     ./pipewire.nix
     ./printing.nix
     ./xserver.nix
@@ -19,16 +14,13 @@ in {
   ];
 
   home-manager.users.brunhild = {
-    _module.args.quickshell = quickshell;
     imports = [
-      ./dank-material-shell.nix
-      ./dsearch.nix
-      ./satty.nix
       ./spotifyd.nix
     ];
   };
 
   environment.systemPackages = [
+    pkgs.brave
     pkgs.dbeaver-bin
     pkgs.dragon-drop
     pkgs.easyeffects
@@ -36,7 +28,6 @@ in {
     pkgs.grim
     pkgs.obs-studio
     pkgs.slurp
-    pkgs.spotify-player
     pkgs.udevil
     pkgs.vesktop
     pkgs.vlc
@@ -47,12 +38,16 @@ in {
   programs = {
     niri.enable = true;
     steam.enable = true;
+    thunar.enable = true;
   };
 
   services = {
     devmon.enable = true;
     gnome.gcr-ssh-agent.enable = false;
+    gnome.gnome-keyring.enable = true;
+    power-profiles-daemon.enable = true;
     pulseaudio.enable = false;
+    tumbler.enable = true;
     upower.enable = true;
   };
 }

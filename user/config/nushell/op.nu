@@ -29,3 +29,56 @@ export def read-env [] {
   }
   | transpose -r -d
 }
+
+export def popup [...files: path] {
+  let files = $files | each {|file| glob $file } | flatten;
+
+  let args = if ($files | length) > 1 {
+    ["-A" ...$files]
+  } else {
+    $files
+  }
+
+  ^dragon-drop -x ...$args
+}
+
+export def with-tunnel [
+  ssh_target: string,
+  ports: string,
+  code: closure,
+] {
+  let ports = $ports | parse "{local}:{remote}" | first
+  let local_port = $ports.local | into int
+  let remote_port = $ports.remote | into int
+
+  let job = job spawn {
+    ssh -N -L $"($local_port):127.0.0.1:($remote_port)" $ssh_target
+  }
+
+  let pid = job list | where id == $job | get pid | first
+  print pid;
+
+  try {
+    mut attempts = 0;
+    loop {
+      if $attempts > 50 {
+        error make {msg: "SSH tunnel timeout, port never opened"}
+      }
+
+      if (ps | where pid == $pid | is-empty) {
+        error make {msg: "SSH process died."}
+      }
+
+      if (nc -z -w 1 127.0.0.1 $local_port | complete).status == 0 {
+        break
+      }
+
+      sleep 100ms
+      $attempts += 1;
+    }
+
+    do $code
+  } finally {
+    job kill $job
+  }
+}
