@@ -14,23 +14,23 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    quickshell = {
-      url = "git+https://git.outfoxxed.me/quickshell/quickshell";
+    stylix = {
+      url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    dms = {
-      url = "github:AvengeMedia/DankMaterialShell/stable";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    danksearch = {
-      url = "github:AvengeMedia/danksearch";
+    neovim = {
+      url = "path:./flakes/neovim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    neovim-nightly-overlay = {
-      url = "github:nix-community/neovim-nightly-overlay";
+    zellij-plugins = {
+      url = "path:./flakes/zellij-plugins";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -45,18 +45,14 @@
       "x86_64-linux"
     ];
 
-    mkPkgs = system:
-      import nixpkgs {
-        inherit system;
-        overlays = [inputs.neovim-nightly-overlay.overlays.default];
-      };
-
-    allPkgs = forAllSystems mkPkgs;
+    allPkgs = forAllSystems (system: nixpkgs.legacyPackages.${system});
   in {
     packages = forAllSystems (
       system: let
         pkgs = allPkgs.${system};
-      in (user.packages {inherit inputs pkgs;})
+        packages = user.packages {inherit pkgs;};
+      in
+        packages // {neovim = inputs.neovim.packages.${system}.default;}
     );
 
     formatter = forAllSystems (
@@ -65,19 +61,16 @@
       in (pkgs.alejandra)
     );
 
-    devShells = forAllSystems (
-      system: let
-        pkgs = allPkgs.${system};
-      in {default = user.shell pkgs;}
-    );
+    nixosModules =
+      {
+        system = import ./system;
+        user = user.module;
 
-    nixosModules = {
-      system = import ./system;
-      user = user.module;
-
-      determinate = inputs.determinate.nixosModules.default;
-      home-manager = inputs.home-manager.nixosModules.home-manager;
-    };
+        determinate = inputs.determinate.nixosModules.default;
+        home-manager = inputs.home-manager.nixosModules.home-manager;
+        stylix = inputs.stylix.nixosModules.stylix;
+      }
+      // import ./modules;
 
     nixosConfigurations = import ./hosts inputs;
   };

@@ -14,12 +14,14 @@
       keep-outputs = true;
       warn-dirty = false;
       sandbox = true;
-      max-jobs = "auto";
+      cores = 2;
+      max-jobs = 2;
       keep-going = true;
       log-lines = 20;
       extra-experimental-features = [
         "flakes"
         "nix-command"
+        "pipe-operators"
       ];
       substituters = ["https://cache.nixos.org"];
     };
