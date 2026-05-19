@@ -82,4 +82,7 @@ in {
       base0F = "#be5046";
     };
   };
+
+  # https://github.com/nix-community/stylix/issues/2334
+  stylix.targets.kmscon.enable = false;
 }
