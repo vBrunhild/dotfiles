@@ -12,6 +12,11 @@ in {
         file = ./files/aws-credentials.age;
         path = "${homeDir}/.aws/credentials";
       };
+
+      rclone-config = {
+        file = ./files/rclone-config.age;
+        path = "${homeDir}/.config/rclone/rclone.conf";
+      };
     };
   };
 }
