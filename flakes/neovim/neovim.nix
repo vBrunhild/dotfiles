@@ -43,6 +43,7 @@
       pkgs.vimPlugins.nvim-lspconfig
       pkgs.vimPlugins.nvim-treesitter.withAllGrammars
       pkgs.vimPlugins.onedarkpro-nvim
+      pkgs.vimPlugins.quicker-nvim
       pkgs.vimPlugins.typst-preview-nvim
     ];
   };

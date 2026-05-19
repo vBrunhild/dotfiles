@@ -60,6 +60,7 @@ vim.o.pumborder = border
 vim.o.relativenumber = true
 vim.o.ruler = false
 vim.o.scrolloff = 10
+vim.o.shell = "bash"
 vim.o.shiftwidth = 4
 vim.o.showmode = false
 vim.o.signcolumn = "yes"
@@ -148,7 +149,15 @@ autocommand("FileType", {
 })
 
 autocommand('FileType', {
-    callback = function(args) pcall(vim.treesitter.start, args.buf) end
+    callback = function(args)
+        local ok = pcall(vim.treesitter.start, args.buf)
+        if not ok then
+            return
+        end
+        vim.bo.indentexpr = 'v:lua.require("nvim-treesitter").indentexpr()'
+        vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        vim.wo[0][0].foldmethod = 'expr'
+    end
 })
 
 autocommand("VimLeave", {
@@ -157,6 +166,79 @@ autocommand("VimLeave", {
 
 -- commands
 command({
+    {
+        "PyreflyCheck", function()
+        local chunks = {}
+
+        vim.fn.setqflist(
+            {},
+            "r",
+            { title = "Pyrefly Check: Running" }
+        )
+
+        local cmd = {
+            "pyrefly", "check",
+            "--output-format=json",
+            "--summary=none",
+            "--progress-bar=no",
+        }
+
+        vim.fn.jobstart(cmd, {
+            stdout_buffered = false,
+            on_stdout = function(_, data)
+                if data then
+                    for _, chunk in ipairs(data) do
+                        if chunk ~= "" then
+                            table.insert(chunks, chunk)
+                        end
+                    end
+                end
+            end,
+            on_exit = function(_, _)
+                local raw_json = table.concat(chunks, "")
+
+                if raw_json == "" or raw_json == "[]" then
+                    vim.fn.setqflist({}, "r", { title = "Pyrefly Check: Clean" })
+                    return
+                end
+
+                local ok, decoded = pcall(vim.json.decode, raw_json)
+                if not ok then
+                    vim.notify("Pyrefly Check: Failed to parse JSON output.")
+                    return
+                end
+
+                ---@diagnostic disable-next-line: undefined-field
+                local errors = decoded.errors
+                local qf_items = {}
+
+                for _, err in ipairs(errors) do
+                    table.insert(qf_items, {
+                        filename = err.path,
+                        lnum = err.line,
+                        col = err.column,
+                        end_lnum = err.stop_line,
+                        end_col = err.stop_column,
+                        text = ("[%s] %s").format(err.name, err.concise_description),
+                        type = (err.severity == "warning") and "W" or "E",
+                    })
+                end
+
+                vim.fn.setqflist({}, "r", {
+                    title = "Pyrefly Check",
+                    items = qf_items,
+                })
+
+                if #qf_items > 0 then
+                    vim.cmd("copen")
+                else
+                    vim.notify("Pyrefly Check: No errors found")
+                end
+            end
+        })
+    end
+    },
+    -- zellij
     { "ZellijPaneNew", function() vim.cmd("silent !zellij action new-pane") end },
     { "ZellijTabNew",  function() vim.cmd("silent !zellij action new-tab --cwd " .. vim.fn.getcwd()) end },
 })
@@ -221,6 +303,17 @@ map({
 })
 
 -- lsp
+vim.lsp.config["*"] = {
+    capabilities = {
+        textDocument = {
+            semanticTokens = {
+                multilineTokenSupport = true,
+            }
+        },
+    },
+    root_markers = { ".git" },
+}
+
 vim.lsp.config("harper_ls", {
     filetypes = {
         "gitcommit",
@@ -265,7 +358,6 @@ vim.lsp.config("lua_ls", {
 
 vim.lsp.config("path_server", {
     cmd = { 'path-server' },
-    root_markers = { '.git' },
 })
 
 vim.lsp.config("phpantom_lsp", {
@@ -954,6 +1046,18 @@ require("lze").load({
                     minitrailspace.trim_last_lines()
                 end
             })
+        end
+    },
+    {
+        "quicker.nvim",
+        ft = "qf",
+        keys = {
+            { "<leader>q", "<Cmd>lua require('quicker').toggle()<cr>", desc = "Toggle quickfix list" },
+        },
+        after = function()
+            ---@module "quicker"
+            ---@type quicker.SetupOptions
+            require("quicker").setup()
         end
     },
     {
