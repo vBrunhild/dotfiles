@@ -22,7 +22,6 @@ in {
     pkgs.bat
     pkgs.boring
     pkgs.bottom
-    pkgs.cloudflared
     pkgs.curl
     pkgs.deploy-rs
     pkgs.direnv
@@ -32,7 +31,6 @@ in {
     pkgs.ffmpeg
     pkgs.git-credential-manager
     pkgs.gitFull
-    pkgs.github-copilot-cli
     pkgs.jq
     pkgs.jujutsu
     pkgs.just
@@ -49,16 +47,17 @@ in {
     pkgs.tabiew
     pkgs.tealdeer
     pkgs.uutils-coreutils-noprefix
-    pkgs.uv
     pkgs.zerotierone
     pkgs.zoxide
   ];
 
   services.openssh.enable = true;
 
-  programs.bat.enable = true;
-  programs.direnv.enable = true;
-  programs.zoxide.enable = true;
+  programs = {
+    bat.enable = true;
+    direnv.enable = true;
+    zoxide.enable = true;
+  };
 
   programs.gnupg.agent = {
     enable = true;
