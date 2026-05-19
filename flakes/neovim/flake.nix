@@ -37,7 +37,7 @@
       craneLib = inputs.crane.mkLib pkgs;
       inherit (pkgs) callPackage;
 
-      neovim = callPackage ./neovim {
+      neovim = callPackage ./neovim.nix {
         inherit inputs;
         flake = self;
       };
@@ -46,12 +46,20 @@
         inherit inputs craneLib;
       };
     in {
-      inherit neovim path-server;
+      inherit
+        neovim
+        path-server
+        ;
+
       default = neovim;
     });
 
     checks = forAllSystems (system: {
-      inherit (self.packages.${system}) path-server;
+      inherit
+        (self.packages.${system})
+        neovim
+        path-server
+        ;
     });
   };
 }
