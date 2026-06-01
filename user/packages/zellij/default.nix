@@ -15,17 +15,6 @@
 in {
   programs.zellij = {
     enable = true;
-    package = pkgs.zellij.overrideAttrs (old: rec {
-      version = "0.44.1";
-      src = old.src.override {
-        tag = "v${version}";
-        hash = "sha256-KHpVUjuOmMtkt8qBaCozD3M44eEtDwFmdDfszKAz0bM=";
-      };
-      cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
-        inherit src;
-        hash = "sha256-D3nZBXoGNf5z85iT7Xhj9Xwwwam/5m3X5hLPVoCzSPM=";
-      };
-    });
     extraConfig =
       builtins.readFile ./config.kdl
       +
@@ -72,7 +61,7 @@ in {
               children
               pane size=1 borderless=true {
                   plugin location="zjstatus" {
-                      hide_frame_for_single_pane "true"
+                      hide_frame_for_single_pane "false"
 
                       format_left  "{mode} #[fg=magenta,bold]{session} {tabs}"
                       format_right "{pipe_zjstatus_hints}{datetime}"

@@ -1,5 +1,5 @@
 {config, ...}: let
-  palette = config.palette;
+  inherit (config) palette;
 in {
   programs.foot = {
     enable = true;
@@ -20,8 +20,7 @@ in {
       };
 
       colors-dark = {
-        foreground = palette.foreground;
-        background = palette.background;
+        inherit (palette) background foreground;
         regular0 = palette.black;
         regular1 = palette.red;
         regular2 = palette.green;

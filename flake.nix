@@ -24,6 +24,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nu-scripts = {
+      url = "github:nushell/nu_scripts";
+      flake = false;
+    };
+
     neovim = {
       url = "path:./flakes/neovim";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,6 +38,17 @@
       url = "path:./flakes/zellij-plugins";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+  };
+
+  nixConfig = {
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+      "https://noctalia.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+    ];
   };
 
   outputs = inputs @ {nixpkgs, ...}: let
@@ -58,7 +74,8 @@
     formatter = forAllSystems (
       system: let
         pkgs = allPkgs.${system};
-      in (pkgs.alejandra)
+      in
+        pkgs.alejandra
     );
 
     nixosModules =

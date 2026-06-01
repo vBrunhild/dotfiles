@@ -54,8 +54,8 @@ module prompt_utils {
     | into record
     | do {
       let used = if $in.used.unit == $in.total.unit {
-        $in.used.size 
-      } else { 
+        $in.used.size
+      } else {
         $"($in.used.size)($in.used.unit)"
       }
       $"($used)/($in.total.size)($in.total.unit)"
@@ -78,7 +78,7 @@ module prompt_utils {
       ms: (($env.CMD_DURATION_MS | into int) mod 1000)
     }
     | $"($in.seconds)s($in.ms)ms"
-    | color $env.config.color_config.hints 
+    | color $env.config.color_config.hints
   }
 
   export def left_prompt []: nothing -> string {

@@ -11,6 +11,7 @@ in {
   ];
 
   home-manager.users.brunhild.imports = [
+    ./nushell
     ./zellij
   ];
 
@@ -21,7 +22,6 @@ in {
     pkgs.bat
     pkgs.boring
     pkgs.bottom
-    pkgs.cloudflared
     pkgs.curl
     pkgs.deploy-rs
     pkgs.direnv
@@ -31,7 +31,6 @@ in {
     pkgs.ffmpeg
     pkgs.git-credential-manager
     pkgs.gitFull
-    pkgs.github-copilot-cli
     pkgs.jq
     pkgs.jujutsu
     pkgs.just
@@ -39,7 +38,7 @@ in {
     pkgs.nh
     pkgs.nushell
     pkgs.opentofu
-    pkgs.ouch
+    pkgs.ouch-rar
     pkgs.pandoc
     pkgs.rclone
     pkgs.ripgrep
@@ -48,16 +47,17 @@ in {
     pkgs.tabiew
     pkgs.tealdeer
     pkgs.uutils-coreutils-noprefix
-    pkgs.uv
     pkgs.zerotierone
     pkgs.zoxide
   ];
 
   services.openssh.enable = true;
 
-  programs.bat.enable = true;
-  programs.direnv.enable = true;
-  programs.zoxide.enable = true;
+  programs = {
+    bat.enable = true;
+    direnv.enable = true;
+    zoxide.enable = true;
+  };
 
   programs.gnupg.agent = {
     enable = true;

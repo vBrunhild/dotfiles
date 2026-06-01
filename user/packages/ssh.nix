@@ -20,6 +20,15 @@
           # Control
           ControlMaster auto
           ControlPath ~/.ssh/master-%r@%h:%p
+
+        Host ped-stag
+          User bruno.moretti
+          HostName ped-stag.agencehost.com.br
+
+        Host ped-prod
+          User bruno.moretti
+          HostName ped-prod.agencehost.com.br
+          IdentityFile ~/.ssh/ped-prod.pem
       '';
   };
 }

@@ -1,4 +1,16 @@
-{pkgs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: let
+  zoxide-init =
+    pkgs.runCommand
+    "zoxide-init.nu"
+    {nativeBuildInputs = [pkgs.zoxide];}
+    ''
+      zoxide init nushell > $out
+    '';
+in {
   programs.nushell = {
     enable = true;
     configFile.text =
@@ -8,6 +20,15 @@
 
         source ${./prompt.nu}
         source ${./theme.nu}
+        source ${zoxide-init}
+
+        source ${inputs.nu-scripts}/custom-completions/git/git-completions.nu
+        source ${inputs.nu-scripts}/custom-completions/jj/jj-completions.nu
+        source ${inputs.nu-scripts}/custom-completions/just/just-completions.nu
+        source ${inputs.nu-scripts}/custom-completions/nix/nix-completions.nu
+        source ${inputs.nu-scripts}/custom-completions/podman/podman-completions.nu
+        source ${inputs.nu-scripts}/custom-completions/ssh/ssh-completions.nu
+        source ${inputs.nu-scripts}/custom-completions/zellij/zellij-completions.nu
 
         $env.config.hooks = {
           env_change: {
@@ -30,20 +51,16 @@
         }
 
         start_zellij
-
-        $env.config.show_banner = false
-        $env.config.edit_mode = "vi"
-        $env.config.completions.algorithm = "fuzzy"
       '';
 
     envFile.text =
       # nu
       ''
-        source ${./completions/git.nu}
-        source ${./completions/jj.nu}
-        source ${./completions/zoxide.nu}
-
         $env.ZELLIJ_SOCKET_DIR = "/tmp/zellij"
+
+        $env.config.completions.algorithm = "fuzzy"
+        $env.config.edit_mode = "vi"
+        $env.config.show_banner = false
       '';
 
     plugins = [
@@ -51,4 +68,6 @@
       pkgs.nushellPlugins.query
     ];
   };
+
+  stylix.targets.nushell.enable = false;
 }
