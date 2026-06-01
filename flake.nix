@@ -74,7 +74,8 @@
     formatter = forAllSystems (
       system: let
         pkgs = allPkgs.${system};
-      in (pkgs.alejandra)
+      in
+        pkgs.alejandra
     );
 
     nixosModules =

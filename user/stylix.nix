@@ -3,7 +3,7 @@
   pkgs,
   ...
 }: let
-  palette = config.palette;
+  inherit (config) palette;
 in {
   palette = {
     primary = "#98c379";
