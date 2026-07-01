@@ -5,6 +5,8 @@
       # ssh_config
       ''
         Host *
+          SetEnv TERM=xterm-256color
+
           # Identity
           IdentityFile ~/.ssh/id_ed25519
           AddKeysToAgent yes
@@ -29,6 +31,11 @@
           User bruno.moretti
           HostName ped-prod.agencehost.com.br
           IdentityFile ~/.ssh/ped-prod.pem
+
+        Host musk
+          User bruno.moretti
+          HostName musk.agencehost.com.br
+          IdentityFile ~/.ssh/musk.pem
       '';
   };
 }
