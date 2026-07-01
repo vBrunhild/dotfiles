@@ -331,6 +331,8 @@ map({
     { "P",          "<Cmd>pu<cr>",                               desc = "Paste in new line" },
     { "g/",         "<Esc>/\\%V",                                mode = "x",                          desc = "Search inside visual selection" },
     { "gy",         '"+y',                                       mode = { "n", "x" },                 desc = "Yank to clipboard" },
+    { "H",          "0",                                         mode = { "n", "x" },                 desc = "Jump to start of line" },
+    { "L",          "$",                                         mode = { "n", "x" },                 desc = "Jump to end of line" },
     -- lsp stuff
     { "<leader>la", vim.lsp.buf.code_action,                     mode = { "n", "x" },                 desc = "LSP code action" },
     { "<leader>ld", vim.lsp.buf.definition,                      mode = { "n", "x" },                 desc = "LSP goto definition" },
