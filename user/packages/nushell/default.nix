@@ -41,16 +41,7 @@ in {
           }
         }
 
-        def start_zellij [] {
-          if 'ZELLIJ' not-in ($env | columns) {
-            zellij
-            if 'ZELLIJ_AUTO_EXIT' in ($env | columns) and $env.ZELLIJ_AUTO_EXIT == 'true' {
-              exit
-            }
-          }
-        }
-
-        start_zellij
+        start-zellij
       '';
 
     envFile.text =

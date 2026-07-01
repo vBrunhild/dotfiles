@@ -1,13 +1,3 @@
-export def sum [
-  --start (-s): any
-] {
-  if $start == null {
-    $in | reduce { |it, acc| $acc + $it }
-  } else {
-    $in | reduce -f $start { |it, acc| $acc + $it }
-  }
-}
-
 export def read-env [] {
   let $env_file = if $in == null {
     pwd | path join '.env'
@@ -42,43 +32,14 @@ export def popup [...files: path] {
   ^dragon-drop -x ...$args
 }
 
-export def with-tunnel [
-  ssh_target: string,
-  ports: string,
-  code: closure,
-] {
-  let ports = $ports | parse "{local}:{remote}" | first
-  let local_port = $ports.local | into int
-  let remote_port = $ports.remote | into int
+export def start-zellij [session?: string] {
+  if 'ZELLIJ' in ($env | columns) { return }
+  ^zellij
 
-  let job = job spawn {
-    ssh -N -L $"($local_port):127.0.0.1:($remote_port)" $ssh_target
-  }
-
-  let pid = job list | where id == $job | get pid | first
-  print pid;
-
-  try {
-    mut attempts = 0;
-    loop {
-      if $attempts > 50 {
-        error make {msg: "SSH tunnel timeout, port never opened"}
-      }
-
-      if (ps | where pid == $pid | is-empty) {
-        error make {msg: "SSH process died."}
-      }
-
-      if (nc -z -w 1 127.0.0.1 $local_port | complete).status == 0 {
-        break
-      }
-
-      sleep 100ms
-      $attempts += 1;
-    }
-
-    do $code
-  } finally {
-    job kill $job
+  if (
+    'ZELLIJ_AUTO_EXIT' in ($env | columns) and
+    $env.ZELLIJ_AUTO_EXIT == 'true'
+  ) {
+    exit
   }
 }
