@@ -137,17 +137,18 @@ autocommand("FileType", {
     desc = "Set indent for specific files",
     pattern = {
         "css",
+        "hcl",
         "html",
         "javascript",
         "json",
         "nix",
+        "nu",
         "opentofu",
         "opentofu-vars",
-        "nu",
+        "terraform",
+        "tf",
         "typescript",
         "typst",
-        "terraform",
-        "hcl",
     },
     callback = function()
         vim.bo.shiftwidth = 2
@@ -442,6 +443,20 @@ vim.lsp.enable({
 
 vim.lsp.inlay_hint.enable(true)
 vim.lsp.codelens.enable(true)
+
+-- treesitter
+vim.treesitter.language.register('hcl', 'atlas-config')
+vim.treesitter.language.register('hcl', 'atlas-plan')
+vim.treesitter.language.register('hcl', 'atlas-rule')
+vim.treesitter.language.register('hcl', 'atlas-rule')
+vim.treesitter.language.register('hcl', 'atlas-schema-clickhouse')
+vim.treesitter.language.register('hcl', 'atlas-schema-mssql')
+vim.treesitter.language.register('hcl', 'atlas-schema-mysql')
+vim.treesitter.language.register('hcl', 'atlas-schema-postgresql')
+vim.treesitter.language.register('hcl', 'atlas-schema-redshift')
+vim.treesitter.language.register('hcl', 'atlas-schema-sqlite')
+vim.treesitter.language.register('hcl', 'atlas-test')
+vim.treesitter.language.register('hcl', 'tf')
 
 -- plugins
 if vim.env.NVIM_MINIMAL then
