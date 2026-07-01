@@ -477,20 +477,25 @@ require("onedarkpro").setup({
     },
     colors = {
         -- default
-        cursorline = color.lighten(colors.bg, 20),
+        cursorline  = color.lighten(colors.bg, 20),
 
         -- custom
-        bg_edge    = color.darken(colors.bg, 5),
-        bg_edge2   = color.darken(colors.bg, 10),
-        bg_mid     = color.lighten(colors.bg, 5),
-        bg_mid2    = color.lighten(colors.bg, 10),
+        bg_edge     = color.darken(colors.bg, 5),
+        bg_edge2    = color.darken(colors.bg, 10),
+        bg_mid      = color.lighten(colors.bg, 5),
+        bg_mid2     = color.lighten(colors.bg, 10),
 
-        fg_edge    = color.darken(colors.fg, 5),
-        fg_edge2   = color.darken(colors.fg, 10),
-        fg_mid     = color.lighten(colors.fg, 5),
-        fg_mid2    = color.lighten(colors.fg, 10),
+        fg_edge     = color.darken(colors.fg, 5),
+        fg_edge2    = color.darken(colors.fg, 10),
+        fg_mid      = color.lighten(colors.fg, 5),
+        fg_mid2     = color.lighten(colors.fg, 10),
 
-        accent     = colors.purple,
+        accent      = colors.purple,
+
+        dark_cyan   = color.darken(colors.cyan, 10),
+        dark_green  = color.darken(colors.green, 10),
+        dark_red    = color.darken(colors.red, 10),
+        dark_yellow = color.darken(colors.yellow, 10),
     },
     highlights = {
         -- default
@@ -532,10 +537,6 @@ require("onedarkpro").setup({
         DiagnosticVirtualTextOk          = { link = "DiagnosticOk" },
         DiagnosticVirtualTextWarn        = { link = "DiagnosticWarn" },
         DiagnosticWarn                   = { fg = "${yellow}", bg = nil },
-        DiffAdd                          = { fg = nil, bg = "${green}" },
-        DiffChange                       = { fg = nil, bg = "${cyan}" },
-        DiffDelete                       = { fg = nil, bg = "${red}" },
-        DiffText                         = { fg = nil, bg = "${yellow}" },
         DiffTextAdd                      = { link = "DiffAdd" },
         Directory                        = { fg = "${blue}", bg = nil },
         EndOfBuffer                      = { fg = "${bg_mid2}", bg = nil },
