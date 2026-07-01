@@ -18,6 +18,7 @@
       pkgs.vimPlugins.conform-nvim
       pkgs.vimPlugins.live-command-nvim
       pkgs.vimPlugins.lze
+      pkgs.vimPlugins.mini-ai
       pkgs.vimPlugins.mini-align
       pkgs.vimPlugins.mini-bufremove
       pkgs.vimPlugins.mini-clue
@@ -31,6 +32,7 @@
       pkgs.vimPlugins.mini-hipatterns
       pkgs.vimPlugins.mini-icons
       pkgs.vimPlugins.mini-indentscope
+      pkgs.vimPlugins.mini-input
       pkgs.vimPlugins.mini-keymap
       pkgs.vimPlugins.mini-notify
       pkgs.vimPlugins.mini-operators
@@ -62,11 +64,11 @@ in
       pkgs.dprint-plugins.dprint-plugin-typescript
       pkgs.harper
       pkgs.just-lsp
-      pkgs.just-lsp
       pkgs.lua-language-server
       pkgs.markdown-oxide
       pkgs.nil
       pkgs.nixd
+      pkgs.ripgrep
       pkgs.taplo
       pkgs.vscode-langservers-extracted
     ];

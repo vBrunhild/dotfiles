@@ -758,6 +758,11 @@ require("lze").load({
         end
     },
     {
+        "mini.ai",
+        event = "DeferredUIEnter",
+        after = function() require("mini.ai").setup() end
+    },
+    {
         "mini.align",
         keys = {
             { "ga", desc = "Align",              mode = { "n", "x" } },
@@ -965,6 +970,11 @@ require("lze").load({
         "mini.indentscope",
         event = "DeferredUIEnter",
         after = function() require("mini.indentscope").setup() end
+    },
+    {
+        "mini.input",
+        event = "DeferredUIEnter",
+        after = function() require("mini.input").setup() end
     },
     {
         "mini.keymap",
