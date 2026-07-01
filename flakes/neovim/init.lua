@@ -92,6 +92,14 @@ vim.opt.listchars:append {
     trail = "·"
 }
 
+vim.opt.diffopt:append {
+    "algorithm:patience",
+    "filler",
+    "indent-heuristic",
+    "iwhite",
+    "vertical",
+}
+
 vim.diagnostic.config({
     float = { source = true },
     severity_sort = true,
@@ -164,8 +172,45 @@ autocommand("VimLeave", {
     command = "silent !zellij action switch-mode normal"
 })
 
+autocommand("VimResized", {
+    desc = "Automatically resize splits when the window resizes",
+    pattern = "*",
+    command = "tabdo wincmd =",
+})
+
 -- commands
 command({
+    {
+        "Diff",
+        function(opts)
+            local files = opts.fargs
+            if #files ~= 2 then
+                vim.notify("Usage: :Diff file1 file2", vim.log.levels.ERROR)
+                return
+            end
+
+            local function open_file(path)
+                local abs = vim.fn.fnamemodify(path, ":p")
+                for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                    if vim.api.nvim_buf_is_loaded(buf) and vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":p") == abs then
+                        vim.cmd("buffer " .. buf)
+                        return
+                    end
+                end
+                vim.cmd("edit " .. vim.fn.fnameescape(path))
+            end
+
+            open_file(files[1])
+            vim.cmd("diffthis")
+            vim.cmd("vsplit")
+
+            open_file(files[2])
+            vim.cmd("diffthis")
+        end,
+        nargs = "+",
+        complete = "file",
+        desc = "Diff two files side by side"
+    },
     {
         "PyreflyCheck", function()
         local chunks = {}
