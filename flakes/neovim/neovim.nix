@@ -4,7 +4,7 @@
   flake,
   ...
 }: let
-  system = pkgs.stdenv.hostPlatform.system;
+  inherit (pkgs.stdenv.hostPlatform) system;
 
   neovim-nightly = inputs.neovim-nightly-overlay.packages.${system}.default;
   path-server = flake.packages.${system}.path-server;

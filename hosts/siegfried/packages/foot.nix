@@ -20,6 +20,7 @@ in {
       };
 
       colors-dark = {
+        # alpha = 0.80;
         inherit (palette) background foreground;
         regular0 = palette.black;
         regular1 = palette.red;
