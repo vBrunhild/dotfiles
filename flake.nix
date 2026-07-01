@@ -58,8 +58,6 @@
   };
 
   outputs = inputs @ {nixpkgs, ...}: let
-    user = import ./user;
-
     forAllSystems = nixpkgs.lib.genAttrs [
       "aarch64-darwin"
       "aarch64-linux"
@@ -70,11 +68,7 @@
     allPkgs = forAllSystems (system: nixpkgs.legacyPackages.${system});
   in {
     packages = forAllSystems (
-      system: let
-        pkgs = allPkgs.${system};
-        packages = user.packages {inherit pkgs inputs;};
-      in
-        packages // {neovim = inputs.neovim.packages.${system}.default;}
+      system: {neovim = inputs.neovim.packages.${system}.default;}
     );
 
     formatter = forAllSystems (
@@ -87,7 +81,7 @@
     nixosModules =
       {
         system = import ./system;
-        user = user.module;
+        user = import ./user;
 
         determinate = inputs.determinate.nixosModules.default;
         home-manager = inputs.home-manager.nixosModules.home-manager;
