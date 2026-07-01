@@ -14,13 +14,6 @@
   plugins = {
     clipper = {
       state = {
-        enabled = true;
-        sourceUrl = sources.official.url;
-      };
-    };
-
-    polkit-agent = {
-      state = {
         enable = true;
         sourceUrl = sources.official.url;
       };
