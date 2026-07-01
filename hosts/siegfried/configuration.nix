@@ -1,11 +1,21 @@
 {pkgs, ...}: {
-  system.stateVersion = "26.05";
+  system.stateVersion = "25.11";
   console.keyMap = "br-abnt2";
   security.rtkit.enable = true;
 
   hardware = {
-    bluetooth.enable = true;
     enableAllFirmware = true;
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+          Experimental = true;
+          FastConnectable = true;
+        };
+      };
+    };
   };
 
   hardware.graphics = {
