@@ -51,6 +51,7 @@ output "HDMI-A-1" {
 layout {
     gaps 10
     center-focused-column "never"
+    always-center-single-column
     background-color "transparent"
 
     preset-column-widths {
