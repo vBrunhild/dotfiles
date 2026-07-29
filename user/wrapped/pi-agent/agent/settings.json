@@ -1,0 +1,15 @@
+{
+  "lastChangelogVersion": "0.82.1",
+  "theme": "default",
+  "defaultProvider": "openrouter",
+  "defaultModel": "deepseek/deepseek-v4-pro",
+  "defaultThinkingLevel": "off",
+  "enableInstallTelemetry": false,
+  "quietStartup": false,
+  "packages": [
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:@juicesharp/rpiv-todo",
+    "npm:@narumitw/pi-usage",
+    "npm:pi-vim"
+  ]
+}

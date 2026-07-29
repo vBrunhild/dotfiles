@@ -13,6 +13,10 @@ in {
         path = "${homeDir}/.aws/credentials";
       };
 
+      github-token = {
+        file = ./files/github-token.age;
+      };
+
       rclone-config = {
         file = ./files/rclone-config.age;
         path = "${homeDir}/.config/rclone/rclone.conf";

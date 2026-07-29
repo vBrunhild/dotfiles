@@ -92,6 +92,14 @@ vim.opt.listchars:append {
     trail = "·"
 }
 
+vim.opt.diffopt:append {
+    "algorithm:patience",
+    "filler",
+    "indent-heuristic",
+    "iwhite",
+    "vertical",
+}
+
 vim.diagnostic.config({
     float = { source = true },
     severity_sort = true,
@@ -120,26 +128,27 @@ autocommand("FileType", {
     end
 })
 
-autocommand("TextYankPost", {
+autocommand({ "TextYankPost", "TextPutPost" }, {
     desc = "Highlight on yank",
-    callback = function() vim.hl.on_yank() end
+    callback = function() vim.hl.hl_op() end
 })
 
 autocommand("FileType", {
     desc = "Set indent for specific files",
     pattern = {
         "css",
+        "hcl",
         "html",
         "javascript",
         "json",
         "nix",
+        "nu",
         "opentofu",
         "opentofu-vars",
-        "nu",
+        "terraform",
+        "tf",
         "typescript",
         "typst",
-        "terraform",
-        "hcl",
     },
     callback = function()
         vim.bo.shiftwidth = 2
@@ -164,8 +173,45 @@ autocommand("VimLeave", {
     command = "silent !zellij action switch-mode normal"
 })
 
+autocommand("VimResized", {
+    desc = "Automatically resize splits when the window resizes",
+    pattern = "*",
+    command = "tabdo wincmd =",
+})
+
 -- commands
 command({
+    {
+        "Diff",
+        function(opts)
+            local files = opts.fargs
+            if #files ~= 2 then
+                vim.notify("Usage: :Diff file1 file2", vim.log.levels.ERROR)
+                return
+            end
+
+            local function open_file(path)
+                local abs = vim.fn.fnamemodify(path, ":p")
+                for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                    if vim.api.nvim_buf_is_loaded(buf) and vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":p") == abs then
+                        vim.cmd("buffer " .. buf)
+                        return
+                    end
+                end
+                vim.cmd("edit " .. vim.fn.fnameescape(path))
+            end
+
+            open_file(files[1])
+            vim.cmd("diffthis")
+            vim.cmd("vsplit")
+
+            open_file(files[2])
+            vim.cmd("diffthis")
+        end,
+        nargs = "+",
+        complete = "file",
+        desc = "Diff two files side by side"
+    },
     {
         "PyreflyCheck", function()
         local chunks = {}
@@ -285,6 +331,8 @@ map({
     { "P",          "<Cmd>pu<cr>",                               desc = "Paste in new line" },
     { "g/",         "<Esc>/\\%V",                                mode = "x",                          desc = "Search inside visual selection" },
     { "gy",         '"+y',                                       mode = { "n", "x" },                 desc = "Yank to clipboard" },
+    { "H",          "0",                                         mode = { "n", "x" },                 desc = "Jump to start of line" },
+    { "L",          "$",                                         mode = { "n", "x" },                 desc = "Jump to end of line" },
     -- lsp stuff
     { "<leader>la", vim.lsp.buf.code_action,                     mode = { "n", "x" },                 desc = "LSP code action" },
     { "<leader>ld", vim.lsp.buf.definition,                      mode = { "n", "x" },                 desc = "LSP goto definition" },
@@ -398,6 +446,20 @@ vim.lsp.enable({
 vim.lsp.inlay_hint.enable(true)
 vim.lsp.codelens.enable(true)
 
+-- treesitter
+vim.treesitter.language.register('hcl', 'atlas-config')
+vim.treesitter.language.register('hcl', 'atlas-plan')
+vim.treesitter.language.register('hcl', 'atlas-rule')
+vim.treesitter.language.register('hcl', 'atlas-rule')
+vim.treesitter.language.register('hcl', 'atlas-schema-clickhouse')
+vim.treesitter.language.register('hcl', 'atlas-schema-mssql')
+vim.treesitter.language.register('hcl', 'atlas-schema-mysql')
+vim.treesitter.language.register('hcl', 'atlas-schema-postgresql')
+vim.treesitter.language.register('hcl', 'atlas-schema-redshift')
+vim.treesitter.language.register('hcl', 'atlas-schema-sqlite')
+vim.treesitter.language.register('hcl', 'atlas-test')
+vim.treesitter.language.register('hcl', 'tf')
+
 -- plugins
 if vim.env.NVIM_MINIMAL then
     return
@@ -415,20 +477,25 @@ require("onedarkpro").setup({
     },
     colors = {
         -- default
-        cursorline = color.lighten(colors.bg, 20),
+        cursorline  = color.lighten(colors.bg, 20),
 
         -- custom
-        bg_edge    = color.darken(colors.bg, 5),
-        bg_edge2   = color.darken(colors.bg, 10),
-        bg_mid     = color.lighten(colors.bg, 5),
-        bg_mid2    = color.lighten(colors.bg, 10),
+        bg_edge     = color.darken(colors.bg, 5),
+        bg_edge2    = color.darken(colors.bg, 10),
+        bg_mid      = color.lighten(colors.bg, 5),
+        bg_mid2     = color.lighten(colors.bg, 10),
 
-        fg_edge    = color.darken(colors.fg, 5),
-        fg_edge2   = color.darken(colors.fg, 10),
-        fg_mid     = color.lighten(colors.fg, 5),
-        fg_mid2    = color.lighten(colors.fg, 10),
+        fg_edge     = color.darken(colors.fg, 5),
+        fg_edge2    = color.darken(colors.fg, 10),
+        fg_mid      = color.lighten(colors.fg, 5),
+        fg_mid2     = color.lighten(colors.fg, 10),
 
-        accent     = colors.purple,
+        accent      = colors.purple,
+
+        dark_cyan   = color.darken(colors.cyan, 10),
+        dark_green  = color.darken(colors.green, 10),
+        dark_red    = color.darken(colors.red, 10),
+        dark_yellow = color.darken(colors.yellow, 10),
     },
     highlights = {
         -- default
@@ -470,10 +537,6 @@ require("onedarkpro").setup({
         DiagnosticVirtualTextOk          = { link = "DiagnosticOk" },
         DiagnosticVirtualTextWarn        = { link = "DiagnosticWarn" },
         DiagnosticWarn                   = { fg = "${yellow}", bg = nil },
-        DiffAdd                          = { fg = nil, bg = "${green}" },
-        DiffChange                       = { fg = nil, bg = "${cyan}" },
-        DiffDelete                       = { fg = nil, bg = "${red}" },
-        DiffText                         = { fg = nil, bg = "${yellow}" },
         DiffTextAdd                      = { link = "DiffAdd" },
         Directory                        = { fg = "${blue}", bg = nil },
         EndOfBuffer                      = { fg = "${bg_mid2}", bg = nil },
@@ -695,6 +758,11 @@ require("lze").load({
         end
     },
     {
+        "mini.ai",
+        event = "DeferredUIEnter",
+        after = function() require("mini.ai").setup() end
+    },
+    {
         "mini.align",
         keys = {
             { "ga", desc = "Align",              mode = { "n", "x" } },
@@ -902,6 +970,11 @@ require("lze").load({
         "mini.indentscope",
         event = "DeferredUIEnter",
         after = function() require("mini.indentscope").setup() end
+    },
+    {
+        "mini.input",
+        event = "DeferredUIEnter",
+        after = function() require("mini.input").setup() end
     },
     {
         "mini.keymap",

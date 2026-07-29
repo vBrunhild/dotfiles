@@ -2,6 +2,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+    jail-nix.url = "sourcehut:~alexdavid/jail.nix";
     nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
 
     agenix = {
@@ -20,7 +21,12 @@
     };
 
     noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
+      url = "github:noctalia-dev/noctalia/legacy-v4";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    sem = {
+      url = "github:Ataraxy-Labs/sem/v0.15.1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -52,8 +58,6 @@
   };
 
   outputs = inputs @ {nixpkgs, ...}: let
-    user = import ./user;
-
     forAllSystems = nixpkgs.lib.genAttrs [
       "aarch64-darwin"
       "aarch64-linux"
@@ -64,11 +68,7 @@
     allPkgs = forAllSystems (system: nixpkgs.legacyPackages.${system});
   in {
     packages = forAllSystems (
-      system: let
-        pkgs = allPkgs.${system};
-        packages = user.packages {inherit pkgs;};
-      in
-        packages // {neovim = inputs.neovim.packages.${system}.default;}
+      system: {neovim = inputs.neovim.packages.${system}.default;}
     );
 
     formatter = forAllSystems (
@@ -81,7 +81,7 @@
     nixosModules =
       {
         system = import ./system;
-        user = user.module;
+        user = import ./user;
 
         determinate = inputs.determinate.nixosModules.default;
         home-manager = inputs.home-manager.nixosModules.home-manager;

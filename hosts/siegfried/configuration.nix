@@ -1,11 +1,21 @@
 {pkgs, ...}: {
-  system.stateVersion = "26.05";
+  system.stateVersion = "25.11";
   console.keyMap = "br-abnt2";
   security.rtkit.enable = true;
 
   hardware = {
-    bluetooth.enable = true;
     enableAllFirmware = true;
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+          Experimental = true;
+          FastConnectable = true;
+        };
+      };
+    };
   };
 
   hardware.graphics = {
@@ -13,7 +23,13 @@
     extraPackages = [pkgs.intel-media-driver];
   };
   environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = ["i915.enable_guc=2"];
+  boot.kernel.sysctl = {
+    "net.ipv4.ip_forward" = 1;
+    "net.ipv6.conf.all.forwarding" = 1;
+  };
 
   boot.loader = {
     systemd-boot.enable = true;

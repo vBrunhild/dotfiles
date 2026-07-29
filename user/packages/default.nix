@@ -17,11 +17,14 @@ in {
 
   environment.systemPackages = [
     inputs.agenix.packages.${system}.default
+    inputs.determinate.packages.${system}.default
     inputs.neovim.packages.${system}.default
+    inputs.sem.packages.${system}.default
     pkgs.atlas
     pkgs.bat
     pkgs.boring
     pkgs.bottom
+    pkgs.cloudflared
     pkgs.curl
     pkgs.deploy-rs
     pkgs.direnv
@@ -29,6 +32,7 @@ in {
     pkgs.dust
     pkgs.eza
     pkgs.ffmpeg
+    pkgs.gh
     pkgs.git-credential-manager
     pkgs.gitFull
     pkgs.jq
@@ -46,6 +50,7 @@ in {
     pkgs.sd
     pkgs.tabiew
     pkgs.tealdeer
+    pkgs.tuicr
     pkgs.uutils-coreutils-noprefix
     pkgs.zerotierone
     pkgs.zoxide

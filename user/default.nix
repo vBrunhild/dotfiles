@@ -1,49 +1,44 @@
-let
-  packages = {pkgs}: let
-    inherit (pkgs) callPackage;
-  in {
-    usql = callPackage ./wrapped/usql {};
-  };
+{
+  flake,
+  inputs,
+  pkgs,
+  config,
+  ...
+}: let
+  inherit (pkgs.stdenv.hostPlatform) system;
+
+  wrapped = import ./wrapped {inherit pkgs inputs config;};
 in {
-  inherit packages;
+  config = {
+    environment.systemPackages =
+      builtins.attrValues (flake.packages.${system} // wrapped);
 
-  module = {
-    inputs,
-    pkgs,
-    ...
-  }: {
-    config = {
-      environment = {
-        systemPackages = builtins.attrValues (packages {inherit pkgs;});
-        pathsToLink = ["/share/zellij-plugins"];
-        variables = {
-          EDITOR = "nvim";
-          VISUAL = "nvim";
-        };
-      };
+    environment.variables = {
+      EDITOR = "nvim";
+      VISUAL = "nvim";
+    };
 
-      virtualisation = {
-        containers.enable = true;
-        podman = {
-          enable = true;
-          dockerCompat = true;
-          dockerSocket.enable = true;
-          defaultNetwork.settings.dns_enabled = true;
-        };
-      };
-
-      home-manager = {
-        useGlobalPkgs = true;
-        useUserPackages = true;
-        extraSpecialArgs = {inherit inputs;};
-        users.brunhild = ./home.nix;
+    virtualisation = {
+      containers.enable = true;
+      podman = {
+        enable = true;
+        dockerCompat = true;
+        dockerSocket.enable = true;
+        defaultNetwork.settings.dns_enabled = true;
       };
     };
 
-    imports = [
-      ./config
-      ./packages
-      ./stylix.nix
-    ];
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      extraSpecialArgs = {inherit inputs;};
+      users.brunhild = ./home.nix;
+    };
   };
+
+  imports = [
+    ./config
+    ./packages
+    ./stylix.nix
+  ];
 }

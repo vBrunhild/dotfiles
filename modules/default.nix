@@ -1,3 +1,3 @@
 {
-  palette = import ./palette.nix;
+  palette = import ./palette;
 }

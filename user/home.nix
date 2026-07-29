@@ -4,6 +4,7 @@
   ...
 }: let
   dotfilesPath = "${config.home.homeDirectory}/dotfiles/user/config";
+  inherit (config.lib.file) mkOutOfStoreSymlink;
 in {
   home = rec {
     username = "brunhild";
@@ -33,7 +34,7 @@ in {
     "jj/config.toml".source = ./config/jj/config.toml;
 
     "boring/.boring.toml".source =
-      config.lib.file.mkOutOfStoreSymlink
+      mkOutOfStoreSymlink
       "${dotfilesPath}/boring/boring.toml";
   };
 
