@@ -13,11 +13,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    zjstatus-hints = {
-      url = "github:b0o/zjstatus-hints";
-      flake = false;
-    };
-
     zellij-autolock = {
       url = "github:fresh2dev/zellij-autolock?ref=0.3.0";
       flake = false;

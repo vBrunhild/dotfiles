@@ -61,7 +61,7 @@ in {
                       hide_frame_for_single_pane "false"
 
                       format_left  "{mode} #[fg=magenta,bold]{session} {tabs}"
-                      format_right "{pipe_zjstatus_hints}{datetime}"
+                      format_right "{datetime}"
                       format_space ""
 
                       tab_active           "#[fg=green,bold]{index}"
