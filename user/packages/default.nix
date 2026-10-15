@@ -15,6 +15,12 @@ in {
     ./zellij
   ];
 
+  nixpkgs.overlays = [
+    (final: prev: {
+      atlas = final.callPackage ./atlas.nix {};
+    })
+  ];
+
   environment.systemPackages = [
     inputs.agenix.packages.${system}.default
     inputs.bitbucket-cli.packages.${system}.default
