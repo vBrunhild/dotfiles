@@ -20,6 +20,7 @@ in {
     inputs.determinate.packages.${system}.default
     inputs.neovim.packages.${system}.default
     inputs.sem.packages.${system}.default
+    pkgs.ansible
     pkgs.atlas
     pkgs.bat
     pkgs.boring
