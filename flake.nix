@@ -26,7 +26,7 @@
     };
 
     sem = {
-      url = "github:Ataraxy-Labs/sem/v0.15.1";
+      url = "github:Ataraxy-Labs/sem/v0.27.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
