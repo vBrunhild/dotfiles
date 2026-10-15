@@ -24,6 +24,7 @@ keybinds clear-defaults=true {
         bind "p" { SwitchFocus; }
         bind "Ctrl p" { SwitchToMode "normal"; }
         bind "r" { NewPane "right"; SwitchToMode "normal"; }
+        bind "s" { NewPane "stacked"; SwitchToMode "normal"; }
         bind "w" { ToggleFloatingPanes; SwitchToMode "normal"; }
         bind "z" { TogglePaneFrames; SwitchToMode "normal"; }
     }
@@ -76,6 +77,7 @@ keybinds clear-defaults=true {
         bind "tab" { MovePane; }
     }
     scroll {
+        bind "c" { CopyLastCommandOutput; }
         bind "e" { EditScrollback; SwitchToMode "normal"; }
         bind "Alt h" { MoveFocusOrTab "left"; SwitchToMode "normal"; }
         bind "Alt j" { MoveFocus "down"; SwitchToMode "normal"; }
@@ -179,7 +181,10 @@ keybinds clear-defaults=true {
         bind "j" { ScrollDown; }
         bind "k" { ScrollUp; }
         bind "l" { PageScrollDown; }
+        bind "m" { SelectCommandAtScrollPosition; }
         bind "Ctrl s" { SwitchToMode "normal"; }
+        bind "[" { ScrollToPreviousPrompt; }
+        bind "]" { ScrollToNextPrompt; }
         bind "u" { HalfPageScrollUp; }
     }
     entersearch {
