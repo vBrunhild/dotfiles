@@ -118,7 +118,7 @@ keybinds clear-defaults=true {
     }
     shared {
         bind "Alt Shift z" {
-            MessagePlugin "aulock" { payload "enable"; }
+            MessagePlugin "autolock" { payload "enable"; }
         }
         bind "Alt f" { ToggleFloatingPanes; }
     }
