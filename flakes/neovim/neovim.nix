@@ -1,15 +1,14 @@
 {
   pkgs,
-  inputs,
   flake,
   ...
 }: let
   inherit (pkgs.stdenv.hostPlatform) system;
 
-  neovim-nightly = inputs.neovim-nightly-overlay.packages.${system}.default;
   path-server = flake.packages.${system}.path-server;
 
-  neovim-wrapped = pkgs.wrapNeovimUnstable neovim-nightly {
+  neovim = pkgs.neovim-unwrapped;
+  neovim-wrapped = pkgs.wrapNeovimUnstable neovim {
     withPython3 = false;
     withRuby = false;
     withNodeJs = false;
@@ -51,7 +50,7 @@
   };
 in
   pkgs.symlinkJoin {
-    inherit (neovim-nightly) version meta;
+    inherit (neovim) version meta;
     pname = "neovim-wrapped";
     paths = [
       neovim-wrapped

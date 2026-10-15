@@ -128,9 +128,9 @@ autocommand("FileType", {
     end
 })
 
-autocommand({ "TextYankPost", "TextPutPost" }, {
+autocommand({ "TextYankPost" }, {
     desc = "Highlight on yank",
-    callback = function() vim.hl.hl_op() end
+    callback = function() vim.hl.on_yank() end
 })
 
 autocommand("FileType", {
