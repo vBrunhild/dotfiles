@@ -1,10 +1,4 @@
 keybinds clear-defaults=true {
-    normal {
-        bind "Enter" {
-            WriteChars "\u{000D}";
-            MessagePlugin "autolock" {};
-        }
-    }
     locked {
         bind "Alt z" {
             MessagePlugin "autolock" { payload "disable"; };

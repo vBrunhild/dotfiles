@@ -38,10 +38,7 @@ in {
                 welcome_screen true
             }
             autolock location="file:${zellij-autolock}/bin/zellij-autolock.wasm" {
-                is_enable true
-                triggers "nvim"
-                reaction_seconds "0.3"
-                print_to_log false
+                is_enabled true
             }
             zjstatus location="file:${zjstatus}/bin/zjstatus.wasm"
         }
