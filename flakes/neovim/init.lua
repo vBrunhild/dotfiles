@@ -415,6 +415,7 @@ vim.lsp.config("phpantom_lsp", {
 })
 
 vim.lsp.enable({
+    "ansiblels",
     "clangd",
     "cssls",
     "docker_language_server",

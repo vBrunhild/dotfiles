@@ -56,6 +56,7 @@ in
       neovim-wrapped
       path-server
       pkgs.alejandra
+      pkgs.ansible-language-server
       pkgs.docker-language-server
       pkgs.dprint
       pkgs.dprint-plugins.dprint-plugin-json
