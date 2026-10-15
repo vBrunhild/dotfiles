@@ -44,6 +44,11 @@
       url = "path:./flakes/zellij-plugins";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    bitbucket-cli = {
+      url = "path:./flakes/bitbucket-cli";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   nixConfig = {

@@ -17,6 +17,7 @@ in {
 
   environment.systemPackages = [
     inputs.agenix.packages.${system}.default
+    inputs.bitbucket-cli.packages.${system}.default
     inputs.determinate.packages.${system}.default
     inputs.neovim.packages.${system}.default
     inputs.sem.packages.${system}.default
