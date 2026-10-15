@@ -30,12 +30,15 @@
     pkgs.dragon-drop
     pkgs.easyeffects
     pkgs.google-chrome
+    pkgs.graphite
     pkgs.grim
     pkgs.hplip-py312
     pkgs.obs-studio
+    pkgs.remmina
     pkgs.slurp
+    pkgs.spotify
     pkgs.udevil
-    pkgs.vesktop
+    # pkgs.vesktop
     pkgs.vlc
     pkgs.wl-clipboard
     pkgs.xwayland-satellite
