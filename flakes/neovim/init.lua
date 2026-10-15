@@ -728,7 +728,7 @@ require("lze").load({
                     json = { "dprint" },
                     jsonc = { "dprint" },
                     nix = { "alejandra", lsp_format = "never" },
-                    python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
+                    python = { "ruff_fix", "ruff_organize_imports", "ruff_format", stop_after_first = false },
                     rust = { "rustfmt" },
                     typescript = { "dprint", "prettierd" },
                 },
