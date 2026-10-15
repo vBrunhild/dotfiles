@@ -19,6 +19,26 @@ in {
     (final: prev: {
       atlas = final.callPackage ./atlas.nix {};
       playwright-cli = final.callPackage ./playwright-cli.nix {};
+
+      nushell = prev.nushell.overrideAttrs (finalAttrs: old: {
+        version = "0.116.1";
+        src = final.fetchFromGitHub {
+          owner = "nushell";
+          repo = "nushell";
+          tag = finalAttrs.version;
+          hash = "sha256-b62ICCP7Li88obcju4xBNVw7D+6TtRURrOUvzqcjHis=";
+        };
+        cargoDeps = final.rustPlatform.fetchCargoVendor {
+          inherit (finalAttrs) src;
+          name = "nushell-${finalAttrs.version}";
+          hash = finalAttrs.passthru.cargoHash;
+        };
+        passthru =
+          old.passthru
+          // {
+            cargoHash = "sha256-+81FRwTlR5NSJuoaH7KCK6Qy1DiU5/JKNqfaAhZmMes=";
+          };
+      });
     })
   ];
 
