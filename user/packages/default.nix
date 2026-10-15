@@ -51,6 +51,7 @@ in {
     pkgs.ansible
     pkgs.atlas
     pkgs.bat
+    pkgs.beans
     pkgs.boring
     pkgs.bottom
     pkgs.cloudflared
