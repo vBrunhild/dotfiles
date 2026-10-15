@@ -25,10 +25,25 @@
     b,
   }:
     builtins.concatStringsSep "" (map lib.toHexString [r g b]);
+
+  # Build an rgba() string from a hex color plus an alpha channel (0-255).
+  rgbAlpha = {
+    r,
+    g,
+    b,
+    alpha,
+  }: "rgba(${toString r}, ${toString g}, ${toString b}, ${toString alpha})";
+
+  hexToRgbAlpha = alpha: hex: let
+    rgb = hexToRgb hex;
+  in
+    rgbAlpha (rgb // {inherit alpha;});
 in {
   inherit
     chunkString
     hexToRgb
+    hexToRgbAlpha
+    rgbAlpha
     rgbToHex
     ;
 }
