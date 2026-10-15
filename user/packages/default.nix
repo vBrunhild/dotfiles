@@ -6,6 +6,7 @@
   system = pkgs.stdenv.hostPlatform.system;
 in {
   imports = [
+    ./claude
     ./git.nix
     ./ssh.nix
   ];

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "defaultMode": "default"
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "model": "opus[1m]",
+  "promptSuggestionEnabled": false,
+  "awaySummaryEnabled": false,
+  "tui": "fullscreen",
+  "theme": "dark",
+  "editorMode": "vim",
+  "autoScrollEnabled": true
+}
