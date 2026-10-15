@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   services.printing = {
     enable = true;
-    drivers = [pkgs.hplipWithPlugin];
+    drivers = [pkgs.hplip-py312];
   };
 }

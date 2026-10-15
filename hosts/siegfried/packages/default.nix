@@ -18,6 +18,12 @@
     ];
   };
 
+  nixpkgs.overlays = [
+    (final: prev: {
+      hplip-py312 = final.callPackage ./hplip.nix {};
+    })
+  ];
+
   environment.systemPackages = [
     pkgs.brave
     pkgs.dbeaver-bin
@@ -25,6 +31,7 @@
     pkgs.easyeffects
     pkgs.google-chrome
     pkgs.grim
+    pkgs.hplip-py312
     pkgs.obs-studio
     pkgs.slurp
     pkgs.udevil
