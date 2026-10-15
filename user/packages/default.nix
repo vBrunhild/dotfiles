@@ -18,6 +18,7 @@ in {
   nixpkgs.overlays = [
     (final: prev: {
       atlas = final.callPackage ./atlas.nix {};
+      playwright-cli = final.callPackage ./playwright-cli.nix {};
     })
   ];
 
@@ -52,6 +53,7 @@ in {
     pkgs.opentofu
     pkgs.ouch-rar
     pkgs.pandoc
+    pkgs.playwright-cli
     pkgs.rclone
     pkgs.ripgrep
     pkgs.rsync
