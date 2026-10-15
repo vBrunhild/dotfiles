@@ -1,11 +1,5 @@
-{
-  pkgs,
-  inputs,
-  config,
-  ...
-}: let
+{pkgs, ...}: let
   inherit (pkgs) callPackage;
 in {
-  pi-agent = callPackage ./pi-agent {inherit inputs config;};
   usql = callPackage ./usql {};
 }
