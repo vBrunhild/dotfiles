@@ -6,8 +6,8 @@ user = "caol"
 host = "caol-stag.agencehost.com.br"
 
 [[tunnels]]
-name = "label-studio-ped"
-local = 8080
-remote = "127.0.0.1:8088"
-user = "bruno.moretti"
-host = "ped-stag.agencehost.com.br"
+name = "mm-prod"
+local = 3307
+remote = "172.17.0.1:3306"
+user = "meeting-mind"
+host = "caol.agencehost.com.br"
