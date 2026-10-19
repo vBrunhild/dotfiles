@@ -16,12 +16,14 @@
         source = mkOutOfStoreSymlink "${claudePath}/${dir}/${name}";
       });
 in {
+  # Direct symlink (no /nix/store hop) so Claude Code can write to it
+  home.activation.claudeSettings = lib.hm.dag.entryAfter ["linkGeneration"] ''
+    run mkdir -p ${config.home.homeDirectory}/.claude
+    run ln -sfn ${claudePath}/settings.json ${config.home.homeDirectory}/.claude/settings.json
+  '';
+
   home.file =
     {
-      ".claude/settings.json".source =
-        mkOutOfStoreSymlink
-        "${claudePath}/settings.json";
-
       ".claude/scripts".source =
         mkOutOfStoreSymlink
         "${claudePath}/scripts";
