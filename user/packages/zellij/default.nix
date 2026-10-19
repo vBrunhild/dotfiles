@@ -12,6 +12,41 @@
     zellij-autolock
     zjstatus
     ;
+
+  autolockIgnoredPrograms = [
+    "zellij"
+    "sh"
+    "ash"
+    "dash"
+    "bash"
+    "zsh"
+    "fish"
+    "ksh"
+    "mksh"
+    "csh"
+    "tcsh"
+    "nu"
+    "xonsh"
+    "elvish"
+    "pwsh"
+    "powershell"
+    "cmd"
+    "ls"
+    "lsd"
+    "eza"
+    "starship"
+    "direnv"
+    ''\\(atuin\\)''
+    "atuin history start.*"
+    "just"
+    "ssh"
+  ];
+
+  autolockIgnore = [
+    ''^(${builtins.concatStringsSep "|" autolockIgnoredPrograms})(\\.exe)?$''
+    ''^(.*/)?(docker|podman) (compose (.* )?)?logs( .*)?$''
+    ''^(.*/)?(docker|podman) compose (.* )?up( .*)?$''
+  ];
 in {
   programs.zellij = {
     enable = true;
@@ -39,6 +74,8 @@ in {
             }
             autolock location="file:${zellij-autolock}/bin/zellij-autolock.wasm" {
                 is_enabled true
+                lock_regex ".*"
+                ignore_regex "${builtins.concatStringsSep "|" autolockIgnore}"
             }
             zjstatus location="file:${zjstatus}/bin/zjstatus.wasm"
         }
