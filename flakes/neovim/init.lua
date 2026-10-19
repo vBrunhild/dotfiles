@@ -128,9 +128,9 @@ autocommand("FileType", {
     end
 })
 
-autocommand({ "TextYankPost", "TextPutPost" }, {
+autocommand({ "TextYankPost" }, {
     desc = "Highlight on yank",
-    callback = function() vim.hl.hl_op() end
+    callback = function() vim.hl.on_yank() end
 })
 
 autocommand("FileType", {
@@ -415,6 +415,7 @@ vim.lsp.config("phpantom_lsp", {
 })
 
 vim.lsp.enable({
+    "ansiblels",
     "clangd",
     "cssls",
     "docker_language_server",
@@ -704,6 +705,11 @@ vim.cmd("colorscheme onedark")
 
 require("lze").load({
     {
+        "breadcrumbs",
+        event = "DeferredUIEnter",
+        after = function() require("breadcrumbs").setup() end
+    },
+    {
         "conform",
         event = { "BufEnter" },
         keys = {
@@ -727,7 +733,7 @@ require("lze").load({
                     json = { "dprint" },
                     jsonc = { "dprint" },
                     nix = { "alejandra", lsp_format = "never" },
-                    python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
+                    python = { "ruff_fix", "ruff_organize_imports", "ruff_format", stop_after_first = false },
                     rust = { "rustfmt" },
                     typescript = { "dprint", "prettierd" },
                 },
@@ -954,6 +960,7 @@ require("lze").load({
     {
         "mini.icons",
         dep_of = {
+            "breadcrumbs",
             "mini.completion",
             "mini.files",
             "mini.pick",

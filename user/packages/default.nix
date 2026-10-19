@@ -6,6 +6,7 @@
   system = pkgs.stdenv.hostPlatform.system;
 in {
   imports = [
+    ./claude
     ./git.nix
     ./ssh.nix
   ];
@@ -15,13 +16,43 @@ in {
     ./zellij
   ];
 
+  nixpkgs.overlays = [
+    (final: prev: {
+      atlas = final.callPackage ./atlas.nix {};
+      playwright-cli = final.callPackage ./playwright-cli.nix {};
+
+      nushell = prev.nushell.overrideAttrs (finalAttrs: old: {
+        version = "0.116.1";
+        src = final.fetchFromGitHub {
+          owner = "nushell";
+          repo = "nushell";
+          tag = finalAttrs.version;
+          hash = "sha256-b62ICCP7Li88obcju4xBNVw7D+6TtRURrOUvzqcjHis=";
+        };
+        cargoDeps = final.rustPlatform.fetchCargoVendor {
+          inherit (finalAttrs) src;
+          name = "nushell-${finalAttrs.version}";
+          hash = finalAttrs.passthru.cargoHash;
+        };
+        passthru =
+          old.passthru
+          // {
+            cargoHash = "sha256-+81FRwTlR5NSJuoaH7KCK6Qy1DiU5/JKNqfaAhZmMes=";
+          };
+      });
+    })
+  ];
+
   environment.systemPackages = [
     inputs.agenix.packages.${system}.default
+    inputs.bitbucket-cli.packages.${system}.default
     inputs.determinate.packages.${system}.default
     inputs.neovim.packages.${system}.default
     inputs.sem.packages.${system}.default
+    pkgs.ansible
     pkgs.atlas
     pkgs.bat
+    pkgs.beans
     pkgs.boring
     pkgs.bottom
     pkgs.cloudflared
@@ -44,6 +75,7 @@ in {
     pkgs.opentofu
     pkgs.ouch-rar
     pkgs.pandoc
+    pkgs.playwright-cli
     pkgs.rclone
     pkgs.ripgrep
     pkgs.rsync

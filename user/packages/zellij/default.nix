@@ -12,6 +12,41 @@
     zellij-autolock
     zjstatus
     ;
+
+  autolockIgnoredPrograms = [
+    "zellij"
+    "sh"
+    "ash"
+    "dash"
+    "bash"
+    "zsh"
+    "fish"
+    "ksh"
+    "mksh"
+    "csh"
+    "tcsh"
+    "nu"
+    "xonsh"
+    "elvish"
+    "pwsh"
+    "powershell"
+    "cmd"
+    "ls"
+    "lsd"
+    "eza"
+    "starship"
+    "direnv"
+    ''\\(atuin\\)''
+    "atuin history start.*"
+    "just"
+    "ssh"
+  ];
+
+  autolockIgnore = [
+    ''^(${builtins.concatStringsSep "|" autolockIgnoredPrograms})(\\.exe)?$''
+    ''^(.*/)?(docker|podman) (compose (.* )?)?logs( .*)?$''
+    ''^(.*/)?(docker|podman) compose (.* )?up( .*)?$''
+  ];
 in {
   programs.zellij = {
     enable = true;
@@ -38,10 +73,9 @@ in {
                 welcome_screen true
             }
             autolock location="file:${zellij-autolock}/bin/zellij-autolock.wasm" {
-                is_enable true
-                triggers "nvim"
-                reaction_seconds "0.3"
-                print_to_log false
+                is_enabled true
+                lock_regex ".*"
+                ignore_regex "${builtins.concatStringsSep "|" autolockIgnore}"
             }
             zjstatus location="file:${zjstatus}/bin/zjstatus.wasm"
         }
@@ -61,10 +95,10 @@ in {
               children
               pane size=1 borderless=true {
                   plugin location="zjstatus" {
-                      hide_frame_for_single_pane "false"
+                      hide_frame_for_single_pane "true"
 
                       format_left  "{mode} #[fg=magenta,bold]{session} {tabs}"
-                      format_right "{pipe_zjstatus_hints}{datetime}"
+                      format_right "{datetime}"
                       format_space ""
 
                       tab_active           "#[fg=green,bold]{index}"

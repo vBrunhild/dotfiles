@@ -9,17 +9,12 @@
     };
 
     zjstatus = {
-      url = "github:dj95/zjstatus";
+      url = "github:dj95/zjstatus?ref=v0.25.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    zjstatus-hints = {
-      url = "github:b0o/zjstatus-hints";
-      flake = false;
-    };
-
     zellij-autolock = {
-      url = "github:fresh2dev/zellij-autolock?ref=0.2.2";
+      url = "github:fresh2dev/zellij-autolock?ref=0.3.0";
       flake = false;
     };
   };
@@ -73,7 +68,7 @@
       zellij-autolock = mkWasmPackage {
         inherit craneLib;
         src = inputs.zellij-autolock;
-        extraArgs = {version = "0.2.2";};
+        extraArgs = {version = "0.3.0";};
       };
 
       zjstatus = inputs.zjstatus.packages.${system}.default;

@@ -1,4 +1,4 @@
-{
+{config, ...}: {
   nix = {
     gc.automatic = false;
 
@@ -25,6 +25,10 @@
       ];
       substituters = ["https://cache.nixos.org"];
     };
+
+    # extraOptions = ''
+    #   !include ${config.age.secrets.github-token.path}
+    # '';
   };
 
   systemd.services.nix-daemon = {

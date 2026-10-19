@@ -1,13 +1,6 @@
 [[tunnels]]
-name = "caol-staging-mariadb"
-local = 33060
-remote = "127.0.0.1:3306"
-user = "caol"
-host = "caol-stag.agencehost.com.br"
-
-[[tunnels]]
-name = "label-studio-ped"
-local = 8080
-remote = "127.0.0.1:8088"
-user = "bruno.moretti"
-host = "ped-stag.agencehost.com.br"
+name = "caol-logs-p"
+local = 8081
+remote = "127.0.0.1:8080"
+user = "dozzle-tunnel"
+host = "caol.agencehost.com.br"

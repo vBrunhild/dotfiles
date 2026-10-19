@@ -1,20 +1,26 @@
 {
   pkgs,
-  inputs,
   flake,
   ...
 }: let
   inherit (pkgs.stdenv.hostPlatform) system;
 
-  neovim-nightly = inputs.neovim-nightly-overlay.packages.${system}.default;
   path-server = flake.packages.${system}.path-server;
 
-  neovim-wrapped = pkgs.wrapNeovimUnstable neovim-nightly {
+  breadcrumbs = pkgs.vimUtils.buildVimPlugin {
+    pname = "breadcrumbs";
+    version = "0.1.0";
+    src = ./plugins/breadcrumbs;
+  };
+
+  neovim = pkgs.neovim-unwrapped;
+  neovim-wrapped = pkgs.wrapNeovimUnstable neovim {
     withPython3 = false;
     withRuby = false;
     withNodeJs = false;
     luaRcContent = builtins.readFile ./init.lua;
     plugins = [
+      breadcrumbs
       pkgs.vimPlugins.conform-nvim
       pkgs.vimPlugins.live-command-nvim
       pkgs.vimPlugins.lze
@@ -51,12 +57,13 @@
   };
 in
   pkgs.symlinkJoin {
-    inherit (neovim-nightly) version meta;
+    inherit (neovim) version meta;
     pname = "neovim-wrapped";
     paths = [
       neovim-wrapped
       path-server
       pkgs.alejandra
+      pkgs.ansible-language-server
       pkgs.docker-language-server
       pkgs.dprint
       pkgs.dprint-plugins.dprint-plugin-json

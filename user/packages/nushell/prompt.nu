@@ -86,11 +86,11 @@ module prompt_utils {
     let pwd: string = pwd
     let memory: string = memory
     let duration: string = duration
-    let git: string = git_display
+    # let git: string = git_display
 
     $"($user) ($pwd) ($memory) ($duration)"
-    | if $git == "" { $in } else { $"($in) ($git)" }
-    | color blue
+    # | if $git == "" { $in } else { $"($in) ($git)" }
+    # | color blue
   }
 }
 

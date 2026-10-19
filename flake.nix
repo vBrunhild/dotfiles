@@ -2,7 +2,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
-    jail-nix.url = "sourcehut:~alexdavid/jail.nix";
     nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
 
     agenix = {
@@ -26,7 +25,7 @@
     };
 
     sem = {
-      url = "github:Ataraxy-Labs/sem/v0.15.1";
+      url = "github:Ataraxy-Labs/sem/v0.27.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -42,6 +41,11 @@
 
     zellij-plugins = {
       url = "path:./flakes/zellij-plugins";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    bitbucket-cli = {
+      url = "path:./flakes/bitbucket-cli";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
