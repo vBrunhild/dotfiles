@@ -705,6 +705,11 @@ vim.cmd("colorscheme onedark")
 
 require("lze").load({
     {
+        "breadcrumbs",
+        event = "DeferredUIEnter",
+        after = function() require("breadcrumbs").setup() end
+    },
+    {
         "conform",
         event = { "BufEnter" },
         keys = {
@@ -955,6 +960,7 @@ require("lze").load({
     {
         "mini.icons",
         dep_of = {
+            "breadcrumbs",
             "mini.completion",
             "mini.files",
             "mini.pick",

@@ -7,6 +7,12 @@
 
   path-server = flake.packages.${system}.path-server;
 
+  breadcrumbs = pkgs.vimUtils.buildVimPlugin {
+    pname = "breadcrumbs";
+    version = "0.1.0";
+    src = ./plugins/breadcrumbs;
+  };
+
   neovim = pkgs.neovim-unwrapped;
   neovim-wrapped = pkgs.wrapNeovimUnstable neovim {
     withPython3 = false;
@@ -14,6 +20,7 @@
     withNodeJs = false;
     luaRcContent = builtins.readFile ./init.lua;
     plugins = [
+      breadcrumbs
       pkgs.vimPlugins.conform-nvim
       pkgs.vimPlugins.live-command-nvim
       pkgs.vimPlugins.lze
