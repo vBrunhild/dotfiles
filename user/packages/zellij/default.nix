@@ -95,7 +95,7 @@ in {
               children
               pane size=1 borderless=true {
                   plugin location="zjstatus" {
-                      hide_frame_for_single_pane "false"
+                      hide_frame_for_single_pane "true"
 
                       format_left  "{mode} #[fg=magenta,bold]{session} {tabs}"
                       format_right "{datetime}"
