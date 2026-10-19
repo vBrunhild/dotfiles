@@ -2,7 +2,22 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
-    nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
+    nixos-wsl = {
+      url = "github:nix-community/nixos-wsl/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+
+    import-tree.url = "github:denful/import-tree";
+
+    nix-wrapper-modules = {
+      url = "github:nix-community/nix-wrapper-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     agenix = {
       url = "github:ryantm/agenix";
@@ -14,14 +29,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    stylix = {
-      url = "github:nix-community/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     noctalia = {
       url = "github:noctalia-dev/noctalia/legacy-v4";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    noctalia-plugins = {
+      url = "github:noctalia-dev/noctalia-plugins";
+      flake = false;
     };
 
     sem = {
@@ -34,19 +49,31 @@
       flake = false;
     };
 
-    neovim = {
-      url = "path:./flakes/neovim";
+    crane.url = "github:ipetkov/crane";
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    zellij-plugins = {
-      url = "path:./flakes/zellij-plugins";
+    path-server = {
+      url = "github:kunlinglio/path-server";
+      flake = false;
+    };
+
+    zjstatus = {
+      url = "github:dj95/zjstatus?ref=v0.25.0";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    zellij-autolock = {
+      url = "github:fresh2dev/zellij-autolock?ref=0.3.0";
+      flake = false;
     };
 
     bitbucket-cli = {
-      url = "path:./flakes/bitbucket-cli";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:avivsinai/bitbucket-cli?ref=v0.32.1";
+      flake = false;
     };
   };
 
@@ -61,38 +88,7 @@
     ];
   };
 
-  outputs = inputs @ {nixpkgs, ...}: let
-    forAllSystems = nixpkgs.lib.genAttrs [
-      "aarch64-darwin"
-      "aarch64-linux"
-      "x86_64-darwin"
-      "x86_64-linux"
-    ];
-
-    allPkgs = forAllSystems (system: nixpkgs.legacyPackages.${system});
-  in {
-    packages = forAllSystems (
-      system: {neovim = inputs.neovim.packages.${system}.default;}
-    );
-
-    formatter = forAllSystems (
-      system: let
-        pkgs = allPkgs.${system};
-      in
-        pkgs.alejandra
-    );
-
-    nixosModules =
-      {
-        system = import ./system;
-        user = import ./user;
-
-        determinate = inputs.determinate.nixosModules.default;
-        home-manager = inputs.home-manager.nixosModules.home-manager;
-        stylix = inputs.stylix.nixosModules.stylix;
-      }
-      // import ./modules;
-
-    nixosConfigurations = import ./hosts inputs;
-  };
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;}
+    (inputs.import-tree ./modules);
 }

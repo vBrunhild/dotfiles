@@ -1,0 +1,64 @@
+{config, ...}: let
+  inherit (config.meta) username;
+in {
+  flake.modules.nixos.users = {
+    users.users.${username} = {
+      uid = 1000;
+      isNormalUser = true;
+      subGidRanges = [
+        {
+          startGid = 100000;
+          count = 65536;
+        }
+      ];
+
+      subUidRanges = [
+        {
+          startUid = 100000;
+          count = 65536;
+        }
+      ];
+
+      extraGroups = [
+        "audio"
+        "bluetooth"
+        "input"
+        "lp"
+        "networkmanager"
+        "nix"
+        "plugdev"
+        "podman"
+        "power"
+        "scanner"
+        "systemd-journal"
+        "vboxusers"
+        "video"
+        "wheel"
+      ];
+    };
+
+    security.sudo = {
+      enable = true;
+      extraRules = [
+        {
+          commands =
+            map (command: {
+              command = "/run/current-system/sw/bin/${command}";
+              options = ["NOPASSWD"];
+            })
+            [
+              "bandwhich"
+              "nh"
+              "nix-env"
+              "nixos-rebuild"
+              "poweroff"
+              "reboot"
+              "systemctl"
+            ];
+
+          groups = ["wheel"];
+        }
+      ];
+    };
+  };
+}
