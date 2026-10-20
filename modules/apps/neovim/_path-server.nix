@@ -13,4 +13,7 @@ in
   craneLib.buildPackage (args
     // {
       inherit cargoArtifacts;
+      preCheck = ''
+        export HOME=$(mktemp -d)
+      '';
     })

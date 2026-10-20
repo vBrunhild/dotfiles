@@ -1,6 +1,15 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
+    # hplip 3.26.4 fails to build: https://github.com/NixOS/nixpkgs/issues/575306
+    # fixed by https://github.com/NixOS/nixpkgs/pull/575319, drop this input once it reaches nixpkgs-unstable
+    # (check with https://nixpk.gs/pr-tracker.html?pr=575319)
+    nixpkgs-hplip = {
+      url = "github:NixOS/nixpkgs/50e858825dda8c0293d9dcae4af90456da5c26f2";
+      flake = false;
+    };
+
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     nixos-wsl = {
       url = "github:nix-community/nixos-wsl/main";
