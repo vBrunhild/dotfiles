@@ -1,10 +1,6 @@
-{
-  config,
-  inputs,
-  ...
-}: {
-  perSystem = {pkgs, ...}: {
-    packages.bitbucket-cli = pkgs.buildGoModule {
+{inputs, ...}: let
+  bitbucket-cli = pkgs:
+    pkgs.buildGoModule {
       pname = "bitbucket-cli";
       version = "0.32.1";
       src = inputs.bitbucket-cli;
@@ -17,11 +13,12 @@
 
       doCheck = false;
     };
+in {
+  perSystem = {pkgs, ...}: {
+    packages.bitbucket-cli = bitbucket-cli pkgs;
   };
 
   flake.modules.nixos.bitbucket-cli = {pkgs, ...}: {
-    environment.systemPackages = [
-      config.flake.packages.${pkgs.stdenv.hostPlatform.system}.bitbucket-cli
-    ];
+    environment.systemPackages = [(bitbucket-cli pkgs)];
   };
 }

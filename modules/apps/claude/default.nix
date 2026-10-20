@@ -1,7 +1,6 @@
 {config, ...}: let
   inherit (config.meta) dotfiles username;
   hm = config.flake.modules.homeManager;
-  packages = config.flake.packages;
 in {
   flake.modules.nixos.claude = {pkgs, ...}: let
     claude-code = pkgs.claude-code.override {
@@ -28,7 +27,7 @@ in {
   }: let
     claudePath = "${dotfiles}/modules/apps/claude";
     inherit (config.lib.file) mkOutOfStoreSymlink;
-    playwright-cli = packages.${pkgs.stdenv.hostPlatform.system}.playwright-cli;
+    playwright-cli = pkgs.callPackage ../playwright-cli/_package.nix {};
 
     linkDirs = dir:
       ./${dir}

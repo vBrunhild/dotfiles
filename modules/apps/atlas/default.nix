@@ -1,11 +1,11 @@
-{config, ...}: {
+let
+  atlas = pkgs: pkgs.callPackage ./_package.nix {};
+in {
   perSystem = {pkgs, ...}: {
-    packages.atlas = pkgs.callPackage ./_package.nix {};
+    packages.atlas = atlas pkgs;
   };
 
   flake.modules.nixos.atlas = {pkgs, ...}: {
-    environment.systemPackages = [
-      config.flake.packages.${pkgs.stdenv.hostPlatform.system}.atlas
-    ];
+    environment.systemPackages = [(atlas pkgs)];
   };
 }

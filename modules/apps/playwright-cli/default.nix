@@ -1,11 +1,11 @@
-{config, ...}: {
+let
+  playwright-cli = pkgs: pkgs.callPackage ./_package.nix {};
+in {
   perSystem = {pkgs, ...}: {
-    packages.playwright-cli = pkgs.callPackage ./_package.nix {};
+    packages.playwright-cli = playwright-cli pkgs;
   };
 
   flake.modules.nixos.playwright-cli = {pkgs, ...}: {
-    environment.systemPackages = [
-      config.flake.packages.${pkgs.stdenv.hostPlatform.system}.playwright-cli
-    ];
+    environment.systemPackages = [(playwright-cli pkgs)];
   };
 }

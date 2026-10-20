@@ -63,7 +63,7 @@
 
     zjstatus = {
       url = "github:dj95/zjstatus?ref=v0.25.0";
-      inputs.nixpkgs.follows = "nixpkgs";
+      flake = false;
     };
 
     zellij-autolock = {

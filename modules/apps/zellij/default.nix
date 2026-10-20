@@ -5,7 +5,7 @@
   ...
 }: let
   inherit (config) meta;
-  inherit (config.flake) packages wrappers;
+  inherit (config.flake) wrappers;
   palette = config.palette.withHashtag;
 
   autolockIgnoredPrograms = [
@@ -91,35 +91,38 @@
       else "${indent}    ${key} \"${value}\"\n")
     attrs)
     + "${indent}}\n";
-in {
-  perSystem = {
-    pkgs,
-    system,
-    ...
-  }: let
+
+  plugins = pkgs: let
     rustPkgs = pkgs.extend (import inputs.rust-overlay);
 
     craneLib = (inputs.crane.mkLib rustPkgs).overrideToolchain (
       p: p.rust-bin.stable.latest.default.override {targets = ["wasm32-wasip1"];}
     );
 
-    cargoExtraArgs = "--target wasm32-wasip1";
-    src = inputs.zellij-autolock;
-  in {
-    packages = {
-      zjstatus = inputs.zjstatus.packages.${system}.default;
-
-      zellij-autolock = craneLib.buildPackage {
-        inherit src cargoExtraArgs;
-        version = "0.3.0";
-        strictDeps = true;
+    mkWasmPlugin = src: args: let
+      common = {
+        inherit src;
+        cargoExtraArgs = "--target wasm32-wasip1";
         doCheck = false;
-        cargoArtifacts = craneLib.buildDepsOnly {
-          inherit src cargoExtraArgs;
-          doCheck = false;
-        };
       };
+    in
+      craneLib.buildPackage (common
+        // {
+          strictDeps = true;
+          cargoArtifacts = craneLib.buildDepsOnly common;
+        }
+        // args);
+  in {
+    zjstatus = mkWasmPlugin (craneLib.cleanCargoSource inputs.zjstatus) {
+      doNotSign = true;
+      buildInputs = [pkgs.libiconv];
     };
+
+    zellij-autolock = mkWasmPlugin inputs.zellij-autolock {version = "0.3.0";};
+  };
+in {
+  perSystem = {pkgs, ...}: {
+    packages = plugins pkgs;
   };
 
   flake.wrappers.zellij = {
@@ -128,7 +131,7 @@ in {
     wlib,
     ...
   }: let
-    inherit (packages.${pkgs.stdenv.hostPlatform.system}) zellij-autolock zjstatus;
+    inherit (plugins pkgs) zellij-autolock zjstatus;
     configDir = "${placeholder "out"}/zellij-config";
   in {
     imports = [wlib.modules.default];
