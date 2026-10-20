@@ -10,7 +10,7 @@
   "promptSuggestionEnabled": false,
   "awaySummaryEnabled": false,
   "tui": "fullscreen",
-  "theme": "dark",
+  "theme": "custom:palette",
   "editorMode": "vim",
   "autoScrollEnabled": true
 }
