@@ -67,11 +67,11 @@ in {
   flake.modules.nixos.claude = {pkgs, ...}: let
     claude-code = pkgs.claude-code.override {
       manifest = {
-        version = "2.1.293";
+        version = "2.1.310";
         platforms = {
           "linux-x64" = {
             binary = "claude.zst";
-            checksum = "sha256-JXhto0fDBkHcbFBzPQkNd8tUDxBaYa9+mJW1bjn+FqU=";
+            checksum = "sha256-kxTyj2eVRql4E/KRTE+2ChkIAe94KAX0e/GXMXzE/9I=";
           };
         };
       };
