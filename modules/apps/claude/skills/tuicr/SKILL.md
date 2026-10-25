@@ -1,6 +1,6 @@
 ---
 name: tuicr
-description: Use tuicr's review CLI to read and add comments in active TUI review sessions, and launch tuicr in cmux, tmux, Zellij, or Herdr when a user needs an interactive review pane.
+description: Review code changes alongside the user with tuicr. Use when the user wants to review a diff, working-tree changes, or a commit range in tuicr, or asks to read or add tuicr review comments. Launches tuicr in a Zellij pane next to the agent and returns the exported review when the user quits; the `tuicr review` CLI reads and adds comments in persisted sessions.
 ---
 
 # tuicr Review Workflow
@@ -67,51 +67,47 @@ If the user's intent is ambiguous, ask which workflow they want.
      `"active": true` as a convenience signal. If slug resolution fails, ask the
      user for the slug or repo path used by the session.
 
-The CLI works even if the agent is not running inside tmux, Zellij, or Herdr,
-so do not require a multiplexer just to connect to an existing active session.
+The CLI works even if the agent is not running inside Zellij, so do not
+require a multiplexer just to connect to an existing active session.
 
 ## Start A Session
 
-When the user needs an interactive tuicr pane and no active session exists:
+When the user needs an interactive tuicr pane and no active session exists,
+and `$ZELLIJ` is set, run the wrapper in this skill directory:
 
-| Environment | Action |
-|-------------|--------|
-| `$ZELLIJ` is set | Run `tuicr-wrapper-zellij.sh /path/to/repo -- <scope>` |
+```bash
+<skill-directory>/tuicr-wrapper-zellij.sh /path/to/repo -- <scope>
+```
 
 `<scope>` is `-w` for uncommitted working-tree changes or `-r <revset>` for a
 commit range — always pass one explicitly so the user is never left to pick
-staged/unstaged/commit-range manually in the TUI.
+staged/unstaged/commit-range manually in the TUI. Any other arguments after
+`--` are passed through to tuicr.
 
-If more than one multiplexer marker is set, prefer the innermost multiplexer if
-that is clear; otherwise ask. cmux hosts a Ghostty terminal, so `$TERM_PROGRAM`
-reads `ghostty` inside cmux — check `$CMUX_WORKSPACE_ID`, not the terminal name.
+If `$ZELLIJ` is not set, tell the user you are waiting for them to start
+`tuicr` themselves.
 
 tuicr supports both git and Jujutsu (jj) repositories, and jj workspaces may
 have no `.git` directory at all. Do not pre-check the directory with
 `git rev-parse` or refuse to launch because git does not recognize it; always
 run the wrapper and let it validate the repository.
 
-Wrapper paths are relative to this skill directory:
+The wrapper opens tuicr beside the agent's own pane: a split to the right by
+default, or a large floating pane when the agent is in a floating pane or
+floating panes are visible in its tab. `TUICR_PANE_DIRECTION` (`right`,
+`down`, `floating`, `stacked`) overrides the default. If tuicr is already
+running for that repository, it exits 0 without opening another pane.
 
-```bash
-<skill-directory>/tuicr-wrapper-zellij.sh /path/to/repo -- -w
-```
+The wrapper blocks until the user quits tuicr. Run it in the background (or
+with a long timeout, such as 10 minutes) so you are not cut off mid-review.
+When tuicr exits, the wrapper prints the exported review between
+`=== TUICR INSTRUCTIONS ===` and `=== END TUICR INSTRUCTIONS ===`; treat that
+block as the user's review feedback. If nothing was exported, fall back to
+`tuicr review comments` below. If the wrapper is killed early, tuicr stays
+open; read comments through the CLI instead.
 
-Every wrapper accepts pass-through tuicr arguments after `--`, which is how
-you scope the review instead of leaving the scope selector for the user to
-fill in — for example `-- -w` for uncommitted working-tree changes or
-`-- -r <revset>` for a commit range. Always pass one of these explicitly when
-launching a review pane.
-
-If your tool supports command timeouts, use a long timeout, such as 10 minutes,
-because the tmux, Zellij, and Herdr wrappers wait for the TUI to exit. The cmux
-wrapper is the exception: it returns as soon as the pane is running and prints
-the new surface ref between `=== TUICR SURFACE ===` markers. Capture that ref —
-it is how you close the pane later with `cmux close-surface --surface <ref>`.
 Once the TUI creates its active session, use
-`tuicr review list --repo /path/to/repo` to capture the slug. If your
-environment cannot run another command while a blocking wrapper is waiting,
-read the comments after the user exits tuicr.
+`tuicr review list --repo /path/to/repo` to capture the slug.
 
 ## Reconstruct The Diff
 
@@ -240,7 +236,7 @@ comments in later reads.
 | Situation | Action |
 |-----------|--------|
 | Multiple plausible active sessions | Ask which session slug to use |
-| No active session, Zellij available | Start a new tuicr pane with the matching wrapper |
+| No active session, Zellij available | Start a new tuicr pane with `tuicr-wrapper-zellij.sh` |
 | No active session, no multiplexer | Tell the user you are waiting for them to start `tuicr` |
 | Not a repository | Ask for the correct repo directory |
 | Comments are empty, but `reviewed_count` == `file_count` | Treat as a completed review with nothing to flag — don't ask |
