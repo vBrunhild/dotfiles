@@ -79,6 +79,17 @@ layout {
     }
 }
 
+layer-rule {
+    match namespace="^noctalia-wallpaper"
+    place-within-backdrop true
+}
+
+overview {
+    workspace-shadow {
+        off
+    }
+}
+
 hotkey-overlay {
     skip-at-startup
 }
@@ -87,7 +98,7 @@ prefer-no-csd
 
 screenshot-path "~/Pictures/Screenshots/%Y-%m-%dT%H-%M-%S.png"
 
-spawn-at-startup "noctalia-shell" "-d"
+spawn-at-startup "noctalia"
 spawn-at-startup "easyeffects" "-w"
 
 debug {
@@ -118,15 +129,11 @@ binds {
     Mod+T repeat=false hotkey-overlay-title="Open Terminal" { spawn "foot"; }
 
     Mod+E repeat=false hotkey-overlay-title="Launcher" {
-        spawn-sh "noctalia-shell ipc call launcher toggle"
+        spawn-sh "noctalia msg panel-toggle launcher"
     }
 
     Mod+S repeat=false hotkey-overlay-title="Print" {
-        spawn-sh "noctalia-shell ipc call plugin:screen-toolkit annotate"
-    }
-
-    Mod+A repeat=false hotkey-overlay-title="Show Keys" {
-        spawn-sh "noctalia-shell ipc call plugin:show-keys toggle"
+        spawn-sh "noctalia msg screenshot-annotate"
     }
 
     Mod+O repeat=false { toggle-overview; }

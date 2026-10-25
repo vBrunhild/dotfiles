@@ -1,101 +1,78 @@
-{
-  config,
-  inputs,
-  lib,
-  ...
-}: let
-  inherit (config) palette;
+{config, ...}: let
+  palette = config.palette.withHashtag;
   inherit (config.flake) wrappers;
-  inherit (config.meta) username;
 
-  sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
+  colors = with palette; {
+    dark = {
+      mPrimary = primary;
+      mOnPrimary = background;
+      mSecondary = secondary;
+      mOnSecondary = background;
+      mTertiary = blue;
+      mOnTertiary = background;
+      mError = red;
+      mOnError = background;
+      mSurface = background;
+      mOnSurface = white;
+      mSurfaceVariant = black;
+      mOnSurfaceVariant = foreground;
+      mOutline = light-gray;
+      mShadow = background;
+      mHover = blue;
+      mOnHover = background;
 
-  plugins = {
-    clipper = {};
-
-    screen-toolkit = {
-      packages = pkgs: [
-        pkgs.curl
-        pkgs.ffmpeg
-        pkgs.grim
-        pkgs.imagemagick
-        pkgs.jq
-        pkgs.slurp
-        pkgs.tesseract
-        pkgs.translate-shell
-        pkgs.wl-screenrec
-        pkgs.zbar
-      ];
-    };
-
-    show-keys = {
-      packages = pkgs: [pkgs.evtest];
-      extraGroups = ["input"];
+      terminal = {
+        inherit background foreground;
+        cursor = foreground;
+        cursorText = background;
+        selectionBg = dark-gray;
+        selectionFg = white;
+        normal = {
+          inherit black red green yellow blue cyan white;
+          magenta = purple;
+        };
+        bright = {
+          inherit red green yellow blue cyan;
+          black = light-gray;
+          magenta = purple;
+          white = dark-gray;
+        };
+      };
     };
   };
 in {
   perSystem = {pkgs, ...}: {
-    wrappers.packages.noctalia-shell = !pkgs.stdenv.hostPlatform.isLinux;
+    wrappers.packages.noctalia = !pkgs.stdenv.hostPlatform.isLinux;
   };
 
-  flake.wrappers.noctalia-shell = {
+  flake.wrappers.noctalia = {
+    config,
+    lib,
     pkgs,
     wlib,
     ...
   }: {
-    imports = [wlib.wrapperModules.noctalia-shell];
+    imports = [wlib.modules.default];
 
-    package = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    package = lib.mkDefault pkgs.noctalia;
 
-    settings = builtins.fromJSON (builtins.readFile ./config.json);
+    env.NOCTALIA_CONFIG_HOME = "${placeholder config.outputName}/noctalia-config";
 
-    colors = with palette.withHashtag; {
-      mError = red;
-      mHover = blue;
-      mOnError = background;
-      mOnHover = background;
-      mOnPrimary = background;
-      mOnSecondary = background;
-      mOnSurface = white;
-      mOnSurfaceVariant = "#abb2bf";
-      mOnTertiary = background;
-      mOutline = light-gray;
-      mPrimary = primary;
-      mSecondary = secondary;
-      mShadow = background;
-      mSurface = background;
-      mSurfaceVariant = black;
-      mTertiary = blue;
+    constructFiles = {
+      config = {
+        relPath = "noctalia-config/noctalia/config.toml";
+        content = builtins.readFile ./config.toml;
+      };
+
+      palette = {
+        relPath = "noctalia-config/noctalia/palettes/palette.json";
+        content = builtins.toJSON colors;
+      };
     };
-
-    plugins.sources = [
-      {
-        enabled = true;
-        name = "Official Noctalia Plugins";
-        url = sourceUrl;
-      }
-    ];
-
-    preInstalledPlugins =
-      plugins
-      |> lib.mapAttrs (name: _: {
-        inherit sourceUrl;
-        src = "${inputs.noctalia-plugins}/${name}";
-      });
   };
 
-  flake.modules.nixos.noctalia = {pkgs, ...}: {
-    imports = [wrappers.noctalia-shell.install];
-    wrappers.noctalia-shell.enable = true;
-
-    environment.systemPackages =
-      plugins
-      |> lib.attrValues
-      |> lib.concatMap (p: (p.packages or (_: [])) pkgs);
-
-    users.users.${username}.extraGroups =
-      plugins
-      |> lib.attrValues
-      |> lib.concatMap (p: p.extraGroups or []);
+  flake.modules.nixos.noctalia = {
+    imports = [wrappers.noctalia.install];
+    wrappers.noctalia.enable = true;
   };
 }
