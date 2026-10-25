@@ -1,0 +1,38 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "defaultMode": "default"
+  },
+  "model": "opus[1m]",
+  "enabledPlugins": {
+    "delta@zed-industries": true,
+    "cc-plugin-telemetry@builtin": false,
+    "cc-plugin-agents-md@builtin": false,
+    "cc-plugin-diff@builtin": false,
+    "cc-plugin-plugin-authoring@builtin": false,
+    "cc-plugin-sec-default@builtin": false
+  },
+  "extraKnownMarketplaces": {
+    "zed-industries": {
+      "source": {
+        "source": "github",
+        "repo": "zed-industries/delta-claude"
+      }
+    }
+  },
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "medium"
+    }
+  },
+  "promptSuggestionEnabled": false,
+  "awaySummaryEnabled": false,
+  "tui": "fullscreen",
+  "theme": "custom:palette",
+  "editorMode": "vim",
+  "switchModelsOnFlag": true,
+  "autoScrollEnabled": true
+}

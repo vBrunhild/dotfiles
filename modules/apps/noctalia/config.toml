@@ -1,0 +1,149 @@
+[bar.default]
+auto_hide = true
+auto_hide_delay_ms = 250
+background_opacity = 0.79999998211860657
+capsule = true
+center = [ "workspaces" ]
+compositor_blur = false
+concave_edge_corners = false
+end = [ "tray", "notifications", "clipboard", "battery" ]
+font_family = "Inter"
+reserve_space = false
+start = [ "control-center", "clock", "network", "bluetooth", "media" ]
+
+[battery]
+warning_threshold = 15
+
+[battery.device."/org/freedesktop/UPower/devices/headset_dev_84_AC_60_05_6D_BB"]
+warning_threshold = 20
+
+[calendar]
+enabled = true
+
+[control_center]
+hidden_tabs = [ "monitor", "weather", "calendar", "notifications", "screen-time" ]
+
+[desktop_widgets]
+enabled = false
+
+[dock]
+background_opacity = 0.79999998211860657
+
+[lockscreen]
+transition = [ "fade" ]
+
+[lockscreen_widgets]
+enabled = false
+schema_version = 2
+widget_order = [ "lockscreen-login-box@eDP-1" ]
+
+[lockscreen_widgets.grid]
+cell_size = 16
+major_interval = 4
+visible = true
+
+[lockscreen_widgets.widget."lockscreen-login-box@eDP-1"]
+box_height = 196.0
+box_width = 810.0
+cx = 683.0
+cy = 586.0
+output = "eDP-1"
+placement_height = 768.0
+placement_width = 1366.0
+rotation = 0.0
+type = "login_box"
+
+[lockscreen_widgets.widget."lockscreen-login-box@eDP-1".settings]
+background_color = "surface_variant"
+background_opacity = 0.88
+background_radius = 12.0
+center_password_text = false
+input_opacity = 1.0
+input_radius = 6.0
+layout = "regular"
+show_caps_lock = true
+show_keyboard_layout = true
+show_login_button = true
+show_media = true
+show_password_reveal = true
+show_session_buttons = true
+show_unlock_hint = true
+show_weather = true
+
+[notification]
+background_opacity = 0.80
+history_retention_hours = 1
+
+[osd]
+background_opacity = 0.80
+
+[shell]
+avatar_path = "/home/brunhild/dotfiles/modules/apps/noctalia/avatar.png"
+font_family = "Inter"
+panel_anchor_bar = "default"
+password_style = "random"
+polkit_agent = true
+popup_shadows = false
+settings_window_translucent = true
+
+[shell.animation]
+enabled = false
+
+[shell.launcher]
+categories = false
+category_icons_only = true
+compact = true
+fetch_exchange_rates = false
+layout = "simple"
+show_app_actions = true
+
+[shell.panel]
+transparency_mode = "glass"
+
+[shell.screenshot]
+annotate = true
+confirm_region = true
+remember_last_region = true
+
+[shell.shadow]
+direction = "center"
+
+[theme]
+custom_palette = "palette"
+mode = "dark"
+source = "custom"
+
+[theme.templates]
+enable_builtin_templates = false
+enable_community_templates = false
+
+[wallpaper]
+directory = "/home/brunhild/Pictures/Wallpapers"
+fill_mode = "span"
+transition_on_startup = true
+
+[wallpaper.automation]
+enabled = true
+
+[wallpaper.default]
+path = "/home/brunhild/Pictures/Wallpapers/astronaut.png"
+
+[wallpaper.last]
+path = "/home/brunhild/Pictures/Wallpapers/astronaut.png"
+
+[wallpaper.monitors.eDP-1]
+path = "/home/brunhild/Pictures/Wallpapers/astronaut.png"
+
+[weather]
+enabled = false
+
+[widget.media]
+hide_when_no_media = true
+
+[widget.network]
+show_label = false
+
+[widget.workspaces]
+active_pill_size = 1.5
+capsule = true
+hide_when_empty = true

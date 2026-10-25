@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_nushell_nushell__evaluate",
+      "WebFetch(domain:api.github.com)"
+    ]
+  },
+  "skillOverrides": {
+    "anthropic-skills:docs": "off",
+    "anthropic-skills:xlsx": "off",
+    "anthropic-skills:docx": "off",
+    "anthropic-skills:google-workspace": "off",
+    "anthropic-skills:import-memory": "off",
+    "anthropic-skills:morning": "off",
+    "anthropic-skills:pdf": "off",
+    "anthropic-skills:pptx": "off",
+    "anthropic-skills:skill-creator": "off"
+  },
+  "sandbox": {
+    "enabled": false,
+    "autoAllowBashIfSandboxed": false,
+    "allowUnsandboxedCommands": false
+  }
+}

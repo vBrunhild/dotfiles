@@ -2,7 +2,34 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
-    nixos-wsl.url = "github:nix-community/nixos-wsl/release-25.05";
+
+    # hplip 3.26.4 fails to build: https://github.com/NixOS/nixpkgs/issues/575306
+    # fixed by https://github.com/NixOS/nixpkgs/pull/575319, drop this input once it reaches nixpkgs-unstable
+    # (check with https://nixpk.gs/pr-tracker.html?pr=575319)
+    nixpkgs-hplip = {
+      url = "github:NixOS/nixpkgs/50e858825dda8c0293d9dcae4af90456da5c26f2";
+      flake = false;
+    };
+
+    nixos-wsl = {
+      url = "github:nix-community/nixos-wsl/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+
+    import-tree = {
+      url = "github:denful/import-tree";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+
+    nix-wrapper-modules = {
+      url = "github:nix-community/nix-wrapper-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     agenix = {
       url = "github:ryantm/agenix";
@@ -11,16 +38,6 @@
 
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    stylix = {
-      url = "github:nix-community/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    noctalia = {
-      url = "github:noctalia-dev/noctalia/legacy-v4";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -34,65 +51,52 @@
       flake = false;
     };
 
-    neovim = {
-      url = "path:./flakes/neovim";
+    crane = {
+      url = "github:ipetkov/crane";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    zellij-plugins = {
-      url = "path:./flakes/zellij-plugins";
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    delta = {
+      url = "github:zed-industries/delta-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    path-server = {
+      url = "github:kunlinglio/path-server";
+      flake = false;
+    };
+
+    zjstatus = {
+      url = "github:dj95/zjstatus?ref=v0.25.0";
+      flake = false;
+    };
+
+    zellij-autolock = {
+      url = "github:fresh2dev/zellij-autolock?ref=0.3.0";
+      flake = false;
     };
 
     bitbucket-cli = {
-      url = "path:./flakes/bitbucket-cli";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:avivsinai/bitbucket-cli?ref=v0.32.1";
+      flake = false;
     };
   };
 
   nixConfig = {
     extra-substituters = [
       "https://nix-community.cachix.org"
-      "https://noctalia.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
     ];
   };
 
-  outputs = inputs @ {nixpkgs, ...}: let
-    forAllSystems = nixpkgs.lib.genAttrs [
-      "aarch64-darwin"
-      "aarch64-linux"
-      "x86_64-darwin"
-      "x86_64-linux"
-    ];
-
-    allPkgs = forAllSystems (system: nixpkgs.legacyPackages.${system});
-  in {
-    packages = forAllSystems (
-      system: {neovim = inputs.neovim.packages.${system}.default;}
-    );
-
-    formatter = forAllSystems (
-      system: let
-        pkgs = allPkgs.${system};
-      in
-        pkgs.alejandra
-    );
-
-    nixosModules =
-      {
-        system = import ./system;
-        user = import ./user;
-
-        determinate = inputs.determinate.nixosModules.default;
-        home-manager = inputs.home-manager.nixosModules.home-manager;
-        stylix = inputs.stylix.nixosModules.stylix;
-      }
-      // import ./modules;
-
-    nixosConfigurations = import ./hosts inputs;
-  };
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;}
+    (inputs.import-tree ./modules);
 }
