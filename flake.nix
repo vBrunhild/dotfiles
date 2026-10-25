@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
 
     # hplip 3.26.4 fails to build: https://github.com/NixOS/nixpkgs/issues/575306
     # fixed by https://github.com/NixOS/nixpkgs/pull/575319, drop this input once it reaches nixpkgs-unstable
@@ -10,7 +11,6 @@
       flake = false;
     };
 
-    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     nixos-wsl = {
       url = "github:nix-community/nixos-wsl/main";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,7 +21,10 @@
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
-    import-tree.url = "github:denful/import-tree";
+    import-tree = {
+      url = "github:denful/import-tree";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
 
     nix-wrapper-modules = {
       url = "github:nix-community/nix-wrapper-modules";
@@ -48,7 +51,10 @@
       flake = false;
     };
 
-    crane.url = "github:ipetkov/crane";
+    crane = {
+      url = "github:ipetkov/crane";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
