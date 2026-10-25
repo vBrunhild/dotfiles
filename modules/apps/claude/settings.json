@@ -7,6 +7,17 @@
     "pr": ""
   },
   "model": "opus[1m]",
+  "enabledPlugins": {
+    "delta@zed-industries": true
+  },
+  "extraKnownMarketplaces": {
+    "zed-industries": {
+      "source": {
+        "source": "github",
+        "repo": "zed-industries/delta-claude"
+      }
+    }
+  },
   "promptSuggestionEnabled": false,
   "awaySummaryEnabled": false,
   "tui": "fullscreen",

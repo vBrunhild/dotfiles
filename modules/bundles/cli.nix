@@ -8,6 +8,7 @@
       bottom
       claude
       cli-tools
+      delta
       dev-tools
       direnv
       git
